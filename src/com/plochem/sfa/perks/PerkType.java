@@ -5,14 +5,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public enum PerkType {
-	REGEN(new ItemStack(Material.GOLDEN_APPLE), 1000, new String[] {}){
+	REGEN(new ItemStack(Material.GOLDEN_APPLE), 1000, 3, new String[] {}){
 		@Override
 		void performAction(Player source, Player target) {
 			// TODO Auto-generated method stub
 			
 		}
 	},
-	DEFLECT(new ItemStack(Material.BARRIER), 1000, 5, new String[] {}){
+	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5, new String[] {}){
 		@Override
 		void performAction(Player source, Player target) {
 			// TODO Auto-generated method stub
@@ -25,15 +25,18 @@ public enum PerkType {
 	private int chance;
 	private ItemStack itemRep;
 	private String[] description;
+	private int maxLevel;
 	
-	private PerkType(ItemStack itemRep, int unlockCost, String[] description) {
+	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, String[] description) {
 		this.unlockCost = unlockCost;
 		this.itemRep = itemRep;
+		this.maxLevel = maxLevel;
 		this.description = description;
 	}
 	
-	private PerkType(ItemStack itemRep, int unlockCost, int chance, String[] description) {
+	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, int chance, String[] description) {
 		this.unlockCost = unlockCost;
+		this.maxLevel = maxLevel;
 		this.chance = chance;
 		this.itemRep = itemRep;
 		this.description = description;
@@ -54,6 +57,11 @@ public enum PerkType {
 	public String[] getDescription() {
 		return description;
 	}
+	
+	public int getMaxLevel() {
+		return maxLevel;
+	}
+	
 	abstract void performAction(Player source, Player target);
 
 }
