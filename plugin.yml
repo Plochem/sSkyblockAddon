@@ -1,0 +1,32 @@
+main: com.plochem.sfa.SFactionAddon
+name: sFactionAddon
+version: 1.4
+author: Plochem
+description: Factions Addon for Straxidus.
+depend: [Vault, Citizens]
+loadbefore: [Factions]
+commands:
+   giveBouncePad:
+   bal:
+   balance:
+   pay:
+   setbal:
+   addbal:
+   boosterqueue:
+   myboosters:
+   givebooster:
+   wild:
+   spawn:
+   kits:
+   createkit:
+   tpa:
+   tpaccept:
+   tpdeny:
+   invsee:
+   givesellwand:
+   givegen:
+   sethome:
+   home:
+   delhome:
+   homes:
+   menu:
