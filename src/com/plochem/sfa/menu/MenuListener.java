@@ -2,6 +2,7 @@ package com.plochem.sfa.menu;
 
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.plochem.sfa.generator.GeneratorType;
+import com.plochem.sfa.perks.PerkManager;
 import com.plochem.sfa.perks.PerkType;
 
 public class MenuListener implements Listener{
@@ -62,7 +64,27 @@ public class MenuListener implements Listener{
 	private void openPerkShop(Player p) {
 		Inventory genShop = Bukkit.createInventory(null, 27, "Perk Shop");
 		for(int i = 0; i < PerkType.values().length; i++) {
-			genShop.setItem(i, PerkType.values()[i].getItemRep());
+			PerkType type = PerkType.values()[i];
+			ItemStack curr = type.getItemRep();
+			ItemMeta currIm = curr.getItemMeta();
+			List<String> desc = Arrays.asList(type.getDescription());
+			int currentLevel = PerkManager.currentLevel(type, p);
+			if(currentLevel == type.getMaxLevel()) {
+				desc.add("");
+				desc.add("§aMaximum level reached!");
+			} else if(currentLevel == 0) {
+				desc.add("");
+				desc.add("§7Cost: §a$" + type.getUnlockCost());
+				desc.add("");
+				desc.add("§eClick to purchase!");
+			} else { // upgradable
+				desc.add("");
+				desc.add("§7Cost: §a$" + type.getUnlockCost() * Math.pow(PerkManager.PURCHASE_SCALE_FACTOR, currentLevel));
+				desc.add("");
+				desc.add("§eClick to upgrade to level " + currentLevel+1 + "!");
+			}
+			currIm.setLore(desc);
+			genShop.setItem(i, curr);
 			// get description, put in lore, add last line (write cost  if havent bought else wirte &aUnlocked!)
 		}
 		p.openInventory(genShop);
