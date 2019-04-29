@@ -18,7 +18,6 @@ import com.plochem.sfa.boosters.Booster;
 import com.plochem.sfa.economy.SEconomy;
 import com.plochem.sfa.homes.Home;
 import com.plochem.sfa.kits.KitManager;
-import com.plochem.sfa.perks.PerkType;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -89,11 +88,6 @@ public class PlayerJoin implements Listener{
 		playerData = YamlConfiguration.loadConfiguration(playerFile);
 		if(!(playerFile.exists())) {
 			Bukkit.getServer().getLogger().info("[SFA] Creating player perk file for " + joiner.getName() + "!");
-			for(PerkType type : PerkType.values()) {
-				if(playerData.get(type.toString()) == null) {
-					playerData.set(type.toString(), 0);
-				}
-			}
 			playerData.save(playerFile);
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Player perk file already exists for " + joiner.getName()+ "! Skipping creation...");
