@@ -1,6 +1,7 @@
 package com.plochem.sfa.menu;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -67,23 +68,27 @@ public class MenuListener implements Listener{
 			PerkType type = PerkType.values()[i];
 			ItemStack curr = type.getItemRep();
 			ItemMeta currIm = curr.getItemMeta();
-			List<String> desc = Arrays.asList(type.getDescription());
+			List<String> desc = new ArrayList<String>(Arrays.asList(type.buildDescription(p)));
 			int currentLevel = PerkManager.currentLevel(type, p);
+			String name = type.toString().substring(0, 1).toUpperCase() + type.toString().substring(1).toLowerCase() +  " " + (currentLevel+1);
+			currIm.setDisplayName("§a" + name);
 			if(currentLevel == type.getMaxLevel()) {
 				desc.add("");
-				desc.add("§aMaximum level reached!");
-			} else if(currentLevel == 0) {
+				desc.add("§a§lFully Upgraded!");
+			} else if(currentLevel == 0) { // does not own it
 				desc.add("");
 				desc.add("§7Cost: §a$" + type.getUnlockCost());
 				desc.add("");
 				desc.add("§eClick to purchase!");
-			} else { // upgradable
+				currIm.setDisplayName("§c" + name);
+			} else { // upgradeable
 				desc.add("");
 				desc.add("§7Cost: §a$" + type.getUnlockCost() * Math.pow(PerkManager.PURCHASE_SCALE_FACTOR, currentLevel));
 				desc.add("");
-				desc.add("§eClick to upgrade to level " + currentLevel+1 + "!");
+				desc.add("§eClick to upgrade to level " + (currentLevel+1) + "!");
 			}
 			currIm.setLore(desc);
+			curr.setItemMeta(currIm);
 			genShop.setItem(i, curr);
 			// get description, put in lore, add last line (write cost  if havent bought else wirte &aUnlocked!)
 		}

@@ -5,41 +5,50 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public enum PerkType {
-	REGEN(new ItemStack(Material.GOLDEN_APPLE), 1000, 3, new String[] {}){
+	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 0){
 		@Override
-		void performAction(Player source, Player target) {
+		public void performAction(Player source, Player target) {
 			// TODO Auto-generated method stub
 			
+		}
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.currentLevel(this, viewer)+1;
+			String[] desc = new String[] {"§7Gives you Regeneration I for", "§7" + (2*level) + " seconds."};
+			return desc;
 		}
 	},
-	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5, new String[] {}){
+	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5){
 		@Override
-		void performAction(Player source, Player target) {
-			// TODO Auto-generated method stub
-			
+		public void performAction(Player source, Player target) {
+						
 		}
-	}
-	;
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.currentLevel(this, viewer)+1;
+			String[] desc = new String[] {"§7" + 2*level + "§7% chance of deflecting damage", "§7back to your opponent"};
+			return desc;
+		}
+	};
 	
 	private int unlockCost;
 	private int chance;
 	private ItemStack itemRep;
-	private String[] description;
 	private int maxLevel;
 	
-	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, String[] description) {
+	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel) {
 		this.unlockCost = unlockCost;
 		this.itemRep = itemRep;
 		this.maxLevel = maxLevel;
-		this.description = description;
 	}
 	
-	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, int chance, String[] description) {
+	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, int chance) {
 		this.unlockCost = unlockCost;
 		this.maxLevel = maxLevel;
 		this.chance = chance;
 		this.itemRep = itemRep;
-		this.description = description;
 	}
 	
 	public int getUnlockCost() {
@@ -54,14 +63,10 @@ public enum PerkType {
 		return itemRep;
 	}
 	
-	public String[] getDescription() {
-		return description;
-	}
-	
 	public int getMaxLevel() {
 		return maxLevel;
 	}
 	
-	abstract void performAction(Player source, Player target);
-
+	public abstract void performAction(Player source, Player target);
+	public abstract String[] buildDescription(Player viewer); // description tells you about the perks if you upgrade
 }
