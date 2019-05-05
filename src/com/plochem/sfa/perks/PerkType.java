@@ -14,7 +14,7 @@ public enum PerkType {
 
 		@Override
 		public String[] buildDescription(Player viewer) {
-			int level = PerkManager.currentLevel(this, viewer)+1;
+			int level = Math.min(PerkManager.currentLevel(this, viewer), this.getMaxLevel());
 			String[] desc = new String[] {"§7Gives you Regeneration I for", "§7" + (2*level) + " seconds."};
 			return desc;
 		}
@@ -27,7 +27,7 @@ public enum PerkType {
 
 		@Override
 		public String[] buildDescription(Player viewer) {
-			int level = PerkManager.currentLevel(this, viewer)+1;
+			int level = Math.min(PerkManager.currentLevel(this, viewer), this.getMaxLevel());
 			String[] desc = new String[] {"§7" + 2*level + "§7% chance of deflecting damage", "§7back to your opponent"};
 			return desc;
 		}

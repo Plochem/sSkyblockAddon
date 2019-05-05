@@ -70,7 +70,7 @@ public class MenuListener implements Listener{
 			ItemMeta currIm = curr.getItemMeta();
 			List<String> desc = new ArrayList<String>(Arrays.asList(type.buildDescription(p)));
 			int currentLevel = PerkManager.currentLevel(type, p);
-			String name = type.toString().substring(0, 1).toUpperCase() + type.toString().substring(1).toLowerCase() +  " " + (currentLevel+1);
+			String name = type.toString().substring(0, 1).toUpperCase() + type.toString().substring(1).toLowerCase() +  " " + Math.min(type.getMaxLevel(), currentLevel+1);
 			currIm.setDisplayName("§a" + name);
 			if(currentLevel == type.getMaxLevel()) {
 				desc.add("");
@@ -85,7 +85,7 @@ public class MenuListener implements Listener{
 				desc.add("");
 				desc.add("§7Cost: §a$" + type.getUnlockCost() * Math.pow(PerkManager.PURCHASE_SCALE_FACTOR, currentLevel));
 				desc.add("");
-				desc.add("§eClick to upgrade to level " + (currentLevel+1) + "!");
+				desc.add("§eClick to upgrade to level " + Math.min(type.getMaxLevel(), currentLevel+1) + "!");
 			}
 			currIm.setLore(desc);
 			curr.setItemMeta(currIm);
