@@ -83,9 +83,9 @@ public class MenuListener implements Listener{
 				currIm.setDisplayName("§c" + name);
 			} else { // upgradeable
 				desc.add("");
-				desc.add("§7Cost: §a$" + type.getUnlockCost() * Math.pow(PerkManager.PURCHASE_SCALE_FACTOR, currentLevel));
+				desc.add("§7Cost: §a$" + type.getUnlockCost() * Math.pow(PerkManager.SCALE_FACTOR, currentLevel));
 				desc.add("");
-				desc.add("§eClick to upgrade to level " + Math.min(type.getMaxLevel(), currentLevel+1) + "!");
+				desc.add("§eClick to upgrade to level " + PerkManager.getNextLvlUpgrade(type, p) + "!");
 			}
 			currIm.setLore(desc);
 			curr.setItemMeta(currIm);

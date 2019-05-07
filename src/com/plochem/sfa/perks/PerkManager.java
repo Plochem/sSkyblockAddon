@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class PerkManager {
-	public static int PURCHASE_SCALE_FACTOR = 2;
+	public static int SCALE_FACTOR = 2;
 	
 	public static int currentLevel(PerkType type, Player p) {
 		File playerFile = new File("plugins/SFA/playerPerks/" + p.getUniqueId().toString() + ".yml");
@@ -15,5 +15,9 @@ public class PerkManager {
 			return 0;
 		}
 		return (Integer)playerData.get(type.toString());
+	}
+	
+	public static int getNextLvlUpgrade(PerkType type, Player p) {
+		return Math.min(PerkManager.currentLevel(type, p)+1, type.getMaxLevel());
 	}
 }

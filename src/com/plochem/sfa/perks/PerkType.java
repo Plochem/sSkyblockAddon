@@ -5,16 +5,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public enum PerkType {
-	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 0){
+	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 1){
 		@Override
 		public void performAction(Player source, Player target) {
-			// TODO Auto-generated method stub
-			
+						
 		}
 
 		@Override
 		public String[] buildDescription(Player viewer) {
-			int level = Math.min(PerkManager.currentLevel(this, viewer), this.getMaxLevel());
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
 			String[] desc = new String[] {"§7Gives you Regeneration I for", "§7" + (2*level) + " seconds."};
 			return desc;
 		}
@@ -27,8 +26,8 @@ public enum PerkType {
 
 		@Override
 		public String[] buildDescription(Player viewer) {
-			int level = Math.min(PerkManager.currentLevel(this, viewer), this.getMaxLevel());
-			String[] desc = new String[] {"§7" + 2*level + "§7% chance of deflecting damage", "§7back to your opponent"};
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
+			String[] desc = new String[] {"§7" + level + "% chance of deflecting damage", "§7back to your opponent"};
 			return desc;
 		}
 	};
@@ -68,5 +67,5 @@ public enum PerkType {
 	}
 	
 	public abstract void performAction(Player source, Player target);
-	public abstract String[] buildDescription(Player viewer); // description tells you about the perks if you upgrade
+	public abstract String[] buildDescription(Player viewer); // the description tells you about the perks if you upgrade
 }
