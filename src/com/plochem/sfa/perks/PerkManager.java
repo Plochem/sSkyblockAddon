@@ -8,6 +8,11 @@ import org.bukkit.entity.Player;
 public class PerkManager {
 	public static int SCALE_FACTOR = 2;
 	
+	/**
+	 * @param type - PerkType
+	 * @param p - Target player
+	 * @return 0 = Player doesn't own that perk
+	 */
 	public static int currentLevel(PerkType type, Player p) {
 		File playerFile = new File("plugins/SFA/playerPerks/" + p.getUniqueId().toString() + ".yml");
 		YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
@@ -20,4 +25,5 @@ public class PerkManager {
 	public static int getNextLvlUpgrade(PerkType type, Player p) {
 		return Math.min(PerkManager.currentLevel(type, p)+1, type.getMaxLevel());
 	}
+	
 }

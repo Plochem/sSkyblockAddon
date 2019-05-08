@@ -3,12 +3,14 @@ package com.plochem.sfa.perks;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public enum PerkType {
 	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 1){
 		@Override
-		public void performAction(Player source, Player target) {
-						
+		public void performAction(Player source, Player target, int level) {
+			source.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 2*level, 1));
 		}
 
 		@Override
@@ -20,7 +22,7 @@ public enum PerkType {
 	},
 	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5){
 		@Override
-		public void performAction(Player source, Player target) {
+		public void performAction(Player source, Player target, int level) {
 						
 		}
 
@@ -66,6 +68,6 @@ public enum PerkType {
 		return maxLevel;
 	}
 	
-	public abstract void performAction(Player source, Player target);
+	public abstract void performAction(Player source, Player target, int level);
 	public abstract String[] buildDescription(Player viewer); // the description tells you about the perks if you upgrade
 }
