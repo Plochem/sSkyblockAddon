@@ -11,9 +11,11 @@ public class PerkListeners implements Listener{
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
 		Player killer = e.getEntity().getKiller();
-		int currLevel = PerkManager.currentLevel(PerkType.REGENERATION, killer);
-		if(currLevel > 0) {
-			PerkType.REGENERATION.performAction(killer, null, currLevel);
+		if(killer != null) {
+			int currLevel = PerkManager.currentLevel(PerkType.REGENERATION, killer);
+			if(currLevel > 0) {
+				PerkType.REGENERATION.performAction(killer, null, currLevel);
+			}
 		}
 	}
 	
@@ -23,7 +25,7 @@ public class PerkListeners implements Listener{
 			Player damaged = (Player)e.getEntity();
 			int currLevel = PerkManager.currentLevel(PerkType.DEFLECT, damaged);
 			if(currLevel > 0) {
-				PerkType.REGENERATION.performAction(damaged, (LivingEntity)e.getDamager(), currLevel);
+				PerkType.DEFLECT.performAction(damaged, (LivingEntity)e.getDamager(), currLevel);
 			}
 		}
 	}
