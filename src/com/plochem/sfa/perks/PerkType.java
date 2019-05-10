@@ -10,16 +10,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public enum PerkType {
-	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 1){
+	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 5){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
-			((Player)source).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 2*level, 1));
+			System.out.println(source.getName());
+			((Player)source).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*3*level, 1)); // convert seconds to ticks
 		}
 
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7Gives you Regeneration I for", "§7" + (2*level) + " seconds."};
+			String[] desc = new String[] {"§7Gives you Regeneration II for", "§7" + (3*level) + " seconds."};
 			return desc;
 		}
 	},
@@ -27,6 +28,7 @@ public enum PerkType {
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			int num = new Random(100).nextInt() + 1;
+			System.out.println(num + "::" + level);
 			if (num <= level) {
 				target.damage(((Player)source).getLastDamage());
 				target.sendMessage("§c" + ((Player)source).getName() + " deflected your attack!");
