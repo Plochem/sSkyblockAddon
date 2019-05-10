@@ -13,7 +13,6 @@ public enum PerkType {
 	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 5){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
-			System.out.println(source.getName());
 			((Player)source).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*3*level, 1)); // convert seconds to ticks
 		}
 
@@ -27,7 +26,7 @@ public enum PerkType {
 	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
-			int num = new Random(100).nextInt() + 1;
+			int num = new Random().nextInt(100) + 1;
 			System.out.println(num + "::" + level);
 			if (num <= level) {
 				target.damage(((Player)source).getLastDamage());
