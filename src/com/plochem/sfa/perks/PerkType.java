@@ -27,9 +27,8 @@ public enum PerkType {
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			int num = new Random().nextInt(100) + 1;
-			System.out.println(num + "::" + level);
 			if (num <= level) {
-				target.damage(((Player)source).getLastDamage());
+				target.damage(((Player)source).getLastDamage(), source);
 				target.sendMessage("§c" + ((Player)source).getName() + " deflected your attack!");
 				source.sendMessage("§eYou deflected the attack because of your §bDeflect §eperk!");
 			}
