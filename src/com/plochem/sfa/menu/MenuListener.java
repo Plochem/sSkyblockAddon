@@ -1,6 +1,5 @@
 package com.plochem.sfa.menu;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +22,7 @@ public class MenuListener implements Listener{
 	@EventHandler
 	public void menuClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
-			if(e.getInventory().getTitle().equalsIgnoreCase("menu")) {
+			if(e.getInventory().getTitle().equalsIgnoreCase("menu") || e.getInventory().getTitle().equalsIgnoreCase("menu")) {
 				e.setCancelled(true);
 				if(e.getClickedInventory().getTitle().equalsIgnoreCase("menu")) {
 					ItemStack i = e.getCurrentItem();
@@ -54,7 +53,7 @@ public class MenuListener implements Listener{
 		for(int i = 0; i < GeneratorType.values().length; i++) {
 			ItemStack gen = new ItemStack(Material.ENDER_PORTAL_FRAME);
 			ItemMeta genMeta = gen.getItemMeta();
-			genMeta.setLore(Arrays.asList("", "§7Click to purchase for §a$" + NumberFormat.getInstance().format(GeneratorType.values()[i].getCost()) + "§7!"));
+			genMeta.setLore(Arrays.asList("", "§7Click to purchase for §a$" + GeneratorType.values()[i].getCost() + "§7!"));
 			genMeta.setDisplayName("§e" + GeneratorType.values()[i].toString().replaceAll("_", " ") + " Generator");
 			gen.setItemMeta(genMeta);
 			genShop.setItem(i, gen);
