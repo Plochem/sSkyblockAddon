@@ -10,7 +10,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 public enum PerkType {
-	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 5){
+	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 2, 5){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			((Player)source).addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*3*level, 1)); // convert seconds to ticks
@@ -23,7 +23,7 @@ public enum PerkType {
 			return desc;
 		}
 	},
-	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 5){
+	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 3, 5){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			int num = new Random().nextInt(100) + 1;
@@ -46,18 +46,21 @@ public enum PerkType {
 	private int chance;
 	private ItemStack itemRep;
 	private int maxLevel;
+	private int costFactor;
 	
-	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel) {
+	private PerkType(ItemStack itemRep, int unlockCost, int costFactor, int maxLevel) {
 		this.unlockCost = unlockCost;
 		this.itemRep = itemRep;
 		this.maxLevel = maxLevel;
+		this.costFactor = costFactor;
 	}
 	
-	private PerkType(ItemStack itemRep, int unlockCost, int maxLevel, int chance) {
+	private PerkType(ItemStack itemRep, int unlockCost, int costFactor, int maxLevel, int chance) {
 		this.unlockCost = unlockCost;
 		this.maxLevel = maxLevel;
 		this.chance = chance;
 		this.itemRep = itemRep;
+		this.costFactor = costFactor;
 	}
 	
 	public int getUnlockCost() {
@@ -74,6 +77,14 @@ public enum PerkType {
 	
 	public int getMaxLevel() {
 		return maxLevel;
+	}
+	
+	public int getCostFactor() {
+		return costFactor;
+	}
+	
+	public int getCost(int currLevel) {
+		return (int)(this.getUnlockCost() * Math.pow(this.getCostFactor(), currLevel));
 	}
 	
 	public abstract void performAction(LivingEntity source, LivingEntity target, int level);

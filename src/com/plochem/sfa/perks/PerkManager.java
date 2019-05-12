@@ -6,7 +6,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class PerkManager {
-	public static int SCALE_FACTOR = 2;
 	
 	/**
 	 * @param type - PerkType
