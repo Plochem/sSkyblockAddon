@@ -2,9 +2,6 @@ package com.plochem.sfa.perks;
 
 import java.util.Arrays;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -57,6 +54,7 @@ public class PerkListeners implements Listener{
 						int cost = type.getCost(PerkManager.getNextLvlUpgrade(type, buyer));
 						if(eco.getBalance(buyer) >= cost) {
 							eco.withdrawPlayer(buyer, cost);
+							PerkManager.unlock(type, buyer);
 							// play sound
 						} else {
 							e.getWhoClicked().sendMessage("§cYou do not have enough money to purchase this perk.");
