@@ -2,6 +2,7 @@ package com.plochem.sfa.perks;
 
 import java.util.Arrays;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,13 +46,13 @@ public class PerkListeners implements Listener{
 				e.setCancelled(true);
 				if(e.getClickedInventory().getTitle().equalsIgnoreCase("perk shop")) {
 					ItemStack item = e.getCurrentItem();
-					String name = item.getItemMeta().getDisplayName();
+					String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
 					if(name != null) {
 						Player buyer = (Player)e.getWhoClicked();
 						String[] temp = name.split(" ");
 						temp = Arrays.copyOf(temp, temp.length-1);
 						PerkType type = PerkType.valueOf(String.join("_", temp).toUpperCase());
-						int cost = type.getCost(PerkManager.getNextLvlUpgrade(type, buyer));
+						int cost = type.getCost(PerkManager.currentLevel(type, buyer));
 						int currentLevel = PerkManager.currentLevel(type, buyer);
 						if(type.getMaxLevel() == currentLevel) { // already at max
 							buyer.sendMessage("§cYou already maxed out this perk!");
