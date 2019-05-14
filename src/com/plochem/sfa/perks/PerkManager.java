@@ -26,10 +26,14 @@ public class PerkManager {
 		return Math.min(PerkManager.currentLevel(type, p)+1, type.getMaxLevel());
 	}
 
-	public static void unlock(PerkType type, Player buyer) {
+	public static void upgrade(PerkType type, Player buyer) {
 		File playerFile = new File("plugins/SFA/playerPerks/" + buyer.getUniqueId().toString() + ".yml");
 		YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
-		playerData.set(type.toString(), 1);
+		if(playerData.get(type.toString()) == null || playerData.getInt(type.toString()) == 0) {
+			playerData.set(type.toString(), 1);
+		} else {
+			playerData.set(type.toString(), playerData.getInt(type.toString()) + 1);
+		}
 		try {
 			playerData.save(playerFile);
 		} catch (IOException e) {

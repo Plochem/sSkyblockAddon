@@ -52,13 +52,28 @@ public class PerkListeners implements Listener{
 						temp = Arrays.copyOf(temp, temp.length-1);
 						PerkType type = PerkType.valueOf(String.join("_", temp).toUpperCase());
 						int cost = type.getCost(PerkManager.getNextLvlUpgrade(type, buyer));
-						if(eco.getBalance(buyer) >= cost) {
-							eco.withdrawPlayer(buyer, cost);
-							PerkManager.unlock(type, buyer);
+						int currentLevel = PerkManager.currentLevel(type, buyer);
+						if(type.getMaxLevel() == currentLevel) { // already at max
+							buyer.sendMessage("§cYou already maxed out this perk!");
 							// play sound
-						} else {
-							e.getWhoClicked().sendMessage("§cYou do not have enough money to purchase this perk.");
-							// play sound
+						} else { //upgrading or buying new perk
+							if(eco.getBalance(buyer) >= cost) {
+								eco.withdrawPlayer(buyer, cost);
+								PerkManager.upgrade(type, buyer);
+								if(currentLevel == 0) {
+									buyer.sendMessage("§aYou successfully purchased this perk.");
+								} else {
+									buyer.sendMessage("§aYou successfully upgraded this perk.");
+								}
+								// play sound
+							} else {
+								if(currentLevel == 0) {
+									buyer.sendMessage("§cYou do not have enough money to purchase this perk.");
+								} else {
+									buyer.sendMessage("§cYou do not have enough money to upgrade this perk.");
+								}
+								// play sound
+							}
 						}
 					}
 					e.getWhoClicked().closeInventory();
