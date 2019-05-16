@@ -23,7 +23,7 @@ public enum PerkType {
 			return desc;
 		}
 	},
-	DEFLECT(new ItemStack(Material.BARRIER), 1000, 3, 3, 5){
+	DEFLECT(new ItemStack(Material.BARRIER), 5000, 4, 3){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			int num = new Random().nextInt(100) + 1;
@@ -52,14 +52,6 @@ public enum PerkType {
 		this.unlockCost = unlockCost;
 		this.itemRep = itemRep;
 		this.maxLevel = maxLevel;
-		this.costFactor = costFactor;
-	}
-	
-	private PerkType(ItemStack itemRep, int unlockCost, int costFactor, int maxLevel, int chance) {
-		this.unlockCost = unlockCost;
-		this.maxLevel = maxLevel;
-		this.chance = chance;
-		this.itemRep = itemRep;
 		this.costFactor = costFactor;
 	}
 	
