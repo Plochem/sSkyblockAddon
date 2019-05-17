@@ -37,6 +37,14 @@ public class PerkListeners implements Listener{
 				PerkType.DEFLECT.performAction(damaged, (LivingEntity)e.getDamager(), currLevel);
 			}
 		}
+		
+		if(e.getEntity() instanceof LivingEntity && e.getDamager() instanceof Player) {
+			Player damager = (Player)e.getDamager();
+			int currLevel = PerkManager.currentLevel(PerkType.FREEZE, damager);
+			if(currLevel > 0) {
+				PerkType.FREEZE.performAction(damager, (LivingEntity)e.getEntity(), currLevel);
+			}
+		}
 	}
 	
 	@EventHandler

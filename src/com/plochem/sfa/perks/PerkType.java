@@ -40,6 +40,21 @@ public enum PerkType {
 			String[] desc = new String[] {"§7" + level + "% chance of deflecting damage", "§7back to your opponent"};
 			return desc;
 		}
+	},
+	FREEZE(new ItemStack(Material.ICE), 2000, 3, 3){
+
+		@Override
+		public void performAction(LivingEntity source, LivingEntity target, int level) {
+
+		}
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
+			String[] desc = new String[] {"§7" + level + "% chance of freezing your opponent", "§7for" + level*2 + " §7seconds"};
+			return desc;
+		}
+		
 	};
 	
 	private int unlockCost;
