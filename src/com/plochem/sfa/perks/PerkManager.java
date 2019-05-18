@@ -2,11 +2,16 @@ package com.plochem.sfa.perks;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class PerkManager {
+	
+	public static List<UUID> frozenPlayers = new ArrayList<>();
 	
 	/**
 	 * @param type - PerkType

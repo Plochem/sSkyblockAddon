@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.plochem.sfa.SFactionAddon;
@@ -17,6 +18,7 @@ import com.plochem.sfa.economy.SEconomyImplementer;
 
 public class PerkListeners implements Listener{
 	private SEconomyImplementer eco = SFactionAddon.getPlugin(SFactionAddon.class).getSEconomy().getEconomyImplementer();
+	
 	@EventHandler
 	public void onKill(PlayerDeathEvent e) {
 		Player killer = e.getEntity().getKiller();
@@ -38,12 +40,19 @@ public class PerkListeners implements Listener{
 			}
 		}
 		
-		if(e.getEntity() instanceof LivingEntity && e.getDamager() instanceof Player) {
+		if(e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
 			Player damager = (Player)e.getDamager();
 			int currLevel = PerkManager.currentLevel(PerkType.FREEZE, damager);
 			if(currLevel > 0) {
-				PerkType.FREEZE.performAction(damager, (LivingEntity)e.getEntity(), currLevel);
+				PerkType.FREEZE.performAction(damager, (Player)e.getEntity(), currLevel);
 			}
+		}
+	}
+	
+	@EventHandler
+	public void onMove(PlayerMoveEvent e) {
+		if(PerkManager.frozenPlayers.contains(e.getPlayer().getUniqueId())) {
+			e.setCancelled(true);
 		}
 	}
 	

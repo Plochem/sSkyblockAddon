@@ -8,6 +8,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.plochem.sfa.SFactionAddon;
 
 public enum PerkType {
 	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 2, 5){
@@ -42,16 +45,30 @@ public enum PerkType {
 		}
 	},
 	FREEZE(new ItemStack(Material.ICE), 2000, 3, 3){
-
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
-
+			int num = new Random().nextInt(100) + 1;
+			//if (num <= level) {
+				Player to = (Player)target;
+				int duration = level*2;
+				source.sendMessage("§eYour attack froze " +  to.getName() + " because of your §bFreeze §eperk!");
+				to.sendMessage("§c" + source.getName() + "'s attack froze you for " + duration + " seconds!");
+				PerkManager.frozenPlayers.add(to.getUniqueId());
+				new BukkitRunnable() {
+				    @Override
+				    public void run() {
+				    	PerkManager.frozenPlayers.remove(to.getUniqueId());
+				    	to.sendMessage("§eYou are now able to move again!");
+				       	this.cancel();
+				    }
+				}.runTaskTimer(SFactionAddon.getPlugin(SFactionAddon.class), duration*20, 0);
+			//}
 		}
 
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of freezing your opponent", "§7for" + level*2 + " §7seconds"};
+			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", " §7for " + level*2 + " §7seconds"};
 			return desc;
 		}
 		
