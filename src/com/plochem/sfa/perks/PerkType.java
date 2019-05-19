@@ -48,7 +48,7 @@ public enum PerkType {
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level) {
 			int num = new Random().nextInt(100) + 1;
-			//if (num <= level) {
+			if (num <= level) {
 				Player to = (Player)target;
 				int duration = level*2;
 				source.sendMessage("§eYour attack froze " +  to.getName() + " because of your §bFreeze §eperk!");
@@ -62,7 +62,7 @@ public enum PerkType {
 				       	this.cancel();
 				    }
 				}.runTaskTimer(SFactionAddon.getPlugin(SFactionAddon.class), duration*20, 0);
-			//}
+			}
 		}
 
 		@Override

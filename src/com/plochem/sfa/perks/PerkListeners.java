@@ -3,8 +3,10 @@ package com.plochem.sfa.perks;
 import java.util.Arrays;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -32,7 +34,7 @@ public class PerkListeners implements Listener{
 	
 	@EventHandler
 	public void onReceiveDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof LivingEntity) {
+		if (e.getEntity() instanceof Player && e.getDamager() instanceof LivingEntity) { // if player hits mob/player
 			Player damaged = (Player)e.getEntity();
 			int currLevel = PerkManager.currentLevel(PerkType.DEFLECT, damaged);
 			if(currLevel > 0) {
@@ -40,8 +42,17 @@ public class PerkListeners implements Listener{
 			}
 		}
 		
-		if(e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-			Player damager = (Player)e.getDamager();
+		if(e.getEntity() instanceof Player && (e.getDamager() instanceof Player || e.getDamager() instanceof Projectile)) { // if player hits player
+			Player damager;
+			if(e.getDamager() instanceof Projectile) {
+				if(((Projectile) e.getDamager()).getShooter() instanceof Player){
+					damager = (Player)(((Projectile)e.getDamager()).getShooter());
+				} else {
+					return;
+				}
+			} else {
+				damager = (Player)e.getDamager();
+			}
 			int currLevel = PerkManager.currentLevel(PerkType.FREEZE, damager);
 			if(currLevel > 0) {
 				PerkType.FREEZE.performAction(damager, (Player)e.getEntity(), currLevel);
@@ -52,7 +63,10 @@ public class PerkListeners implements Listener{
 	@EventHandler
 	public void onMove(PlayerMoveEvent e) {
 		if(PerkManager.frozenPlayers.contains(e.getPlayer().getUniqueId())) {
-			e.setCancelled(true);
+	        if(e.getTo().getBlockX() != e.getFrom().getBlockX() || e.getTo().getBlockZ() != e.getFrom().getBlockZ()) {
+	        	Location loc = new Location(e.getPlayer().getWorld(), e.getFrom().getX(), (int)e.getFrom().getY(), e.getFrom().getZ(), e.getFrom().getYaw(), e.getFrom().getPitch());
+	            e.getPlayer().teleport(loc);
+	        }
 		}
 	}
 	
