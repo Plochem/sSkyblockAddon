@@ -68,7 +68,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", " §7for " + level*2 + " §7seconds"};
+			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", "§7for " + level*2 + " §7seconds"};
 			return desc;
 		}
 		
