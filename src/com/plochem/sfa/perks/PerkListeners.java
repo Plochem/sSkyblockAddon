@@ -4,12 +4,14 @@ import java.util.Arrays;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -67,6 +69,15 @@ public class PerkListeners implements Listener{
 	        	Location loc = new Location(e.getPlayer().getWorld(), e.getFrom().getX(), (int)e.getFrom().getY(), e.getFrom().getZ(), e.getFrom().getYaw(), e.getFrom().getPitch());
 	            e.getPlayer().teleport(loc);
 	        }
+		}
+	}
+	
+	@EventHandler
+	public void onBowRelease(EntityShootBowEvent e) {
+		if(e.getEntity() instanceof Player) {
+			Player source = (Player)e.getEntity();
+			int currLevel = PerkManager.currentLevel(PerkType.DEFLECT, source);
+			PerkType.FIRE_ARROW.performAction(source, null, currLevel, (Arrow)e.getProjectile());
 		}
 	}
 	
