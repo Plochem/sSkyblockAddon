@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -69,7 +70,7 @@ public class MenuListener implements Listener{
 			ItemMeta currIm = curr.getItemMeta();
 			List<String> desc = new ArrayList<String>(Arrays.asList(type.buildDescription(p)));
 			int currentLevel = PerkManager.currentLevel(type, p);
-			String name = type.toString().substring(0, 1).toUpperCase() + type.toString().substring(1).toLowerCase() +  " " + Math.min(type.getMaxLevel(), currentLevel+1);
+			String name = WordUtils.capitalizeFully(type.toString().replaceAll("_", " ")) +  " " + Math.min(type.getMaxLevel(), currentLevel+1);
 			currIm.setDisplayName("§a" + name);
 			if(currentLevel == type.getMaxLevel()) {
 				desc.add("");
