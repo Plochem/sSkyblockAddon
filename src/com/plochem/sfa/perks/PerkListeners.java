@@ -76,7 +76,7 @@ public class PerkListeners implements Listener{
 	public void onBowRelease(EntityShootBowEvent e) {
 		if(e.getEntity() instanceof Player) {
 			Player source = (Player)e.getEntity();
-			int currLevel = PerkManager.currentLevel(PerkType.DEFLECT, source);
+			int currLevel = PerkManager.currentLevel(PerkType.FIRE_ARROW, source);
 			PerkType.FIRE_ARROW.performAction(source, null, currLevel, (Arrow)e.getProjectile());
 		}
 	}
