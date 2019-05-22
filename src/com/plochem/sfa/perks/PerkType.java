@@ -23,7 +23,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7Gives you Regeneration II for", "§7" + (3*level) + " seconds."};
+			String[] desc = new String[] {"§7Gives you Regeneration II for", "§7" + (3*level) + " seconds after killing a player."};
 			return desc;
 		}
 	},
@@ -41,7 +41,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of deflecting damage", "§7back to your opponent"};
+			String[] desc = new String[] {"§7" + level + "% chance of deflecting damage", "§7back to your opponent."};
 			return desc;
 		}
 	},
@@ -69,7 +69,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", "§7for " + level*2 + " §7seconds"};
+			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", "§7for " + level*2 + " §7seconds."};
 			return desc;
 		}
 	},
@@ -86,7 +86,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level*2 + "% chance of firing a flame arrow", "§7instead of a normal one"};
+			String[] desc = new String[] {"§7" + level*2 + "% chance of firing a flame arrow", "§7instead of a normal one."};
 			return desc;
 		}
 		
