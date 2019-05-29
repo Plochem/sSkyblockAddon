@@ -41,7 +41,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of deflecting damage", "§7back to your opponent."};
+			String[] desc = new String[] {"§7" + level + "% chance of deflecting melee", "§7damage back to your opponent."};
 			return desc;
 		}
 	},
