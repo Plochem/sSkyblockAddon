@@ -1,7 +1,12 @@
 package com.plochem.sfa.economy;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -38,6 +43,23 @@ public class SEconomy {
 	
 	public void loadToMap(UUID uuid, double amount) {
 		playerBank.put(uuid, amount);
+	}
+	
+	public List<Entry<UUID, Double>> getTopBals(){
+	    List<Entry<UUID,Double>> results = new ArrayList<>(playerBank.entrySet());
+	    Collections.sort(results, new Comparator<Entry<UUID,Double>>() { // custom comparator or nah?
+	    	@Override
+	        public int compare(Entry<UUID,Double> o1, Entry<UUID,Double> o2) {
+	            if (o1.getValue() < o2.getValue()) {
+	                return 1;
+	            } else if (o1.getValue() > o2.getValue()) {
+	                return -1;
+	            }
+	            return 0;
+	        }
+		});
+	    return results.subList(0, 10);
+		
 	}
 
 }
