@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 public class PerkManager {
 	
 	public static List<UUID> frozenPlayers = new ArrayList<>();
+	public static List<UUID> playersInLeech = new ArrayList<>();
 	
 	/**
 	 * @param type - PerkType

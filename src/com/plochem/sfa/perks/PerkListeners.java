@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -45,7 +46,8 @@ public class PerkListeners implements Listener{
 		}
 		
 		if(e.getEntity() instanceof Player && (e.getDamager() instanceof Player || e.getDamager() instanceof Projectile)) { // if player hits player
-			Player damager;
+			Player damaged = (Player)e.getEntity();
+			Player damager; // shooter of projectile or melee attacker
 			if(e.getDamager() instanceof Projectile) {
 				if(((Projectile) e.getDamager()).getShooter() instanceof Player){
 					damager = (Player)(((Projectile)e.getDamager()).getShooter());
@@ -58,6 +60,9 @@ public class PerkListeners implements Listener{
 			int currLevel = PerkManager.currentLevel(PerkType.FREEZE, damager);
 			if(currLevel > 0) {
 				PerkType.FREEZE.performAction(damager, (Player)e.getEntity(), currLevel);
+			}
+			if(PerkManager.playersInLeech.contains(damaged.getUniqueId())){
+				damaged.setHealth(damaged.getHealth() + e.getDamage()); //TOOD check if right, & msg
 			}
 		}
 	}
@@ -79,6 +84,12 @@ public class PerkListeners implements Listener{
 			int currLevel = PerkManager.currentLevel(PerkType.FIRE_ARROW, source);
 			PerkType.FIRE_ARROW.performAction(source, null, currLevel, (Arrow)e.getProjectile());
 		}
+	}
+	
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent e) {
+		int currLevel = PerkManager.currentLevel(PerkType.FORTUNE, e.getPlayer());
+		PerkType.FORTUNE.performAction(e.getPlayer(), null, currLevel, e.getBlock().getDrops());
 	}
 	
 	@EventHandler

@@ -1,5 +1,6 @@
 package com.plochem.sfa.perks;
 
+import java.util.Collection;
 import java.util.Random;
 
 import org.bukkit.Material;
@@ -87,6 +88,56 @@ public enum PerkType {
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
 			String[] desc = new String[] {"§7" + level*2 + "% chance of firing a flame arrow", "§7instead of a normal one."};
+			return desc;
+		}
+		
+	},
+	FORTUNE(new ItemStack(Material.DIAMOND_PICKAXE), 1000, 2, 5){
+		@SuppressWarnings("unchecked")
+		@Override
+		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
+			int num = new Random().nextInt(100) + 1;
+			if (num <= (level*4)) {
+				source.sendMessage("§eYou received an extra drop because of your §bFortune §eperk!");
+				for(ItemStack i : (Collection<ItemStack>)other[0]){
+					source.getWorld().dropItem(source.getLocation(), i);
+				}
+			}
+			
+		}
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
+			String[] desc = new String[] {"§7" + 4*level + "% chance of getting an extra", "§7drop from any mined block."};
+			return desc;
+		}
+		
+	},
+	LEECH(new ItemStack(Material.REDSTONE), 5000, 5, 3){
+		@Override
+		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
+			int num = new Random().nextInt(100) + 1;
+			if (num <= (level) && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
+				source.sendMessage("§eYour §bLeech §eperk has been activated for " + level*3 + " seconds!");
+				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §eperk has been activated!");
+				PerkManager.playersInLeech.add(source.getUniqueId());
+				new BukkitRunnable() {
+				    @Override
+				    public void run() {
+				    	PerkManager.playersInLeech.remove(source.getUniqueId());
+				    	source.sendMessage("§eYour §bLeech §eperk has expired!");
+				       	this.cancel();
+				    }
+				}.runTaskTimer(SFactionAddon.getPlugin(SFactionAddon.class), level*3*20, 0);
+			}
+			
+		}
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
+			String[] desc = new String[] {"§7" + level + "% chance of converting damage to", "§7health for " + level*3 + " seconds."};
 			return desc;
 		}
 		
