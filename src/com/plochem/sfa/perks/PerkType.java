@@ -116,11 +116,11 @@ public enum PerkType {
 	},
 	LEECH(new ItemStack(Material.REDSTONE), 5000, 5, 3){
 		@Override
-		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
-			int num = new Random().nextInt(100) + 1;
-			if (num <= (level) && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
+		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) { // other[0] = damage received
+			int num = new Random().nextInt(100) + 1; // num <= (level) && 
+			if (!PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
 				source.sendMessage("§eYour §bLeech §eperk has been activated for " + level*3 + " seconds!");
-				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §eperk has been activated!");
+				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §cperk has been activated!");
 				PerkManager.playersInLeech.add(source.getUniqueId());
 				new BukkitRunnable() {
 				    @Override
@@ -130,6 +130,10 @@ public enum PerkType {
 				       	this.cancel();
 				    }
 				}.runTaskTimer(SFactionAddon.getPlugin(SFactionAddon.class), level*3*20, 0);
+			} else {
+				source.setHealth(source.getHealth() + (2*(Double)other[0]));
+				source.sendMessage("§a" + target.getName() + "'s attack healed you by " + (Double)other[0] + " HP.");
+				target.sendMessage("§cYour attack healed " + source.getName() + " by " + (Double)other[0] + " HP.");
 			}
 			
 		}
@@ -137,7 +141,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of converting damage to", "§7health for " + level*3 + " seconds."};
+			String[] desc = new String[] {"§7" + level + "% chance of converting damage to", "§7health for " + level*3 + " seconds. However, you will", "§7die if the damage you received is greater", "§7than your current health."};
 			return desc;
 		}
 		
