@@ -7,6 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -117,8 +118,8 @@ public enum PerkType {
 	LEECH(new ItemStack(Material.REDSTONE), 5000, 5, 3){
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) { // other[0] = damage received
-			int num = new Random().nextInt(100) + 1; // num <= (level) && 
-			if (!PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
+			int num = new Random().nextInt(100) + 1;
+			if (num <= (level) && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
 				source.sendMessage("§eYour §bLeech §eperk has been activated for " + level*3 + " seconds!");
 				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §cperk has been activated!");
 				PerkManager.playersInLeech.add(source.getUniqueId());
@@ -131,7 +132,7 @@ public enum PerkType {
 				    }
 				}.runTaskTimer(SFactionAddon.getPlugin(SFactionAddon.class), level*3*20, 0);
 			} else {
-				source.setHealth(source.getHealth() + (2*(Double)other[0]));
+				source.setHealth(source.getHealth() + ((Double)other[0]));
 				source.sendMessage("§a" + target.getName() + "'s attack healed you by " + (Double)other[0] + " HP.");
 				target.sendMessage("§cYour attack healed " + source.getName() + " by " + (Double)other[0] + " HP.");
 			}
@@ -143,6 +144,21 @@ public enum PerkType {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
 			String[] desc = new String[] {"§7" + level + "% chance of converting damage to", "§7health for " + level*3 + " seconds. However, you will", "§7die if the damage you received is greater", "§7than your current health."};
 			return desc;
+		}
+		
+	},
+	JELLY_LEGS(new ItemStack(Material.FEATHER), 3000, 2, 4){
+
+		@Override
+		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
+			((EntityDamageEvent)(other[0])).setDamage(((EntityDamageEvent)(other[0])).getDamage() * (1-(level*0.25)));
+		}
+
+		@Override
+		public String[] buildDescription(Player viewer) {
+			int level = PerkManager.getNextLvlUpgrade(this, viewer);
+			String[] desc = new String[] {"§7Pemanently reduces fall damage by " + 25*level  + "%"};
+			return desc; 
 		}
 		
 	};

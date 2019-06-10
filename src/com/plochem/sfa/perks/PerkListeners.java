@@ -12,6 +12,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -64,8 +66,16 @@ public class PerkListeners implements Listener{
 			currLevel = PerkManager.currentLevel(PerkType.LEECH, damaged);
 			if(currLevel > 0) {
 				PerkType.LEECH.performAction(damaged, damager, currLevel, e.getDamage());
+				e.setDamage(0); // removes damage, but hits player back
 			}
-
+		}
+	}
+	
+	@EventHandler
+	public void onDamage(EntityDamageEvent e) {
+		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL) {
+			int currLevel = PerkManager.currentLevel(PerkType.LEECH, (Player)e.getEntity());
+			PerkType.JELLY_LEGS.performAction((Player)e.getEntity(), null , currLevel, e);
 		}
 	}
 
