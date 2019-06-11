@@ -147,17 +147,22 @@ public enum PerkType {
 		}
 		
 	},
-	JELLY_LEGS(new ItemStack(Material.FEATHER), 3000, 2, 4){
+	JELLY_LEGS(new ItemStack(Material.FEATHER), 2000, 2, 5){
 
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
-			((EntityDamageEvent)(other[0])).setDamage(((EntityDamageEvent)(other[0])).getDamage() * (1-(level*0.25)));
+			EntityDamageEvent e = (EntityDamageEvent)(other[0]);
+			double initial = e.getDamage();
+			e.setDamage(e.getDamage() * (1-(level*0.2)));
+			System.out.println(e.getDamage());
+			double last = Math.round(e.getDamage()*10.0)/10.0;
+			source.sendMessage("§eYou took §c" + last + " §edamage instead of §c" + initial + " §ebecause of your §bJelly Legs §eperk.");
 		}
 
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7Pemanently reduces fall damage by " + 25*level  + "%"};
+			String[] desc = new String[] {"§7Pemanently reduces fall damage by " + 20*level  + "%"};
 			return desc; 
 		}
 		

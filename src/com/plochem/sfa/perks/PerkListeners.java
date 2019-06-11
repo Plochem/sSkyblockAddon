@@ -66,7 +66,6 @@ public class PerkListeners implements Listener{
 			currLevel = PerkManager.currentLevel(PerkType.LEECH, damaged);
 			if(currLevel > 0) {
 				PerkType.LEECH.performAction(damaged, damager, currLevel, e.getDamage());
-				e.setDamage(0); // removes damage, but hits player back
 			}
 		}
 	}
@@ -74,7 +73,7 @@ public class PerkListeners implements Listener{
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {
 		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL) {
-			int currLevel = PerkManager.currentLevel(PerkType.LEECH, (Player)e.getEntity());
+			int currLevel = PerkManager.currentLevel(PerkType.JELLY_LEGS, (Player)e.getEntity());
 			PerkType.JELLY_LEGS.performAction((Player)e.getEntity(), null , currLevel, e);
 		}
 	}
