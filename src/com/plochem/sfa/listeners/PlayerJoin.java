@@ -36,6 +36,7 @@ public class PlayerJoin implements Listener{
             public void run() {
             	if(!((OfflinePlayer)joiner).hasPlayedBefore()){
                 	joiner.teleport(sfa.getSpawn());
+                	Bukkit.dispatchCommand(joiner, "help");
             	}
             }
         }.runTaskLater(sfa, 1);

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Random;
 import java.util.UUID;
 
@@ -99,9 +100,7 @@ public class SFactionAddon extends JavaPlugin {
 			sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));
 		}
 		BoosterManager.activate(BoosterType.EXPERIENCE);
-		BoosterManager.activate(BoosterType.MONEY);
-		
-		
+		BoosterManager.activate(BoosterType.MONEY);		
 	}
 
 	public void onDisable(){
@@ -341,7 +340,7 @@ public class SFactionAddon extends JavaPlugin {
 				}.runTaskTimer(this, 0, 20);
 			} else
 				p.sendMessage("§cYou need $100 to use this command!");
-		} else if(command.getName().equalsIgnoreCase("kits")) {
+		} else if(command.getName().equalsIgnoreCase("kits") || command.getName().equalsIgnoreCase("kit")) {
 			if(KitManager.getKits().isEmpty()) {
 				p.sendMessage("§cNo kits have been created yet!");
 			} else {
@@ -488,6 +487,25 @@ public class SFactionAddon extends JavaPlugin {
 			HomeManager.displayHomes(p);
 		} else if(command.getName().equalsIgnoreCase("menu")) {
 			p.openInventory(buildMenu());
+		} else if(command.getName().equalsIgnoreCase("baltop")) {
+			p.sendMessage("§l---------------------------------------------");
+			p.sendMessage("§eHere are the top balances:");
+			int idx = 1;
+			for(Entry<UUID, Double> e : sEco.getTopBals()) {
+				p.sendMessage("§e" + idx + ". §6" + Bukkit.getOfflinePlayer(e.getKey()).getName() + " §e- §a$" + e.getValue());
+				idx++;
+			}
+			p.sendMessage("§l---------------------------------------------");
+		} else if(command.getName().equalsIgnoreCase("help")) {
+			p.sendMessage("§l---------------------------------------------");
+			p.sendMessage("§eTo start, do /kit or /kits to view a selection of kits.");
+			p.sendMessage("");
+			p.sendMessage("§ePerform the /wild command to teleport to a random location.");
+			p.sendMessage("");
+			p.sendMessage("§eDo /menu to access a list of things to purchase.");
+			p.sendMessage("");
+			p.sendMessage("§eIf you need additional help, contact an online staff member or join the server discord: §bdiscord.gg/c9fc5yR");
+			p.sendMessage("§l---------------------------------------------");
 		}
 		return false;
 	}

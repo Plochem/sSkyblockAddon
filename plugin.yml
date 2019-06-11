@@ -18,6 +18,7 @@ commands:
    wild:
    spawn:
    kits:
+   kit:
    createkit:
    tpa:
    tpaccept:
@@ -30,3 +31,5 @@ commands:
    delhome:
    homes:
    menu:
+   baltop:
+   help:
