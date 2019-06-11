@@ -506,6 +506,14 @@ public class SFactionAddon extends JavaPlugin {
 			p.sendMessage("");
 			p.sendMessage("§eIf you need additional help, contact an online staff member or join the server discord: §bdiscord.gg/c9fc5yR");
 			p.sendMessage("§l---------------------------------------------");
+		} else if(command.getName().equalsIgnoreCase("clearchat")) {
+			for(Player player : Bukkit.getOnlinePlayers()) {
+				for(int i = 0; i <100; i++) {
+					player.sendMessage("");
+				}
+				player.sendMessage("§b" + p.getName() + " has cleared the chat!");
+			}
+			
 		}
 		return false;
 	}
