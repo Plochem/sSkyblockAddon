@@ -74,7 +74,9 @@ public class PerkListeners implements Listener{
 	public void onDamage(EntityDamageEvent e) {
 		if(e.getEntity() instanceof Player && e.getCause() == DamageCause.FALL) {
 			int currLevel = PerkManager.currentLevel(PerkType.JELLY_LEGS, (Player)e.getEntity());
-			PerkType.JELLY_LEGS.performAction((Player)e.getEntity(), null , currLevel, e);
+			if(currLevel > 0) {
+				PerkType.JELLY_LEGS.performAction((Player)e.getEntity(), null , currLevel, e);
+			}
 		}
 	}
 

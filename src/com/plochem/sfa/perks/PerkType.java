@@ -119,7 +119,7 @@ public enum PerkType {
 		@Override
 		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) { // other[0] = damage received
 			int num = new Random().nextInt(100) + 1;
-			if (num <= (level) && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
+			if (num <= level && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
 				source.sendMessage("§eYour §bLeech §eperk has been activated for " + level*3 + " seconds!");
 				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §cperk has been activated!");
 				PerkManager.playersInLeech.add(source.getUniqueId());
