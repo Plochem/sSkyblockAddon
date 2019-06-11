@@ -507,11 +507,13 @@ public class SFactionAddon extends JavaPlugin {
 			p.sendMessage("§eIf you need additional help, contact an online staff member or join the server discord: §bdiscord.gg/c9fc5yR");
 			p.sendMessage("§l---------------------------------------------");
 		} else if(command.getName().equalsIgnoreCase("clearchat")) {
-			for(Player player : Bukkit.getOnlinePlayers()) {
-				for(int i = 0; i <100; i++) {
-					player.sendMessage("");
+			if(p.hasPermission("sfa.clearchat")) {
+				for(Player player : Bukkit.getOnlinePlayers()) {
+					for(int i = 0; i <100; i++) {
+						player.sendMessage("");
+					}
+					player.sendMessage("§b" + p.getName() + " has cleared the chat!");
 				}
-				player.sendMessage("§b" + p.getName() + " has cleared the chat!");
 			}
 			
 		}
@@ -589,6 +591,7 @@ public class SFactionAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.sethomemultiple4"));
 		pm.addPermission(new Permission("sfa.sethomemultiple6"));
 		pm.addPermission(new Permission("sfa.sethomemultiple8"));
+		pm.addPermission(new Permission("sfa.clearchat"));
 	}
 
 	private void teleportRandom(Player p) {
