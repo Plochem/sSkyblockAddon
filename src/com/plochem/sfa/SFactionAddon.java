@@ -61,6 +61,8 @@ import com.plochem.sfa.listeners.PlayerMove;
 import com.plochem.sfa.listeners.PlayerRespawn;
 import com.plochem.sfa.menu.MenuListener;
 import com.plochem.sfa.perks.PerkListeners;
+import com.plochem.sfa.rewards.RewardListener;
+import com.plochem.sfa.rewards.RewardManager;
 import com.plochem.sfa.staffheadabilities.SkullAbility;
 import com.plochem.sfa.staffheadabilities.SkullEquipListeners;
 
@@ -87,7 +89,7 @@ public class SFactionAddon extends JavaPlugin {
 			Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
 		}
 		registerThings();
-		
+		RewardManager.createCollectedFile();
 		BoosterManager.createQueueFile();
 		KitManager.createKitFile();
 		GeneratorManager.createGeneratorFile();
@@ -516,6 +518,8 @@ public class SFactionAddon extends JavaPlugin {
 				}
 			}
 			
+		} else if(command.getName().equalsIgnoreCase("rewards")) {
+			RewardManager.openRewardMenu(p);
 		}
 		return false;
 	}
@@ -577,6 +581,7 @@ public class SFactionAddon extends JavaPlugin {
 		pm.registerEvents(new GeneratorListeners(), this);
 		pm.registerEvents(new MenuListener(), this);
 		pm.registerEvents(new PerkListeners(), this);
+		pm.registerEvents(new RewardListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
