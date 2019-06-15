@@ -154,7 +154,6 @@ public enum PerkType {
 			EntityDamageEvent e = (EntityDamageEvent)(other[0]);
 			double initial = e.getDamage();
 			e.setDamage(e.getDamage() * (1-(level*0.2)));
-			System.out.println(e.getDamage());
 			double last = Math.round(e.getDamage()*10.0)/10.0;
 			source.sendMessage("§eYou took §c" + last + " §edamage instead of §c" + initial + " §ebecause of your §bJelly Legs §eperk.");
 		}
