@@ -597,6 +597,10 @@ public class SFactionAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.sethomemultiple6"));
 		pm.addPermission(new Permission("sfa.sethomemultiple8"));
 		pm.addPermission(new Permission("sfa.clearchat"));
+		pm.addPermission(new Permission("sfa.rewards.elite"));
+		pm.addPermission(new Permission("sfa.rewards.master"));
+		pm.addPermission(new Permission("sfa.rewards.legend"));
+		pm.addPermission(new Permission("sfa.rewards.mystic"));
 	}
 
 	private void teleportRandom(Player p) {
