@@ -25,22 +25,35 @@ public class RewardListener implements Listener{
 						LocalDateTime now = LocalDateTime.now();
 						LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
 						LocalDateTime tomorrowMidnight = todayMidnight.plusDays(1);
+						LocalDateTime beginningNextMonth = LocalDateTime.of(today.plusMonths(1).withDayOfMonth(1), midnight);
 						Player clicker = (Player)e.getWhoClicked();
 						if(name.equalsIgnoreCase("Daily Rewards")) {
-							if(now.isAfter(todayMidnight) && RewardManager.notClaim(clicker, RewardType.DAILY)) {
-								// give reward and add to claimed list 
-								System.out.println("YSAFFPYDSHFIDSHJPFSJDIPF");
-								RewardManager.addToClaim(clicker, RewardType.DAILY);
-							} else {
-								clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(tomorrowMidnight, now) + ".");
-							}
-						} else if(name.equalsIgnoreCase("Monthly Rewards")) {
-							
+							claimReward(clicker, RewardType.DAILY, now, tomorrowMidnight);
+						} else if(name.equalsIgnoreCase("monthly rewards")) {
+							claimReward(clicker, RewardType.MONTHLY, now, beginningNextMonth);
+						} else if(name.equalsIgnoreCase("elite monthly rewards") && clicker.hasPermission("sfa.rewards.elite")) {
+							claimReward(clicker, RewardType.ELITEMONTHLY, now, beginningNextMonth);
+						} else if(name.equalsIgnoreCase("master monthly rewards") && clicker.hasPermission("sfa.rewards.master")) {
+							claimReward(clicker, RewardType.MASTERMONTHLY, now, beginningNextMonth);
+						} else if(name.equalsIgnoreCase("legend monthly rewards") && clicker.hasPermission("sfa.rewards.legend")) {
+							claimReward(clicker, RewardType.LEGENDMONTHLY, now, beginningNextMonth);
+						} else if(name.equalsIgnoreCase("mystic monthly rewards") && clicker.hasPermission("sfa.rewards.mystic")) {
+							claimReward(clicker, RewardType.MYSTICMONTHLY, now, beginningNextMonth);
 						}
-						clicker.closeInventory();
+						clicker.closeInventory(); //TODO dont need times. just have runnable that checks if midnight: true -> clear claim list.
+						// keep diff tho to tell time left
 					}
 				}
 			}
+		}
+	}
+	
+	private void claimReward(Player clicker, RewardType type, LocalDateTime now, LocalDateTime end) {
+		if(RewardManager.notClaim(clicker, type)) {
+			System.out.println("YSAFFPYDSHFIDSHJPFSJDIPF - " + type.toString());
+			RewardManager.addToClaim(clicker, type);
+		} else {
+			clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(end, now) + ".");
 		}
 	}
 
