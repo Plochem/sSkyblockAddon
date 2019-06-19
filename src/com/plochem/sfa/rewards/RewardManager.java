@@ -29,22 +29,22 @@ public class RewardManager {
 		i.setItemMeta(im);
 		menu.setItem(11, i);
 		
-		im.setDisplayName("§eMonthly Rewards");
+		im.setDisplayName("§eElite Monthly Rewards");
 		im.setLore(Arrays.asList(""));
 		i.setItemMeta(im);
 		menu.setItem(12, i);
 		
-		im.setDisplayName("§eMonthly Rewards");
+		im.setDisplayName("§eMaster Monthly Rewards");
 		im.setLore(Arrays.asList(""));
 		i.setItemMeta(im);
 		menu.setItem(13, i);
 		
-		im.setDisplayName("§eMonthly Rewards");
+		im.setDisplayName("§eLegend Monthly Rewards");
 		im.setLore(Arrays.asList(""));
 		i.setItemMeta(im);
 		menu.setItem(14, i);
 		
-		im.setDisplayName("§eMonthly Rewards");
+		im.setDisplayName("§eMystic Monthly Rewards");
 		im.setLore(Arrays.asList(""));
 		i.setItemMeta(im);
 		menu.setItem(15, i);
