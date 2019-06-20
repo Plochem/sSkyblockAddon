@@ -2,9 +2,16 @@ package com.plochem.sfa.rewards;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -70,6 +77,34 @@ public class RewardManager {
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Claimed reward file already exists! Skipping creation...");
 		}
+	}
+	
+	public static void resetListTimer() {
+		Timer timer = new Timer();
+		LocalDateTime tomorrowMidnight = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).plusDays(1);
+		Date date = Date.from(tomorrowMidnight.atZone(ZoneId.systemDefault()).toInstant());
+		
+		timer.schedule(new TimerTask() {
+			@Override
+			public void run() { // runs when is tomorrowMidnight
+				File f = new File("plugins/SFA/claimedplayers.yml");
+				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
+				for(RewardType type : RewardType.values()) {
+					if(type.toString().contains("MONTHLY")) {
+						if(tomorrowMidnight.getDayOfMonth() == 1) { // check if the midnight is the first of month
+							fData.set(type.toString(), new ArrayList<>()); // then clear monthly
+						}
+					} else { // clear daily
+						fData.set(type.toString(), new ArrayList<>());
+					}
+				}
+				try {
+					fData.save(f);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}, date);
 	}
 	
 	@SuppressWarnings("unchecked")
