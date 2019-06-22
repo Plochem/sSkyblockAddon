@@ -11,7 +11,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 
+import com.plochem.sfa.SFactionAddon;
+
 public class RewardListener implements Listener{
+	SFactionAddon sfa = SFactionAddon.getPlugin(SFactionAddon.class);
 	@EventHandler
 	public void onInvClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
@@ -40,8 +43,7 @@ public class RewardListener implements Listener{
 						} else if(name.equalsIgnoreCase("mystic monthly rewards") && clicker.hasPermission("sfa.rewards.mystic")) {
 							claimReward(clicker, RewardType.MYSTICMONTHLY, now, beginningNextMonth);
 						}
-						clicker.closeInventory(); //TODO dont need times. just have runnable that checks if midnight: true -> clear claim list.
-						// keep diff tho to tell time left
+						clicker.closeInventory(); 
 					}
 				}
 			}
@@ -50,8 +52,10 @@ public class RewardListener implements Listener{
 	
 	private void claimReward(Player clicker, RewardType type, LocalDateTime now, LocalDateTime end) {
 		if(RewardManager.notClaim(clicker, type)) {
-			System.out.println("YSAFFPYDSHFIDSHJPFSJDIPF - " + type.toString());
+			sfa.getSEconomy().getEconomyImplementer().depositPlayer(clicker, type.getMoney());
+			clicker.setTotalExperience(clicker.getTotalExperience() + type.getXp());
 			RewardManager.addToClaim(clicker, type);
+			clicker.sendMessage("§aYou received §6$" + type.getMoney() + " §aand§3 " + type.getXp() + " XP§a.");
 		} else {
 			clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(end, now) + ".");
 		}
