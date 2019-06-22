@@ -1,6 +1,5 @@
 package com.plochem.sfa.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -47,7 +46,7 @@ public class PlayerKillEntity implements Listener{
 				baseXP *= 2;
 				expMessage = " §3(x2 EXP booster)";
 			}
-			Bukkit.dispatchCommand(Bukkit.getServer().getConsoleSender(), "xp " + (int)(killer.getExp() + baseXP) + " " + killer.getName());
+			killer.setTotalExperience(killer.getTotalExperience() + baseXP);
 			sfa.getSEconomy().getEconomyImplementer().depositPlayer(killer, baseMoney);
 			killer.sendMessage("§a+$" + baseMoney + killedWhoMessage + boosterMessage);
 			killer.sendMessage("§3+" + baseXP + " exp" + killedWhoMessage + expMessage);
