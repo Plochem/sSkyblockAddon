@@ -1,12 +1,12 @@
 package com.plochem.sfa.rewards;
 
 public enum RewardType {
-	DAILY(1,1),
-	MONTHLY(1,1),
-	ELITEMONTHLY(1,1),
-	MASTERMONTHLY(1,1),
-	LEGENDMONTHLY(1,1),
-	MYSTICMONTHLY(1,1);
+	DAILY(1000,300),
+	MONTHLY(10000,3000),
+	ELITEMONTHLY(10000,3000),
+	MASTERMONTHLY(10000,3000),
+	LEGENDMONTHLY(10000,3000),
+	MYSTICMONTHLY(10000,3000);
 	
 	private int money;
 	private int xp;
