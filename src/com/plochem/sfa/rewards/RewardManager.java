@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -84,7 +85,7 @@ public class RewardManager {
 		LocalDateTime tomorrowMidnight = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).plusDays(1);
 		Date date = Date.from(tomorrowMidnight.atZone(ZoneId.systemDefault()).toInstant());
 		
-		timer.schedule(new TimerTask() {
+		timer.scheduleAtFixedRate(new TimerTask() {
 			@Override
 			public void run() { // runs when is tomorrowMidnight
 				File f = new File("plugins/SFA/claimedplayers.yml");
@@ -104,7 +105,7 @@ public class RewardManager {
 					e.printStackTrace();
 				}
 			}
-		}, date);
+		}, date, TimeUnit.DAYS.toMillis(1));
 	}
 	
 	@SuppressWarnings("unchecked")
