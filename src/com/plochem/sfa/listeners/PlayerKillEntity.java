@@ -46,7 +46,7 @@ public class PlayerKillEntity implements Listener{
 				baseXP *= 2;
 				expMessage = " §3(x2 EXP booster)";
 			}
-			killer.setTotalExperience(killer.getTotalExperience() + baseXP);
+			killer.giveExp(baseXP);
 			sfa.getSEconomy().getEconomyImplementer().depositPlayer(killer, baseMoney);
 			killer.sendMessage("§a+$" + baseMoney + killedWhoMessage + boosterMessage);
 			killer.sendMessage("§3+" + baseXP + " exp" + killedWhoMessage + expMessage);

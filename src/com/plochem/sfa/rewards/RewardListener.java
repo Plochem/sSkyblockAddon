@@ -65,7 +65,7 @@ public class RewardListener implements Listener{
 	private void claimReward(Player clicker, RewardType type, LocalDateTime now, LocalDateTime end) {
 		if(RewardManager.notClaim(clicker, type)) {
 			sfa.getSEconomy().getEconomyImplementer().depositPlayer(clicker, type.getMoney());
-			clicker.setTotalExperience(clicker.getTotalExperience() + type.getXp());
+			clicker.giveExp(type.getXp());
 			RewardManager.addToClaim(clicker, type);
 			clicker.sendMessage("§aYou received §6$" + type.getMoney() + " §aand§3 " + type.getXp() + " XP§a.");
 		} else {
