@@ -34,14 +34,26 @@ public class RewardListener implements Listener{
 							claimReward(clicker, RewardType.DAILY, now, tomorrowMidnight);
 						} else if(name.equalsIgnoreCase("monthly rewards")) {
 							claimReward(clicker, RewardType.MONTHLY, now, beginningNextMonth);
-						} else if(name.equalsIgnoreCase("elite monthly rewards") && clicker.hasPermission("sfa.rewards.elite")) {
-							claimReward(clicker, RewardType.ELITEMONTHLY, now, beginningNextMonth);
-						} else if(name.equalsIgnoreCase("master monthly rewards") && clicker.hasPermission("sfa.rewards.master")) {
-							claimReward(clicker, RewardType.MASTERMONTHLY, now, beginningNextMonth);
-						} else if(name.equalsIgnoreCase("legend monthly rewards") && clicker.hasPermission("sfa.rewards.legend")) {
-							claimReward(clicker, RewardType.LEGENDMONTHLY, now, beginningNextMonth);
-						} else if(name.equalsIgnoreCase("mystic monthly rewards") && clicker.hasPermission("sfa.rewards.mystic")) {
-							claimReward(clicker, RewardType.MYSTICMONTHLY, now, beginningNextMonth);
+						} else if(name.equalsIgnoreCase("elite monthly rewards")) {
+							if(clicker.hasPermission("sfa.rewards.elite"))
+								claimReward(clicker, RewardType.ELITEMONTHLY, now, beginningNextMonth);
+							else
+								clicker.sendMessage("§cYou must have the §3§lELITE §crank to claim this reward.");
+						} else if(name.equalsIgnoreCase("master monthly rewards")) {
+							if(clicker.hasPermission("sfa.rewards.master"))
+								claimReward(clicker, RewardType.MASTERMONTHLY, now, beginningNextMonth);
+							else
+								clicker.sendMessage("§cYou must have the §6§lMASTER §crank to claim this reward.");
+						} else if(name.equalsIgnoreCase("legend monthly rewards")) {
+							if(clicker.hasPermission("sfa.rewards.legend"))
+								claimReward(clicker, RewardType.LEGENDMONTHLY, now, beginningNextMonth);
+							else
+								clicker.sendMessage("§cYou must have the §e§lLEGEND §crank to claim this reward.");
+						} else if(name.equalsIgnoreCase("mystic monthly rewards")) {
+							if(clicker.hasPermission("sfa.rewards.mystic"))
+								claimReward(clicker, RewardType.MYSTICMONTHLY, now, beginningNextMonth);
+							else
+								clicker.sendMessage("§cYou must have the §d§lMYSTIC §crank to claim this reward.");
 						}
 						clicker.closeInventory(); 
 					}
