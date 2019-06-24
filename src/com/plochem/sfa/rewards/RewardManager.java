@@ -14,6 +14,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,37 +27,14 @@ public class RewardManager {
 	public static void openRewardMenu(Player p) {
 		Inventory menu = Bukkit.createInventory(null, 36, "Rewards");
 		ItemStack i = new ItemStack(Material.STORAGE_MINECART);
-		ItemMeta im = i.getItemMeta();
-		im.setDisplayName("§eDaily Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(10, i);
-		
-		im.setDisplayName("§eMonthly Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(11, i);
-		
-		im.setDisplayName("§eElite Monthly Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(12, i);
-		
-		im.setDisplayName("§eMaster Monthly Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(13, i);
-		
-		im.setDisplayName("§eLegend Monthly Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(14, i);
-		
-		im.setDisplayName("§eMystic Monthly Rewards");
-		im.setLore(Arrays.asList(""));
-		i.setItemMeta(im);
-		menu.setItem(15, i);
-		p.openInventory(menu);
+		ItemMeta im = i.getItemMeta(); // for loop
+		int[] pos = {10,11,12,13,14,15,16,19};
+		for(int j = 0; j < RewardType.values().length; j++) {
+			im.setDisplayName("§e" + WordUtils.capitalizeFully(RewardType.values()[j].toString().replaceAll("_", " ")) + " Rewards");
+			im.setLore(Arrays.asList("§6$" + RewardType.values()[j].getMoney() + " §eand§3 " + RewardType.values()[j].getXp() + " XP", "", "§eClick to claim!"));
+			i.setItemMeta(im);
+			menu.setItem(pos[j], i);
+		}
 	}
 	
 	public static void createCollectedFile() {
@@ -66,10 +44,10 @@ public class RewardManager {
 			Bukkit.getServer().getLogger().info("[SFA] Creating a claimed reward file!");
 			fData.set(RewardType.DAILY.toString(), new ArrayList<String>());
 			fData.set(RewardType.MONTHLY.toString(), new ArrayList<String>());
-			fData.set(RewardType.ELITEMONTHLY.toString(), new ArrayList<String>());
-			fData.set(RewardType.MASTERMONTHLY.toString(), new ArrayList<String>());
-			fData.set(RewardType.LEGENDMONTHLY.toString(), new ArrayList<String>());
-			fData.set(RewardType.MYSTICMONTHLY.toString(), new ArrayList<String>());
+			fData.set(RewardType.ELITE_MONTHLY.toString(), new ArrayList<String>());
+			fData.set(RewardType.MASTER_MONTHLY.toString(), new ArrayList<String>());
+			fData.set(RewardType.LEGEND_MONTHLY.toString(), new ArrayList<String>());
+			fData.set(RewardType.MYSTIC_MONTHLY.toString(), new ArrayList<String>());
 			try {
 				fData.save(f);
 			} catch (IOException e) {
