@@ -31,10 +31,19 @@ public class RewardManager {
 		int[] pos = {10,11,12,13,14,15,16,19};
 		for(int j = 0; j < RewardType.values().length; j++) {
 			im.setDisplayName("§e" + WordUtils.capitalizeFully(RewardType.values()[j].toString().replaceAll("_", " ")) + " Rewards");
-			im.setLore(Arrays.asList("§6$" + RewardType.values()[j].getMoney() + " §eand§3 " + RewardType.values()[j].getXp() + " XP", "", "§eClick to claim!"));
+			List<String> lore = new ArrayList<>(Arrays.asList("§6$" + RewardType.values()[j].getMoney() + " §eand§3 " + RewardType.values()[j].getXp() + " XP", "")); 
+			if(notClaim(p, RewardType.values()[j])) {
+				lore.add("§eClick to claim!");
+				i.setType(Material.STORAGE_MINECART);
+			} else {
+				lore.add("§cAlready claimed!");
+				i.setType(Material.MINECART);
+			}
+			im.setLore(lore);
 			i.setItemMeta(im);
 			menu.setItem(pos[j], i);
 		}
+		p.openInventory(menu);
 	}
 	
 	public static void createCollectedFile() {
