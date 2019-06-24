@@ -36,22 +36,22 @@ public class RewardListener implements Listener{
 							claimReward(clicker, RewardType.MONTHLY, now, beginningNextMonth);
 						} else if(name.equalsIgnoreCase("elite monthly rewards")) {
 							if(clicker.hasPermission("sfa.rewards.elite"))
-								claimReward(clicker, RewardType.ELITEMONTHLY, now, beginningNextMonth);
+								claimReward(clicker, RewardType.ELITE_MONTHLY, now, beginningNextMonth);
 							else
 								clicker.sendMessage("§cYou must have the §3§lELITE §crank to claim this reward.");
 						} else if(name.equalsIgnoreCase("master monthly rewards")) {
 							if(clicker.hasPermission("sfa.rewards.master"))
-								claimReward(clicker, RewardType.MASTERMONTHLY, now, beginningNextMonth);
+								claimReward(clicker, RewardType.MASTER_MONTHLY, now, beginningNextMonth);
 							else
 								clicker.sendMessage("§cYou must have the §6§lMASTER §crank to claim this reward.");
 						} else if(name.equalsIgnoreCase("legend monthly rewards")) {
 							if(clicker.hasPermission("sfa.rewards.legend"))
-								claimReward(clicker, RewardType.LEGENDMONTHLY, now, beginningNextMonth);
+								claimReward(clicker, RewardType.LEGEND_MONTHLY, now, beginningNextMonth);
 							else
 								clicker.sendMessage("§cYou must have the §e§lLEGEND §crank to claim this reward.");
 						} else if(name.equalsIgnoreCase("mystic monthly rewards")) {
 							if(clicker.hasPermission("sfa.rewards.mystic"))
-								claimReward(clicker, RewardType.MYSTICMONTHLY, now, beginningNextMonth);
+								claimReward(clicker, RewardType.MYSTIC_MONTHLY, now, beginningNextMonth);
 							else
 								clicker.sendMessage("§cYou must have the §d§lMYSTIC §crank to claim this reward.");
 						}
