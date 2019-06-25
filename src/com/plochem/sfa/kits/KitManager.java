@@ -3,6 +3,7 @@ package com.plochem.sfa.kits;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -99,6 +100,7 @@ public class KitManager {
 			ItemStack i = k.getItemRep();
 			ItemMeta im = i.getItemMeta();
 			im.setDisplayName("§f" + k.getName());
+			im.setLore(Arrays.asList("", "§eLeft click to claim the kit!", "", "§eRight click to preview the kit!"));
 			i.setItemMeta(im);
 			menu.addItem(k.getItemRep());
 		}

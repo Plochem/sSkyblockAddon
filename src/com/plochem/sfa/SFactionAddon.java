@@ -51,6 +51,7 @@ import com.plochem.sfa.homes.Home;
 import com.plochem.sfa.homes.HomeManager;
 import com.plochem.sfa.kits.Kit;
 import com.plochem.sfa.kits.KitManager;
+import com.plochem.sfa.kits.KitPreview;
 import com.plochem.sfa.kits.KitSelection;
 import com.plochem.sfa.listeners.ChatHandling;
 import com.plochem.sfa.listeners.EventsCancelInSpawn;
@@ -582,6 +583,7 @@ public class SFactionAddon extends JavaPlugin {
 		pm.registerEvents(new MenuListener(), this);
 		pm.registerEvents(new PerkListeners(), this);
 		pm.registerEvents(new RewardListener(), this);
+		pm.registerEvents(new KitPreview(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
