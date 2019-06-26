@@ -100,7 +100,7 @@ public class KitManager {
 			ItemStack i = k.getItemRep();
 			ItemMeta im = i.getItemMeta();
 			im.setDisplayName("§f" + k.getName());
-			im.setLore(Arrays.asList("", "§eLeft click to claim the kit!", "", "§eRight click to preview the kit!"));
+			im.setLore(Arrays.asList("§eLeft click to claim the kit!", "", "§eRight click to preview the kit!"));
 			i.setItemMeta(im);
 			menu.addItem(k.getItemRep());
 		}
