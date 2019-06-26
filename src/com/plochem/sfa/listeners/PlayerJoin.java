@@ -93,5 +93,17 @@ public class PlayerJoin implements Listener{
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Player perk file already exists for " + joiner.getName()+ "! Skipping creation...");
 		}
+		
+		// generatate stats files
+		playerFile = new File("plugins/SFA/playerStats/" + joiner.getUniqueId().toString() + ".yml");
+		playerData = YamlConfiguration.loadConfiguration(playerFile);
+		if(!(playerFile.exists())) {
+			Bukkit.getServer().getLogger().info("[SFA] Creating player stats file for " + joiner.getName() + "!");
+			playerData.set("kills", 0);
+			playerData.set("deaths", 0);
+			playerData.save(playerFile);
+		}  else {
+			Bukkit.getServer().getLogger().info("[SFA] Player stats file already exists for " + joiner.getName()+ "! Skipping creation...");
+		}
 	}
 }

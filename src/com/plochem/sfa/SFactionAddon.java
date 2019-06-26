@@ -66,6 +66,7 @@ import com.plochem.sfa.rewards.RewardListener;
 import com.plochem.sfa.rewards.RewardManager;
 import com.plochem.sfa.staffheadabilities.SkullAbility;
 import com.plochem.sfa.staffheadabilities.SkullEquipListeners;
+import com.plochem.sfa.stats.StatsListener;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -584,6 +585,7 @@ public class SFactionAddon extends JavaPlugin {
 		pm.registerEvents(new PerkListeners(), this);
 		pm.registerEvents(new RewardListener(), this);
 		pm.registerEvents(new KitPreview(), this);
+		pm.registerEvents(new StatsListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
