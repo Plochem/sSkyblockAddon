@@ -5,6 +5,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import com.plochem.sfa.SFactionAddon;
 
 public class KitPreview implements Listener{
 	@EventHandler
@@ -15,12 +18,18 @@ public class KitPreview implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onClose(InventoryCloseEvent e) {
 		if(e.getInventory().getTitle().contains("Previewing")) {
-			KitManager.openMenu((Player)e.getPlayer());
+			new BukkitRunnable() { // need 1 tick delay because of stackoverflow
+				@Override
+				public void run () {
+					KitManager.openMenu((Player)e.getPlayer());
+				}
+			}.runTaskLater(SFactionAddon.getPlugin(SFactionAddon.class), 1);         
 		}
 	}
-
 }
+
+
