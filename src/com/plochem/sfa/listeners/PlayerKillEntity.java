@@ -25,8 +25,10 @@ public class PlayerKillEntity implements Listener{
 				} else {
 					return;
 				}
-			} else {
+			} else if(nEvent.getDamager() instanceof Player){
 				killer = (Player)nEvent.getDamager();
+			} else {
+				return;
 			}
 			int baseMoney = 2;
 			int baseXP = e.getDroppedExp();
