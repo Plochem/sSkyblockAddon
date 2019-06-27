@@ -99,7 +99,7 @@ public enum PerkType {
 		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) {
 			int num = new Random().nextInt(100) + 1;
 			if (num <= (level*4)) {
-				source.sendMessage("§eYou received an extra drop because of your §bFortune §eperk!");
+				source.sendMessage("§eYou received an extra ore because of your §bFortune §eperk!");
 				for(ItemStack i : (Collection<ItemStack>)other[0]){
 					source.getWorld().dropItem(source.getLocation(), i);
 				}
@@ -110,7 +110,7 @@ public enum PerkType {
 		@Override
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + 4*level + "% chance of getting an extra", "§7drop from any mined block."};
+			String[] desc = new String[] {"§7" + 4*level + "% chance of getting an extra", "§7drop from any mined ore."};
 			return desc;
 		}
 		

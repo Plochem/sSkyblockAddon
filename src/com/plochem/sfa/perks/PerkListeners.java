@@ -101,8 +101,10 @@ public class PerkListeners implements Listener{
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
-		int currLevel = PerkManager.currentLevel(PerkType.FORTUNE, e.getPlayer());
-		PerkType.FORTUNE.performAction(e.getPlayer(), null, currLevel, e.getBlock().getDrops());
+		if(e.getBlock().getType().toString().contains("ORE")) {
+			int currLevel = PerkManager.currentLevel(PerkType.FORTUNE, e.getPlayer());
+			PerkType.FORTUNE.performAction(e.getPlayer(), null, currLevel, e.getBlock().getDrops());
+		}
 	}
 
 	@EventHandler
