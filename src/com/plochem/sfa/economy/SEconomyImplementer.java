@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import com.massivecraft.factions.FPlayer;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import com.plochem.sfa.stats.StatsManager;
 
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -310,6 +311,9 @@ public class SEconomyImplementer implements Economy{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		OfflinePlayer p = Bukkit.getOfflinePlayer(uuid);
+		if(p.isOnline())
+			StatsManager.showScoreboard(p.getPlayer());
     }
 
 }

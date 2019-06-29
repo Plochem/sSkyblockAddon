@@ -6,9 +6,13 @@ import java.io.IOException;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import com.massivecraft.factions.FPlayers;
+import com.plochem.sfa.SFactionAddon;
 
 
 public class StatsManager {
@@ -47,12 +51,24 @@ public class StatsManager {
 	}
 	
 	public static void showScoreboard(Player p) {
-		Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
-        Objective obj = sb.registerNewObjective("stats", "dummy");
-        obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-        obj.setDisplayName("§e§lStraxidus Factions");
-        obj.getScore("Kills: §a" + getKills(p)).setScore(1);
-        obj.getScore("Deaths: §a" + getDeaths(p)).setScore(0);
-		p.setScoreboard(sb);
+		SFactionAddon sfa = SFactionAddon.getPlugin(SFactionAddon.class);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+        		Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+                Objective obj = sb.registerNewObjective("stats", "dummy");
+                obj.setDisplaySlot(DisplaySlot.SIDEBAR);
+                obj.setDisplayName("§e§lStraxidus Factions");
+                obj.getScore("Kills: §a" + getKills(p)).setScore(4);
+                obj.getScore("Deaths: §a" + getDeaths(p)).setScore(3);
+                obj.getScore("").setScore(2);
+                obj.getScore("Faction: §a" + FPlayers.getInstance().getByPlayer(p).getFaction().getTag()).setScore(1);
+                obj.getScore("Balance: §a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(0);
+        		p.setScoreboard(sb);
+            }
+        }.runTaskLater(sfa, 1*20);
+
 	}
+	
+	
 }
