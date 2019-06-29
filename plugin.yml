@@ -1,6 +1,6 @@
 main: com.plochem.sfa.SFactionAddon
 name: sFactionAddon
-version: 1.4
+version: 1.6
 author: Plochem
 description: Factions Addon for Straxidus.
 depend: [Vault, Citizens]
