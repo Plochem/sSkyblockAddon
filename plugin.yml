@@ -1,8 +1,8 @@
-main: com.plochem.sfa.SFactionAddon
-name: sFactionAddon
+main: com.plochem.sfa.SSkyblockAddon
+name: sSkyblockAddon
 version: 1.6
 author: Plochem
-description: Factions Addon for Straxidus.
+description: Skyblock Addon for Straxidus.
 depend: [Vault, Citizens]
 loadbefore: [Factions]
 commands:
