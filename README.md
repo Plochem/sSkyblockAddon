@@ -1,2 +1,2 @@
-# sFactionAddon
-Addons for factions on Straxidus
+# sSkyblockAddon
+Addons for Skyblock on Straxidus
