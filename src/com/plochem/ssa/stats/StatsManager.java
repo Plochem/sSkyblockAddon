@@ -1,4 +1,4 @@
-package com.plochem.sfa.stats;
+package com.plochem.ssa.stats;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
 import com.massivecraft.factions.FPlayers;
-import com.plochem.sfa.SFactionAddon;
+import com.plochem.ssa.SSkyblockAddon;
 
 
 public class StatsManager {
@@ -51,7 +51,7 @@ public class StatsManager {
 	}
 	
 	public static void showScoreboard(Player p) {
-		SFactionAddon sfa = SFactionAddon.getPlugin(SFactionAddon.class);
+		SSkyblockAddon sfa = SSkyblockAddon.getPlugin(SSkyblockAddon.class);
         new BukkitRunnable() {
             @Override
             public void run() {
