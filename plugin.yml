@@ -1,6 +1,6 @@
 main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
-version: 1.6
+version: 1.6.1
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, Citizens]
@@ -15,7 +15,6 @@ commands:
    boosterqueue:
    myboosters:
    givebooster:
-   wild:
    spawn:
    kits:
    kit:
