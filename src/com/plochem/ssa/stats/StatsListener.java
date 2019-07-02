@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
 import com.wasteofplastic.askyblock.events.IslandJoinEvent;
 import com.wasteofplastic.askyblock.events.IslandLeaveEvent;
 import com.wasteofplastic.askyblock.events.IslandNewEvent;
@@ -28,7 +29,7 @@ public class StatsListener implements Listener {
 	
 	@EventHandler
 	public void onIslandJoin(IslandJoinEvent e) {
-		StatsManager.showScoreboard(Bukkit.getPlayer(e.getPlayer()));
+		ASkyBlockAPI.getInstance().calculateIslandLevel(e.getIslandOwner());
 	}
 	
 	@EventHandler
