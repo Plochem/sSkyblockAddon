@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
@@ -17,9 +16,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -319,31 +315,6 @@ public class SSkyblockAddon extends JavaPlugin {
 				sender.sendMessage("§cEnter a valid integer amount of minutes.");
 				return false;
 			}
-		} else if(command.getName().equalsIgnoreCase("wild")) {
-			if(sEco.getEconomyImplementer().getBalance(p) >= 100) {
-				if(runningSomeTPCmd.contains(p.getUniqueId())) {
-					p.sendMessage("§cWait for the command to finish executing!");
-					return false;
-				}
-				p.sendMessage("§aTeleporting you in 10 seconds. §cDon't move!");
-				runningSomeTPCmd.add(p.getUniqueId());
-				new BukkitRunnable() {
-					int time = 11;
-					@Override
-					public void run() {
-						if(!runningSomeTPCmd.contains(p.getUniqueId())) {
-							p.sendMessage("§cTeleportation has been canceled by your movement!");
-							this.cancel();
-						}
-						if(time == 1) {
-							this.cancel();
-							teleportRandom(p);
-						}
-						time--;
-					}
-				}.runTaskTimer(this, 0, 20);
-			} else
-				p.sendMessage("§cYou need $100 to use this command!");
 		} else if(command.getName().equalsIgnoreCase("kits") || command.getName().equalsIgnoreCase("kit")) {
 			if(KitManager.getKits().isEmpty()) {
 				p.sendMessage("§cNo kits have been created yet!");
@@ -605,46 +576,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.rewards.master"));
 		pm.addPermission(new Permission("sfa.rewards.legend"));
 		pm.addPermission(new Permission("sfa.rewards.mystic"));
-	}
-
-	private void teleportRandom(Player p) {
-		World w = Bukkit.getWorld("APTERRA");
-		double radius = (w.getWorldBorder().getSize() / 2) + 1;
-		double xMax = w.getWorldBorder().getCenter().getX() + radius;
-		double xMin = w.getWorldBorder().getCenter().getX() - radius;
-		double zMax = w.getWorldBorder().getCenter().getZ() + radius;
-		double zMin = w.getWorldBorder().getCenter().getZ() - radius;
-		Random r = new Random();
-		double randomX = r.nextInt((int) (xMax - xMin)) + xMin;
-		double randomZ = r.nextInt((int) (zMax - zMin)) + zMin;
-		for(int y = 256; y >=0; y--) {
-			if(isSafeLocation(new Location(w, randomX, y, randomZ))) {
-				p.teleport(new Location(w, randomX, y, randomZ));
-				runningSomeTPCmd.remove(p.getUniqueId());
-				p.sendMessage("§aYou have been teleported to §e(" + (int)randomX + ", " + y + ", " + (int)randomZ + ")§a.");
-				sEco.getEconomyImplementer().withdrawPlayer(p, 100);
-				p.sendMessage("§c$100 has been withdrawed from your account.");
-				return;
-			}
-		}
-		teleportRandom(p);
-	}
-	
-
-	private boolean isSafeLocation(Location location) {
-		Block feet = location.getBlock();
-		if (!feet.getType().isTransparent() && !feet.getLocation().add(0, 1, 0).getBlock().getType().isTransparent()) {
-			return false; // not transparent (will suffocate)
-		}
-		Block head = feet.getRelative(BlockFace.UP);
-		if (!head.getType().isTransparent()) {
-			return false; // not transparent (will suffocate)
-		}
-		Block ground = feet.getRelative(BlockFace.DOWN);
-		if (!ground.getType().isSolid()) {
-			return false; // not solid
-		}
-		return true;
 	}
 
 	public YamlConfiguration getBpData() {
