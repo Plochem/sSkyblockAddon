@@ -58,7 +58,7 @@ public class SEconomy {
 	            return 0;
 	        }
 		});
-	    return results.subList(0, 10);
+	    return results.subList(0, Math.min(10, results.size()));
 		
 	}
 
