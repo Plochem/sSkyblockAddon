@@ -1,4 +1,4 @@
-main: com.plochem.sfa.SSkyblockAddon
+main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
 version: 1.6
 author: Plochem
