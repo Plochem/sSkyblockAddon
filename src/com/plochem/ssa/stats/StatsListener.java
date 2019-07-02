@@ -1,14 +1,17 @@
 package com.plochem.ssa.stats;
 
+import java.util.UUID;
+
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
-import com.massivecraft.factions.event.FPlayerJoinEvent;
-import com.massivecraft.factions.event.FPlayerLeaveEvent;
-import com.massivecraft.factions.event.FactionCreateEvent;
-import com.massivecraft.factions.event.FactionDisbandEvent;
+import com.wasteofplastic.askyblock.events.IslandJoinEvent;
+import com.wasteofplastic.askyblock.events.IslandLeaveEvent;
+import com.wasteofplastic.askyblock.events.IslandNewEvent;
+import com.wasteofplastic.askyblock.events.IslandPostLevelEvent;
 
 public class StatsListener implements Listener {
 	@EventHandler
@@ -24,22 +27,28 @@ public class StatsListener implements Listener {
 	}
 	
 	@EventHandler
-	public void onFactionJoin(FPlayerJoinEvent e) {
-		StatsManager.showScoreboard(e.getfPlayer().getPlayer());
+	public void onIslandJoin(IslandJoinEvent e) {
+		StatsManager.showScoreboard(Bukkit.getPlayer(e.getPlayer()));
 	}
 	
 	@EventHandler
-	public void onFactionLeave(FPlayerLeaveEvent e) {
-		StatsManager.showScoreboard(e.getfPlayer().getPlayer());
+	public void onIslandLeave(IslandLeaveEvent e) {
+		StatsManager.showScoreboard(Bukkit.getPlayer(e.getPlayer()));
 	}
 	
 	@EventHandler
-	public void onFactionCreate(FactionCreateEvent e) {
-		StatsManager.showScoreboard(e.getFPlayer().getPlayer());
+	public void onIslandCreate(IslandNewEvent e) {
+		StatsManager.showScoreboard(e.getPlayer());
 	}
 	
 	@EventHandler
-	public void onFactionDisband(FactionDisbandEvent e) {
-		StatsManager.showScoreboard(e.getFPlayer().getPlayer());
+	public void onIslandCreate(IslandPostLevelEvent e) {
+		for(UUID id : e.getIsland().getMembers()) {
+			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+		}
+		StatsManager.showScoreboard(Bukkit.getPlayer(e.getIslandOwner()));
+
 	}
+
+	
 }

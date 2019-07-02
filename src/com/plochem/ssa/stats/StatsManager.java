@@ -3,6 +3,7 @@ package com.plochem.ssa.stats;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -11,8 +12,8 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
-import com.massivecraft.factions.FPlayers;
 import com.plochem.ssa.SSkyblockAddon;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 
 public class StatsManager {
@@ -55,16 +56,24 @@ public class StatsManager {
         new BukkitRunnable() {
             @Override
             public void run() {
+            	String islandName = ASkyBlockAPI.getInstance().getIslandName(p.getUniqueId());
+            	long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((p.getUniqueId()));
+            	if(ASkyBlockAPI.getInstance().getIslandOwnedBy(p.getUniqueId()) == null) // doesnt own/part of island
+            		islandName = "None";
+            	if(ASkyBlockAPI.getInstance().inTeam(p.getUniqueId())) // if in team, get the team's leader uuid to get island name
+            		islandName = ASkyBlockAPI.getInstance().getIslandName(ASkyBlockAPI.getInstance().getTeamLeader(p.getUniqueId()));
         		Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = sb.registerNewObjective("stats", "dummy");
                 obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-                obj.setDisplayName("§e§lStraxidus Factions");
-                obj.getScore("Kills: §a" + getKills(p)).setScore(4);
-                obj.getScore("Deaths: §a" + getDeaths(p)).setScore(3);
+                obj.setDisplayName("§e§lStraxidus Skyblock");
+                obj.getScore(StringUtils.center("§7Statistics", 33)).setScore(6);
+                obj.getScore("Kills: §a" + getKills(p)).setScore(5);
+                obj.getScore("Deaths: §a" + getDeaths(p)).setScore(4);
+                obj.getScore("Balance: §a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(3);
                 obj.getScore("").setScore(2);
-                obj.getScore("Faction: §a" + FPlayers.getInstance().getByPlayer(p).getFaction().getTag()).setScore(1);
-                obj.getScore("Balance: §a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(0);
-        		p.setScoreboard(sb);
+                obj.getScore("Island name: §a" + islandName).setScore(1);
+                obj.getScore("Island level: §a" + islandLevel).setScore(0);
+                p.setScoreboard(sb);
             }
         }.runTaskLater(sfa, 1*20);
 
