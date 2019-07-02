@@ -75,7 +75,7 @@ public class StatsManager {
                 obj.getScore("Island level: §a" + islandLevel).setScore(0);
                 p.setScoreboard(sb);
             }
-        }.runTaskLater(sfa, 1*20);
+        }.runTaskLater(sfa, 20);
 
 	}
 	
