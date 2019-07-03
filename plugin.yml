@@ -4,7 +4,7 @@ version: 1.6.1
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, Citizens]
-loadbefore: [Factions]
+loadbefore: [ASkyBlock, ShopGUIPlus]
 commands:
    giveBouncePad:
    bal:
@@ -34,3 +34,4 @@ commands:
    help:
    clearchat:
    rewards:
+   trade:
