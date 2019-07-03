@@ -57,12 +57,14 @@ import com.plochem.ssa.listeners.PlayerKillEntity;
 import com.plochem.ssa.listeners.PlayerMove;
 import com.plochem.ssa.listeners.PlayerRespawn;
 import com.plochem.ssa.menu.MenuListener;
+import com.plochem.ssa.oregen.OreGenListener;
 import com.plochem.ssa.perks.PerkListeners;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
 import com.plochem.ssa.stats.StatsListener;
+import com.plochem.ssa.trading.TradeManager;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -73,6 +75,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
+	private Map<UUID, UUID> tradeReq = new HashMap<>();
 	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen");
 
 	public void onEnable(){
@@ -493,7 +496,50 @@ public class SSkyblockAddon extends JavaPlugin {
 			
 		} else if(command.getName().equalsIgnoreCase("rewards")) {
 			RewardManager.openRewardMenu(p);
-		}
+		} else if(command.getName().equalsIgnoreCase("trade")) {
+			if(args.length == 1) { // trade <name> TODO
+				Player to = Bukkit.getPlayer(args[0]);
+				if(to == null) {
+					p.sendMessage("§cSorry, but that player cannot be found!");
+					return false;
+				}
+				if(tradeReq.containsKey(p.getUniqueId())) {
+					p.sendMessage("§cYou already sent a trade request.");
+					return false;
+				}
+				if(tradeReq.containsValue(to.getUniqueId())) {
+					p.sendMessage("§cThat player has an active request or is currently trading.");
+					return false;
+				}
+				tradeReq.put(p.getUniqueId(), to.getUniqueId());
+				p.sendMessage("§aRequest sent to §f" + to.getName() + "§a.");
+				to.sendMessage(p.getName() + "§6 has requested to trade with you.");
+				to.sendMessage("§6Do §c/trade accept " + p.getName() + " §6 to accept the request or §c/trade deny " + p.getName() + " §6to decline the request.");
+			} else if(args.length == 2) { // trade accept <name>
+				if(args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny")) {
+					if(tradeReq.containsValue(p.getUniqueId())) {
+						Player requester = Bukkit.getPlayer(args[1]);
+						if(requester == null) {
+							p.sendMessage("§cSorry, but that player cannot be found!");
+							return false;
+						}
+						if(args[0].equalsIgnoreCase("deny")) {
+							tradeReq.remove(requester.getUniqueId());
+							requester.sendMessage("§c" + p.getName() + " has declined your trade request.");
+							p.sendMessage("§aYou declined " + requester.getName() + "'s trade request.");
+						} else { //accept
+							TradeManager.trade(requester, p);
+						}
+					} else {
+						p.sendMessage("§cNobody requested to trade with you.");
+					}
+				} else {
+					p.sendMessage("§cUsage: /trade [accept/deny] [player name]");
+				}
+			} else {
+				p.sendMessage("§cUsage: /trade [player name] or /trade [accept/deny] [player name]");
+			}
+		} // new cmd
 		return false;
 	}
 	
@@ -509,7 +555,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		item = new ItemStack(Material.IRON_SWORD);
 		im = item.getItemMeta();
 		im.setDisplayName("§aPerks");
-		im.setLore(Arrays.asList("§7Click here to purchase faction perks." , "§o§5(Perks only affect an individual, not the whole faction)"));
+		im.setLore(Arrays.asList("§7Click here to purchase skyblock perks."));
 		item.setItemMeta(im);
 		i.setItem(12, item);
 		
@@ -557,6 +603,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new RewardListener(), this);
 		pm.registerEvents(new KitPreview(), this);
 		pm.registerEvents(new StatsListener(), this);
+		pm.registerEvents(new OreGenListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
