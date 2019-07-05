@@ -1,7 +1,6 @@
 package com.plochem.ssa.oregen;
 
 import java.util.Random;
-import java.util.UUID;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -10,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockFromToEvent;
 
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 public class OreGenListener implements Listener{
 
