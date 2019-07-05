@@ -18,7 +18,7 @@ public class RewardListener implements Listener{
 	@EventHandler
 	public void onInvClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
-			if(e.getInventory().getTitle().equalsIgnoreCase("rewards") || e.getInventory().getTitle().equalsIgnoreCase("rewards")) {
+			if(e.getInventory().getTitle().equalsIgnoreCase("rewards")) {
 				e.setCancelled(true);
 				if(e.getClickedInventory().getTitle().equalsIgnoreCase("rewards")) {
 					String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());

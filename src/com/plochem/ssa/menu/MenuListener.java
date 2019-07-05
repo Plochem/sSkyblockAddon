@@ -23,7 +23,7 @@ public class MenuListener implements Listener{
 	@EventHandler
 	public void menuClick(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
-			if(e.getInventory().getTitle().equalsIgnoreCase("menu") || e.getInventory().getTitle().equalsIgnoreCase("menu")) {
+			if(e.getInventory().getTitle().equalsIgnoreCase("menu")) {
 				e.setCancelled(true);
 				if(e.getClickedInventory().getTitle().equalsIgnoreCase("menu")) {
 					ItemStack i = e.getCurrentItem();
