@@ -64,6 +64,7 @@ import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
 import com.plochem.ssa.stats.StatsListener;
+import com.plochem.ssa.trading.TradeListener;
 import com.plochem.ssa.trading.TradeManager;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
@@ -75,7 +76,6 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
-	private Map<UUID, UUID> tradeReq = new HashMap<>();
 	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen");
 
 	public void onEnable(){
@@ -503,28 +503,28 @@ public class SSkyblockAddon extends JavaPlugin {
 					p.sendMessage("§cSorry, but that player cannot be found!");
 					return false;
 				}
-				if(tradeReq.containsKey(p.getUniqueId())) {
+				if(TradeManager.getTradeReq().containsKey(p.getUniqueId())) {
 					p.sendMessage("§cYou already sent a trade request.");
 					return false;
 				}
-				if(tradeReq.containsValue(to.getUniqueId())) {
+				if(TradeManager.getTradeReq().containsValue(to.getUniqueId())) {
 					p.sendMessage("§cThat player has an active request or is currently trading.");
 					return false;
 				}
-				tradeReq.put(p.getUniqueId(), to.getUniqueId());
+				TradeManager.getTradeReq().put(p.getUniqueId(), to.getUniqueId());
 				p.sendMessage("§aRequest sent to §f" + to.getName() + "§a.");
 				to.sendMessage(p.getName() + "§6 has requested to trade with you.");
-				to.sendMessage("§6Do §c/trade accept " + p.getName() + " §6 to accept the request or §c/trade deny " + p.getName() + " §6to decline the request.");
+				to.sendMessage("§6Do §c/trade accept " + p.getName() + " §6to accept the request or §c/trade deny " + p.getName() + " §6to decline the request.");
 			} else if(args.length == 2) { // trade accept <name>
 				if(args[0].equalsIgnoreCase("accept") || args[0].equalsIgnoreCase("deny")) {
-					if(tradeReq.containsValue(p.getUniqueId())) {
+					if(TradeManager.getTradeReq().containsValue(p.getUniqueId())) {
 						Player requester = Bukkit.getPlayer(args[1]);
 						if(requester == null) {
 							p.sendMessage("§cSorry, but that player cannot be found!");
 							return false;
 						}
 						if(args[0].equalsIgnoreCase("deny")) {
-							tradeReq.remove(requester.getUniqueId());
+							TradeManager.getTradeReq().remove(requester.getUniqueId());
 							requester.sendMessage("§c" + p.getName() + " has declined your trade request.");
 							p.sendMessage("§aYou declined " + requester.getName() + "'s trade request.");
 						} else { //accept
@@ -604,6 +604,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new KitPreview(), this);
 		pm.registerEvents(new StatsListener(), this);
 		pm.registerEvents(new OreGenListener(), this);
+		pm.registerEvents(new TradeListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
