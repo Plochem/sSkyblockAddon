@@ -507,7 +507,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					p.sendMessage("§cYou already sent a trade request.");
 					return false;
 				}
-				if(TradeManager.getTradeReq().containsValue(to.getUniqueId())) {
+				if(TradeManager.getTradeReq().containsValue(to.getUniqueId()) || TradeManager.getTradeReq().containsKey(to.getUniqueId())) {
 					p.sendMessage("§cThat player has an active request or is currently trading.");
 					return false;
 				}
