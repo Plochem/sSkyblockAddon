@@ -48,6 +48,7 @@ public class TradeManager {
 				tradeGUI.setItem(i, confirm); // §l§aREADY				
 		}
 		requester.openInventory(tradeGUI);
+		p.openInventory(tradeGUI);
 		
 	}
 	
