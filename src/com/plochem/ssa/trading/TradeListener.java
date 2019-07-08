@@ -55,6 +55,8 @@ public class TradeListener implements Listener{
 						if(isInArray(e.getSlot(), tradeSpots)) {
 							clicker.getInventory().addItem(e.getCurrentItem());
 							e.getClickedInventory().setItem(e.getSlot(), null);
+							for(int i : requesterConfirm) e.getInventory().setItem(i, confirm); // cancel confirmation
+							for(int i : accepterConfirm) e.getInventory().setItem(i, confirm);
 						} else if(isInArray(e.getSlot(), confirmSpots)) {
 							if(e.getCurrentItem().equals(notReady)) {
 								confirm = ready;
@@ -68,7 +70,7 @@ public class TradeListener implements Listener{
 							if(e.getInventory().getItem(pos) == null) { // available spot
 								e.getInventory().setItem(pos, e.getCurrentItem());
 								e.getClickedInventory().setItem(e.getSlot(), null);
-								for(int i : requesterConfirm) e.getInventory().setItem(i, confirm);
+								for(int i : requesterConfirm) e.getInventory().setItem(i, confirm); // cancel confirmation
 								for(int i : accepterConfirm) e.getInventory().setItem(i, confirm);
 								break;
 							}									
