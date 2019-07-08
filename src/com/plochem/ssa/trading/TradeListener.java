@@ -27,34 +27,37 @@ public class TradeListener implements Listener{
 			27,28,29,30,
 			36,37,38,39};
 	private int[] requesterConfirm = {45,46,47,48};
+	private ItemStack ready = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)5);
+	private ItemStack notReady = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)14);
+	{
+		ItemMeta meta = ready.getItemMeta();
+		meta.setDisplayName("§a§lREADY");
+		ready.setItemMeta(meta);
+		meta = notReady.getItemMeta();
+		meta.setDisplayName("§c§lNOT READY");
+		notReady.setItemMeta(meta);
+	}
 	@EventHandler
 	public void onclick(InventoryClickEvent e) {
 		Player clicker = (Player)e.getWhoClicked();
-		
 		if(isRequester(clicker) || isAccepter(clicker)){
 			if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
 				if(e.getInventory().getTitle().contains("trade")) {
 					e.setCancelled(true);
+					ItemStack confirm = notReady;
 					int[] tradeSpots = requesterTradeSpots;
 					int[] confirmSpots = requesterConfirm;
 					if(isAccepter(clicker)) {
 						tradeSpots = accepterTradeSpots;
 						confirmSpots = accepterConfirm;
 					}
-					ItemStack confirm = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)14);
-					ItemMeta meta = confirm.getItemMeta();
-					meta.setDisplayName("§c§lNOT READY");
-					confirm.setItemMeta(meta);
 					if(e.getClickedInventory().getTitle().contains("trade")) { // reclaim
 						if(isInArray(e.getSlot(), tradeSpots)) {
 							clicker.getInventory().addItem(e.getCurrentItem());
 							e.getClickedInventory().setItem(e.getSlot(), null);
 						} else if(isInArray(e.getSlot(), confirmSpots)) {
-							if(e.getCurrentItem().getDurability() == (short)14) {
-								confirm = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)5);
-								meta = confirm.getItemMeta();
-								meta.setDisplayName("§a§lREADY");
-								confirm.setItemMeta(meta);
+							if(e.getCurrentItem().equals(notReady)) {
+								confirm = ready;
 							}
 							for(int i : confirmSpots) {
 								e.getInventory().setItem(i, confirm);
