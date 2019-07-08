@@ -4,12 +4,14 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -51,18 +53,42 @@ public class TradeListener implements Listener{
 						tradeSpots = accepterTradeSpots;
 						confirmSpots = accepterConfirm;
 					}
-					if(e.getClickedInventory().getTitle().contains("trade")) { // reclaim
-						if(isInArray(e.getSlot(), tradeSpots)) {
+					if(e.getClickedInventory().getTitle().contains("trade")) {
+						if(isInArray(e.getSlot(), tradeSpots)) { // reclaim
 							clicker.getInventory().addItem(e.getCurrentItem());
 							e.getClickedInventory().setItem(e.getSlot(), null);
 							for(int i : requesterConfirm) e.getInventory().setItem(i, confirm); // cancel confirmation
 							for(int i : accepterConfirm) e.getInventory().setItem(i, confirm);
-						} else if(isInArray(e.getSlot(), confirmSpots)) {
+						} else if(isInArray(e.getSlot(), confirmSpots)) { // confirm
 							if(e.getCurrentItem().equals(notReady)) {
 								confirm = ready;
 							}
 							for(int i : confirmSpots) {
 								e.getInventory().setItem(i, confirm);
+							}
+							Player requester = null;
+							Player accepter = null;
+							if(bothReady(e.getInventory())) { //make trade
+								for(HumanEntity entity : e.getViewers()) {
+									if(isAccepter((Player)entity)) 
+										accepter = (Player)entity;
+									else
+										requester = (Player)entity;
+								}
+								for(int i : requesterTradeSpots) {
+									if(e.getInventory().getItem(i) != null)
+										accepter.getInventory().addItem(e.getInventory().getItem(i));
+								}
+								for(int i : accepterTradeSpots) {
+									if(e.getInventory().getItem(i) != null)
+										requester.getInventory().addItem(e.getInventory().getItem(i));
+								}
+								TradeManager.getTradeReq().remove(requester.getUniqueId());
+								accepter.closeInventory();
+								requester.closeInventory();
+								accepter.sendMessage("§aYou had successfully completed the trade!");
+								requester.sendMessage("§aYou had successfully completed the trade!");
+								return;
 							}
 						}
 					} else if(e.getClickedInventory().getType() == InventoryType.PLAYER) { // clicked own inventory & add item
@@ -129,21 +155,35 @@ public class TradeListener implements Listener{
 		}
 	}
 	
-	private static boolean isInArray(int num, int[] spots) {
+	private boolean bothReady(Inventory trade) {
+		for(int i : accepterConfirm) {
+			if(!trade.getItem(i).equals(ready)) {
+				return false;
+			}
+		}
+		for(int i : requesterConfirm) {
+			if(!trade.getItem(i).equals(ready)) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	private boolean isInArray(int num, int[] spots) {
 		for(int i : spots) {
 			if(num == i) return true;
 		}
 		return false;
 	}
 
-	private static boolean isRequester(Player p) {
+	private boolean isRequester(Player p) {
 		if(TradeManager.getTradeReq().containsKey(p.getUniqueId())) {
 			return true;
 		}
 		return false;
 	}
 
-	private static boolean isAccepter(Player p) {
+	private boolean isAccepter(Player p) {
 		if(TradeManager.getTradeReq().containsValue(p.getUniqueId())) {
 			return true;
 		}
