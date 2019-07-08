@@ -22,7 +22,7 @@ public class ChatHandling implements Listener{
 		Player p = e.getPlayer();
 		String rank = PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§");
 		long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((p.getUniqueId()));
-		e.setFormat("§7[§a" + islandLevel + "§7]" + rank + p.getName() + "§r: " + e.getMessage().replaceAll("%", "%%"));
+		e.setFormat(rank + p.getName() + " §7[§a" + islandLevel + "§7]§r: " + e.getMessage().replaceAll("%", "%%"));
 	}
 
 }
