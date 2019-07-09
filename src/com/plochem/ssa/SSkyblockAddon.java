@@ -503,6 +503,11 @@ public class SSkyblockAddon extends JavaPlugin {
 					p.sendMessage("§cSorry, but that player cannot be found!");
 					return false;
 				}
+				if(to.equals(p)) {
+					p.sendMessage("§cYou cannot trade with yourself.");
+					return false;
+				}
+				
 				if(TradeManager.getTradeReq().containsKey(p.getUniqueId())) {
 					p.sendMessage("§cYou already sent a trade request.");
 					return false;
