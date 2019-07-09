@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -56,11 +57,15 @@ public class TradeListener implements Listener{
 					if(e.getClickedInventory().getTitle().contains("trade")) {
 						if(isInArray(e.getSlot(), tradeSpots)) { // reclaim
 							clicker.getInventory().addItem(e.getCurrentItem());
-							e.getClickedInventory().setItem(e.getSlot(), null);
+							e.getInventory().setItem(e.getSlot(), null);
 							for(int i : requesterConfirm) e.getInventory().setItem(i, confirm); // cancel confirmation
 							for(int i : accepterConfirm) e.getInventory().setItem(i, confirm);
 						} else if(isInArray(e.getSlot(), confirmSpots)) { // confirm
 							if(e.getCurrentItem().equals(notReady)) {
+								if(tradeEmpty(e.getInventory(), tradeSpots)) { // check if there isnt an item in your side of trade.
+									clicker.sendMessage("§cYou must have at least one item to trade before confirming.");
+									return;
+								} 
 								confirm = ready;
 							}
 							for(int i : confirmSpots) {
@@ -86,8 +91,8 @@ public class TradeListener implements Listener{
 								TradeManager.getTradeReq().remove(requester.getUniqueId());
 								accepter.closeInventory();
 								requester.closeInventory();
-								accepter.sendMessage("§aYou had successfully completed the trade!");
-								requester.sendMessage("§aYou had successfully completed the trade!");
+								accepter.sendMessage("§aYou successfully completed the trade!");
+								requester.sendMessage("§aYou successfully completed the trade!");
 								return;
 							}
 						}
@@ -153,6 +158,37 @@ public class TradeListener implements Listener{
 				return;
 			}
 		}
+	}
+	
+	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		Player p = e.getPlayer();
+		if(isRequester(p)) { // requester left
+			Player accepter = Bukkit.getPlayer(TradeManager.getTradeReq().get(p.getUniqueId()));
+			accepter.sendMessage("§cThe trade request has canceled because " + p.getName() + " is now offline.");
+			TradeManager.getTradeReq().remove(p.getUniqueId());
+		} else if(isAccepter(p)) { //accepter left
+			for(UUID id : TradeManager.getTradeReq().keySet()) {
+				if(p.getUniqueId().equals(TradeManager.getTradeReq().get(id))) {
+					Player requester = Bukkit.getPlayer(id);
+					requester.sendMessage("§cThe trade request has canceled because " + p.getName() + " is now offline.");
+					TradeManager.getTradeReq().remove(id);
+					break;
+				}
+			}
+			
+		} else {
+			return;
+		}
+	}
+	
+	private boolean tradeEmpty(Inventory inv, int[] tradeSpots) {
+		for(int i : tradeSpots) {
+			if(inv.getItem(i) != null) {
+				return false; // have at least 1 item to trade
+			}
+		}
+		return true;
 	}
 	
 	private boolean bothReady(Inventory trade) {
