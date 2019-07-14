@@ -72,6 +72,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class SSkyblockAddon extends JavaPlugin {
 	private File bpFile;
 	private YamlConfiguration bpData;
+	private File storage = new File("plugins/SFA/storage.yml");
+	private YamlConfiguration storageData = YamlConfiguration.loadConfiguration(bpFile);
 	private SEconomy sEco = new SEconomy(this);
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
@@ -103,7 +105,16 @@ public class SSkyblockAddon extends JavaPlugin {
 			sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));
 		}
 		BoosterManager.activate(BoosterType.EXPERIENCE);
-		BoosterManager.activate(BoosterType.MONEY);		
+		BoosterManager.activate(BoosterType.MONEY);	
+		
+
+		if(!(bpFile.exists())) {
+			Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
+			bpData.createSection("bp.locs");
+			saveBP();
+		}  else {
+			Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
+		}
 	}
 
 	public void onDisable(){
@@ -341,28 +352,9 @@ public class SSkyblockAddon extends JavaPlugin {
 			KitManager.addKit(new Kit(604800, args[0], new ItemStack(Material.CHEST), temp));
 			p.sendMessage("§aYou created the the §e" + args[0] + " §akit!");
 		} else if(command.getName().equalsIgnoreCase("spawn")) {
-			if(runningSomeTPCmd.contains(p.getUniqueId())) {
-				p.sendMessage("§cWait for the command to finish executing!");
-				return false;
-			}
-			p.sendMessage("§aTeleporting you in 10 seconds. §cDon't move!");
-			runningSomeTPCmd.add(p.getUniqueId());
-			new BukkitRunnable() {
-				int time = 11;
-				@Override
-				public void run() {
-					if(!runningSomeTPCmd.contains(p.getUniqueId())) {
-						p.sendMessage("§cTeleportation has been canceled by your movement!");
-						this.cancel();
-					}
-					if(time == 1) {
-						this.cancel();
-						p.teleport(getSpawn());
-						runningSomeTPCmd.remove(p.getUniqueId());
-					}
-					time--;
-				}
-			}.runTaskTimer(this, 0, 20);
+			teleportCoolDown(getSpawn(), p, 5);
+		} else if(command.getName().equalsIgnoreCase("pvp")) {
+			teleportCoolDown(getPvPSpawn(), p, 5);
 		} else if(command.getName().equalsIgnoreCase("tpa")) {
 			if(args.length != 1) {
 				p.sendMessage("§cUsage: /tpa [player name]");
@@ -492,8 +484,9 @@ public class SSkyblockAddon extends JavaPlugin {
 					}
 					player.sendMessage("§b" + p.getName() + " has cleared the chat!");
 				}
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
-			
 		} else if(command.getName().equalsIgnoreCase("rewards")) {
 			RewardManager.openRewardMenu(p);
 		} else if(command.getName().equalsIgnoreCase("trade")) {
@@ -548,7 +541,35 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				p.sendMessage("§cUsage: /trade [player name] or /trade [accept/deny] [player name]");
 			}
-		} // new cmd
+		} else if(command.getName().equalsIgnoreCase("setspawn")) {
+			if(p.hasPermission("sfa.setspawns")) {
+				storageData.set("spawn", p.getLocation());
+				saveStorage();
+				p.sendMessage("§aYou have successfully set a new spawn point.");
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
+		} else if(command.getName().equalsIgnoreCase("setpvpspawn")) {
+			if(p.hasPermission("sfa.setspawns")) {
+				storageData.set("pvpspawn", p.getLocation());
+				saveStorage();
+				p.sendMessage("§aYou have successfully set a new PVP spawn point.");
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
+		} else if(command.getName().equalsIgnoreCase("fly")) {
+			if(p.hasPermission("sfa.fly")) {
+				if(p.isFlying()) {
+					p.setFlying(true);
+					p.sendMessage("§aYou are currently in flight mode.");
+				} else {
+					p.setFlying(false);
+					p.sendMessage("§aYou are no longer in flight mode.");
+				}
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
+		}			// new cmd
 		return false;
 	}
 	
@@ -582,6 +603,31 @@ public class SSkyblockAddon extends JavaPlugin {
 		item.setItemMeta(im);
 		i.setItem(16, item);
 		return i;
+	}
+	
+	private void teleportCoolDown(Location loc, Player p, int sec) {
+		if(runningSomeTPCmd.contains(p.getUniqueId())) {
+			p.sendMessage("§cWait for the command to finish executing!");
+			return;
+		}
+		p.sendMessage("§aTeleporting you in " + sec + " seconds. §cDon't move!");
+		runningSomeTPCmd.add(p.getUniqueId());
+		new BukkitRunnable() {
+			int time = sec;
+			@Override
+			public void run() {
+				if(!runningSomeTPCmd.contains(p.getUniqueId())) {
+					p.sendMessage("§cTeleportation has been canceled by your movement!");
+					this.cancel();
+				}
+				if(time == 0) {
+					this.cancel();
+					p.teleport(loc);
+					runningSomeTPCmd.remove(p.getUniqueId());
+				}
+				time--;
+			}
+		}.runTaskTimer(this, 0, 20);
 	}
 
 	private void registerThings() {
@@ -617,6 +663,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
+		pm.addPermission(new Permission("sfa.fly"));
 		pm.addPermission(new Permission("sfa.setBal"));
 		pm.addPermission(new Permission("sfa.givebooster"));
 		pm.addPermission(new Permission("sfa.createKit"));
@@ -628,6 +675,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.sethomemultiple4"));
 		pm.addPermission(new Permission("sfa.sethomemultiple6"));
 		pm.addPermission(new Permission("sfa.sethomemultiple8"));
+		pm.addPermission(new Permission("sfa.setspawns"));
 		pm.addPermission(new Permission("sfa.clearchat"));
 		pm.addPermission(new Permission("sfa.rewards.elite"));
 		pm.addPermission(new Permission("sfa.rewards.master"));
@@ -637,6 +685,14 @@ public class SSkyblockAddon extends JavaPlugin {
 
 	public YamlConfiguration getBpData() {
 		return bpData;
+	}
+	
+	public void saveStorage() {
+		try {
+			storageData.save(storage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void saveBP() {
@@ -652,7 +708,8 @@ public class SSkyblockAddon extends JavaPlugin {
 	}
 
 	public Location getSpawn() {
-		return new Location(Bukkit.getWorld("spawn"), 2.5, 77, -52.2);
+		return (Location)storageData.get("spawn");
+		//return new Location(Bukkit.getWorld("spawn"), 2.5, 77, -52.2);
 	}
 
 	public List<UUID> getWhoRunningSomeTPCmd(){
@@ -661,6 +718,10 @@ public class SSkyblockAddon extends JavaPlugin {
 	
 	public List<UUID> getViewingInv(){
 		return viewingInv;
+	}
+
+	public Location getPvPSpawn() {
+		return (Location)storageData.get("pvpspawn");
 	}
 	
 	
