@@ -72,8 +72,8 @@ import ru.tehkode.permissions.bukkit.PermissionsEx;
 public class SSkyblockAddon extends JavaPlugin {
 	private File bpFile;
 	private YamlConfiguration bpData;
-	private File storage = new File("plugins/SFA/storage.yml");
-	private YamlConfiguration storageData = YamlConfiguration.loadConfiguration(bpFile);
+	private File storage;
+	private YamlConfiguration storageData;
 	private SEconomy sEco = new SEconomy(this);
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
@@ -90,6 +90,13 @@ public class SSkyblockAddon extends JavaPlugin {
 			saveBP();
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
+		}
+		storage = new File("plugins/SFA/storage.yml");
+		storageData = YamlConfiguration.loadConfiguration(storage);
+		if(!storage.exists()) {
+			saveStorage();
+		} else {
+			Bukkit.getServer().getLogger().info("[SFA] General storage file already exists! Skipping creation...");
 		}
 		registerThings();
 		RewardManager.createCollectedFile();
@@ -352,9 +359,15 @@ public class SSkyblockAddon extends JavaPlugin {
 			KitManager.addKit(new Kit(604800, args[0], new ItemStack(Material.CHEST), temp));
 			p.sendMessage("§aYou created the the §e" + args[0] + " §akit!");
 		} else if(command.getName().equalsIgnoreCase("spawn")) {
-			teleportCoolDown(getSpawn(), p, 5);
+			if(getSpawn()==null)
+				p.sendMessage("§cThe spawnpoint has not been created yet!");
+			else
+				teleportCoolDown(getSpawn(), p, 5);
 		} else if(command.getName().equalsIgnoreCase("pvp")) {
-			teleportCoolDown(getPvPSpawn(), p, 5);
+			if(getSpawn()==null)
+				p.sendMessage("§cThe PVP spawnpoint has not been created yet!");
+			else
+				teleportCoolDown(getPvPSpawn(), p, 5);
 		} else if(command.getName().equalsIgnoreCase("tpa")) {
 			if(args.length != 1) {
 				p.sendMessage("§cUsage: /tpa [player name]");
