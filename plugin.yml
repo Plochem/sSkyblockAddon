@@ -16,6 +16,7 @@ commands:
    myboosters:
    givebooster:
    spawn:
+   pvp:
    kits:
    kit:
    createkit:
