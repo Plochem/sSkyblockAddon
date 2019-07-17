@@ -54,6 +54,8 @@ public class StatsManager {
 	
 	public static void showScoreboard(Player p) {
 		SSkyblockAddon sfa = SSkyblockAddon.getPlugin(SSkyblockAddon.class);
+		if(p==null)
+			return;
         new BukkitRunnable() {
             @Override
             public void run() {
