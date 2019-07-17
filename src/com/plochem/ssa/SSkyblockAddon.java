@@ -63,6 +63,7 @@ import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
+import com.plochem.ssa.stats.LeaderboardHandler;
 import com.plochem.ssa.stats.StatsListener;
 import com.plochem.ssa.trading.TradeListener;
 import com.plochem.ssa.trading.TradeManager;
@@ -82,50 +83,59 @@ public class SSkyblockAddon extends JavaPlugin {
 
 	public void onEnable(){
 		sEco.hook();
-		bpFile = new File("plugins/SFA/bouncepads-locations.yml");
-		bpData = YamlConfiguration.loadConfiguration(bpFile);
-		if(!(bpFile.exists())) {
-			Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
-			bpData.createSection("bp.locs");
-			saveBP();
-		}  else {
-			Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
-		}
-		storage = new File("plugins/SFA/storage.yml");
-		storageData = YamlConfiguration.loadConfiguration(storage);
-		if(!storage.exists()) {
-			saveStorage();
-		} else {
-			Bukkit.getServer().getLogger().info("[SFA] General storage file already exists! Skipping creation...");
-		}
-		registerThings();
-		RewardManager.createCollectedFile();
-		BoosterManager.createQueueFile();
-		KitManager.createKitFile();
-		GeneratorManager.createGeneratorFile();
-		GeneratorManager.startGlobalCounter();
-		for(Player p : Bukkit.getOnlinePlayers()) {
-			KitManager.readCooldownFiles(p.getUniqueId());
-		}
-		for(File f : new File("plugins/SFA/playerbalance").listFiles()) { //loads balance from file to hashmap
-			YamlConfiguration playerData = YamlConfiguration.loadConfiguration(f);
-			sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));
-		}
-		BoosterManager.activate(BoosterType.EXPERIENCE);
-		BoosterManager.activate(BoosterType.MONEY);	
-		
+		new BukkitRunnable() { // waits for one tick before reading config because worlds have to be loaded first
+			@Override
+			public void run() {
+				bpFile = new File("plugins/SFA/bouncepads-locations.yml");
+				bpData = YamlConfiguration.loadConfiguration(bpFile);
+				if(!(bpFile.exists())) {
+					Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
+					bpData.createSection("bp.locs");
+					saveBP();
+				}  else {
+					Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
+				}
+				storage = new File("plugins/SFA/storage.yml");
+				storageData = YamlConfiguration.loadConfiguration(storage);
+				if(!storage.exists()) {
+					saveStorage();
+				} else {
+					Bukkit.getServer().getLogger().info("[SFA] General storage file already exists! Skipping creation...");
+				}
+				registerThings();
+				RewardManager.createCollectedFile();
+				BoosterManager.createQueueFile();
+				KitManager.createKitFile();
+				GeneratorManager.createGeneratorFile();
+				GeneratorManager.startGlobalCounter();
+				for(Player p : Bukkit.getOnlinePlayers()) {
+					KitManager.readCooldownFiles(p.getUniqueId());
+				}
+				for(File f : new File("plugins/SFA/playerbalance").listFiles()) { //loads balance from file to hashmap
+					YamlConfiguration playerData = YamlConfiguration.loadConfiguration(f);
+					sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));
+				}
+				BoosterManager.activate(BoosterType.EXPERIENCE);
+				BoosterManager.activate(BoosterType.MONEY);	
 
-		if(!(bpFile.exists())) {
-			Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
-			bpData.createSection("bp.locs");
-			saveBP();
-		}  else {
-			Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
-		}
+
+				if(!(bpFile.exists())) {
+					Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
+					bpData.createSection("bp.locs");
+					saveBP();
+				}  else {
+					Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
+				}
+				LeaderboardHandler.update(SSkyblockAddon.getPlugin(SSkyblockAddon.class), storageData);
+				
+			}
+
+		}.runTaskLater(this, 1);	
 	}
 
 	public void onDisable(){
 		sEco.unhook();
+		LeaderboardHandler.deleteLeaderboards();
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -382,12 +392,12 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cYou already have a pending teleport request.");
 				return false;
 			}
-			
+
 			if(tpReq.containsKey(to.getUniqueId())) {
 				p.sendMessage("§cThat player currently has a teleport request to handle.");
 				return false;
 			}
-			
+
 			if(runningSomeTPCmd.contains(p.getUniqueId())) {
 				p.sendMessage("§cWait for the command to finish executing!");
 				return false;
@@ -446,7 +456,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cUsage: /invsee [player name]");
 				return false;
 			}
-			
+
 			Player target = Bukkit.getPlayer(args[0]);
 			if(target == null) {
 				p.sendMessage("§cSorry, but that player cannot be found!");
@@ -475,7 +485,7 @@ public class SSkyblockAddon extends JavaPlugin {
 			p.sendMessage("§eHere are the top balances:");
 			int idx = 1;
 			for(Entry<UUID, Double> e : sEco.getTopBals()) {
-				p.sendMessage("§e" + idx + ". §6" + Bukkit.getOfflinePlayer(e.getKey()).getName() + " §e- §a$" + e.getValue());
+				p.sendMessage("§e" + idx + ". §6" + Bukkit.getOfflinePlayer(e.getKey()).getName() + " §e- §a$" + String.format("%,.2f", e.getValue()));
 				idx++;
 			}
 			p.sendMessage("§l---------------------------------------------");
@@ -513,7 +523,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					p.sendMessage("§cYou cannot trade with yourself.");
 					return false;
 				}
-				
+
 				if(TradeManager.getTradeReq().containsKey(p.getUniqueId())) {
 					p.sendMessage("§cYou already sent a trade request.");
 					return false;
@@ -570,22 +580,23 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
-		} else if(command.getName().equalsIgnoreCase("fly")) {
-			if(p.hasPermission("sfa.fly")) {
-				if(p.isFlying()) {
-					p.setFlying(true);
-					p.sendMessage("§aYou are currently in flight mode.");
-				} else {
-					p.setFlying(false);
-					p.sendMessage("§aYou are no longer in flight mode.");
-				}
-			} else {
-				p.sendMessage("§cYou do not have permission to perform this command!");
-			}
-		}			// new cmd
+		} else if(command.getName().equalsIgnoreCase("setKillLb")) {
+			LeaderboardHandler.deleteLeaderboards();
+			storageData.set("killLb", p.getLocation()); 
+			saveStorage();
+			p.sendMessage("§aYou have successfully set a new location for the Kills Leaderboard.");
+			LeaderboardHandler.createLeaderboards(storageData);
+		} else if(command.getName().equalsIgnoreCase("setDeathLb")) {
+			LeaderboardHandler.deleteLeaderboards();
+			storageData.set("deathLb", p.getLocation()); 
+			saveStorage();
+			p.sendMessage("§aYou have successfully set a new location for the Deaths Leaderboard.");
+			LeaderboardHandler.createLeaderboards(storageData);
+		}
+		// new cmd
 		return false;
 	}
-	
+
 	private Inventory buildMenu() {
 		Inventory i = Bukkit.createInventory(null, 27, "Menu");
 		ItemStack item = new ItemStack(Material.SLIME_BALL);
@@ -594,21 +605,21 @@ public class SSkyblockAddon extends JavaPlugin {
 		im.setLore(Arrays.asList("§7Click here to purchase cosmetics."));
 		item.setItemMeta(im);
 		i.setItem(10, item);
-		
+
 		item = new ItemStack(Material.IRON_SWORD);
 		im = item.getItemMeta();
 		im.setDisplayName("§aPerks");
 		im.setLore(Arrays.asList("§7Click here to purchase skyblock perks."));
 		item.setItemMeta(im);
 		i.setItem(12, item);
-		
+
 		item = new ItemStack(Material.ENDER_PORTAL_FRAME);
 		im = item.getItemMeta();
 		im.setDisplayName("§aOre Generators");
 		im.setLore(Arrays.asList("§7Click here to purchase ore generators."));
 		item.setItemMeta(im);
 		i.setItem(14, item);
-		
+
 		item = new ItemStack(Material.EMERALD);
 		im = item.getItemMeta();
 		im.setDisplayName("§aShop");
@@ -617,7 +628,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		i.setItem(16, item);
 		return i;
 	}
-	
+
 	private void teleportCoolDown(Location loc, Player p, int sec) {
 		if(runningSomeTPCmd.contains(p.getUniqueId())) {
 			p.sendMessage("§cWait for the command to finish executing!");
@@ -690,6 +701,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.sethomemultiple8"));
 		pm.addPermission(new Permission("sfa.setspawns"));
 		pm.addPermission(new Permission("sfa.clearchat"));
+		pm.addPermission(new Permission("sfa.setleaderboards"));
 		pm.addPermission(new Permission("sfa.rewards.elite"));
 		pm.addPermission(new Permission("sfa.rewards.master"));
 		pm.addPermission(new Permission("sfa.rewards.legend"));
@@ -699,7 +711,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	public YamlConfiguration getBpData() {
 		return bpData;
 	}
-	
+
 	public void saveStorage() {
 		try {
 			storageData.save(storage);
@@ -722,13 +734,12 @@ public class SSkyblockAddon extends JavaPlugin {
 
 	public Location getSpawn() {
 		return (Location)storageData.get("spawn");
-		//return new Location(Bukkit.getWorld("spawn"), 2.5, 77, -52.2);
 	}
 
 	public List<UUID> getWhoRunningSomeTPCmd(){
 		return runningSomeTPCmd;
 	}
-	
+
 	public List<UUID> getViewingInv(){
 		return viewingInv;
 	}
@@ -736,6 +747,6 @@ public class SSkyblockAddon extends JavaPlugin {
 	public Location getPvPSpawn() {
 		return (Location)storageData.get("pvpspawn");
 	}
-	
-	
+
+
 }
