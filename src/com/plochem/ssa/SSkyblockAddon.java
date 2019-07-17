@@ -581,17 +581,25 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
 		} else if(command.getName().equalsIgnoreCase("setKillLb")) {
-			LeaderboardHandler.deleteLeaderboards();
-			storageData.set("killLb", p.getLocation()); 
-			saveStorage();
-			p.sendMessage("§aYou have successfully set a new location for the Kills Leaderboard.");
-			LeaderboardHandler.createLeaderboards(storageData);
+			if(p.hasPermission("sfa.setleaderboards")) {
+				LeaderboardHandler.deleteLeaderboards();
+				storageData.set("killLb", p.getLocation()); 
+				saveStorage();
+				p.sendMessage("§aYou have successfully set a new location for the Kills Leaderboard.");
+				LeaderboardHandler.createLeaderboards(storageData);
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
 		} else if(command.getName().equalsIgnoreCase("setDeathLb")) {
-			LeaderboardHandler.deleteLeaderboards();
-			storageData.set("deathLb", p.getLocation()); 
-			saveStorage();
-			p.sendMessage("§aYou have successfully set a new location for the Deaths Leaderboard.");
-			LeaderboardHandler.createLeaderboards(storageData);
+			if(p.hasPermission("sfa.setleaderboards")) {
+				LeaderboardHandler.deleteLeaderboards();
+				storageData.set("deathLb", p.getLocation()); 
+				saveStorage();
+				p.sendMessage("§aYou have successfully set a new location for the Deaths Leaderboard.");
+				LeaderboardHandler.createLeaderboards(storageData);
+			} else {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
 		}
 		// new cmd
 		return false;
