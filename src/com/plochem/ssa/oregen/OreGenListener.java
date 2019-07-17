@@ -21,7 +21,6 @@ public class OreGenListener implements Listener{
 				if (generatesCobble(type, b)){
 					//UUID owner = ASkyBlockAPI.getInstance().getIslandAt(e.getBlock().getLocation()).getOwner();
 					int r = new Random().nextInt(100) + 1; // 1- 100
-					System.out.println(r);
 					if(r == 1) { // 1
 						e.getToBlock().setType(Material.EMERALD_ORE);
 					} else if (r <= 4) { // 3

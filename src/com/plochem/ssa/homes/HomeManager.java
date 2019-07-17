@@ -24,10 +24,6 @@ public class HomeManager {
 			c.set("default", new Home("", p.getLocation()));
 			p.sendMessage("§aYou have set the default home at §e(" + p.getLocation().getBlockX() + ", " + p.getLocation().getBlockY() + ", " + p.getLocation().getBlockZ() + ")§a.");
 		} else { //TODO
-			System.out.println(p.hasPermission("sfa.sethomemultiple2"));
-			System.out.println(p.hasPermission("sfa.sethomemultiple4"));
-			System.out.println(p.hasPermission("sfa.sethomemultiple6"));
-			System.out.println(p.hasPermission("sfa.sethomemultiple8"));
 			if(!p.hasPermission("sfa.sethomemultiple2") && !p.hasPermission("sfa.sethomemultiple4") && !p.hasPermission("sfa.sethomemultiple6") && !p.hasPermission("sfa.sethomemultiple8")) {
 				p.sendMessage("§cYou do not have permission to set custom homes.");
 				return;
