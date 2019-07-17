@@ -10,7 +10,7 @@ public class BoosterClaim implements Listener{
 	@EventHandler
 	public void onClickItem(PlayerInteractEvent e) {
 		if(e.getPlayer().getItemInHand().getType() == Material.INK_SACK){
-			if(e.getItem().getItemMeta().getDisplayName() != null && e.getItem().getItemMeta().getDisplayName().contains("§")) {
+			if(e.getItem().getItemMeta().getDisplayName() != null && e.getItem().getItemMeta().getDisplayName().contains("booster")) {
 				String[] splitName = e.getItem().getItemMeta().getDisplayName().replaceAll("§", "").split(" ");
 				String color = "§3";
 				BoosterType type = BoosterType.EXPERIENCE;
