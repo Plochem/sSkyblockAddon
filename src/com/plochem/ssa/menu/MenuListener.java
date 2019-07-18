@@ -54,7 +54,7 @@ public class MenuListener implements Listener{
 		for(int i = 0; i < GeneratorType.values().length; i++) {
 			ItemStack gen = new ItemStack(Material.ENDER_PORTAL_FRAME);
 			ItemMeta genMeta = gen.getItemMeta();
-			genMeta.setLore(Arrays.asList("", "§7Click to purchase for §a$" + String.format("%,.2f", GeneratorType.values()[i].getCost()) + "§7!"));
+			genMeta.setLore(Arrays.asList("", "§7Click to purchase for §a$" + String.format("%,d", GeneratorType.values()[i].getCost()) + "§7!"));
 			genMeta.setDisplayName("§e" + GeneratorType.values()[i].toString().replaceAll("_", " ") + " Generator");
 			gen.setItemMeta(genMeta);
 			genShop.setItem(i, gen);
@@ -77,13 +77,13 @@ public class MenuListener implements Listener{
 				desc.add("§a§lFully Upgraded!");
 			} else if(currentLevel == 0) { // does not own it
 				desc.add("");
-				desc.add("§7Cost: §a$" + String.format("%,.2f", type.getUnlockCost()));
+				desc.add("§7Cost: §a$" + String.format("%,d", type.getUnlockCost()));
 				desc.add("");
 				desc.add("§eClick to purchase!");
 				currIm.setDisplayName("§c" + name);
 			} else { // upgradeable
 				desc.add("");
-				desc.add("§7Cost: §a$" + String.format("%,.2f", type.getCost(currentLevel)));
+				desc.add("§7Cost: §a$" + String.format("%,d", type.getCost(currentLevel)));
 				desc.add("");
 				desc.add("§eClick to upgrade to level " + PerkManager.getNextLvlUpgrade(type, p) + "!");
 			}
