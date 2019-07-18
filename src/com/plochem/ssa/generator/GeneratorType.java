@@ -1,14 +1,14 @@
 package com.plochem.ssa.generator;
 
 public enum GeneratorType {
-	COAL(30, 500000, "§8"),
-	REDSTONE(30, 500000, "§4"),
-	IRON_INGOT(40, 650000, "§f"),
-	GOLD_INGOT(40, 650000, "§e"),
-	EMERALD(50, 800000, "§a"),
-	DIAMOND(60, 1000000, "§b");
+	COAL(30, 250000, "§8"),
+	REDSTONE(30, 300000, "§4"),
+	IRON_INGOT(40, 400000, "§f"),
+	GOLD_INGOT(40, 450000, "§e"),
+	DIAMOND(50, 550000, "§b"),
+	EMERALD(60, 600000, "§a");
 	
-	private int interval;
+	private int interval; //sec
 	private int cost;
 	private String color;
 	
