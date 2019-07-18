@@ -75,11 +75,13 @@ public class GeneratorManager {
 				timeElapsed++;
 				for(Generator gen: gens) {
 					if(timeElapsed >= gen.getType().getInterval() && timeElapsed % gen.getType().getInterval() == 0) {
-						gen.setNumGenerated(gen.getNumGenerated()+1);
-						Block signBlock = gen.getLoc().getBlock().getRelative(gen.getSignDir());
-						Sign sign = (Sign) (signBlock.getState());
-						sign.setLine(2, String.valueOf(gen.getNumGenerated()));
-						sign.update();
+						if(gen.getNumGenerated() < Integer.MAX_VALUE) { // prevent overflowing
+							gen.setNumGenerated(gen.getNumGenerated()+1);
+							Block signBlock = gen.getLoc().getBlock().getRelative(gen.getSignDir());
+							Sign sign = (Sign) (signBlock.getState());
+							sign.setLine(2, String.valueOf(gen.getNumGenerated()));
+							sign.update();
+						}
 					}
 				}
 				saveGenFile();
