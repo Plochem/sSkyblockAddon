@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -67,7 +68,8 @@ public class RewardListener implements Listener{
 			sfa.getSEconomy().getEconomyImplementer().depositPlayer(clicker, type.getMoney());
 			clicker.giveExp(type.getXp());
 			RewardManager.addToClaim(clicker, type);
-			clicker.sendMessage("§aYou received §6$" + type.getMoney() + " §aand§3 " + type.getXp() + " XP§a.");
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "cc give physical " +  type.getCrateKey() + " 1 " + clicker.getName());
+			clicker.sendMessage("§aYou received a crate key, §6$" + type.getMoney() + " §a, and§3 " + type.getXp() + " XP§a.");
 		} else {
 			clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(end, now) + ".");
 		}

@@ -27,11 +27,14 @@ public class RewardManager {
 	public static void openRewardMenu(Player p) {
 		Inventory menu = Bukkit.createInventory(null, 36, "Rewards");
 		ItemStack i = new ItemStack(Material.STORAGE_MINECART);
-		ItemMeta im = i.getItemMeta(); // for loop
+		ItemMeta im = i.getItemMeta(); 
 		int[] pos = {10,11,12,13,14,15,16,19};
 		for(int j = 0; j < RewardType.values().length; j++) {
 			im.setDisplayName("§e" + WordUtils.capitalizeFully(RewardType.values()[j].toString().replaceAll("_", " ")) + " Rewards");
-			List<String> lore = new ArrayList<>(Arrays.asList("§6$" + RewardType.values()[j].getMoney() + " §eand§3 " + RewardType.values()[j].getXp() + " XP", "")); 
+			List<String> lore = new ArrayList<>(Arrays.asList("§6$" + RewardType.values()[j].getMoney(),
+												"§3"+RewardType.values()[j].getXp() + " XP", 
+												"§7" + RewardType.values()[j].getCrateKey() + " key",
+												"")); 
 			if(notClaim(p, RewardType.values()[j])) {
 				lore.add("§eClick to claim!");
 				i.setType(Material.STORAGE_MINECART);
