@@ -38,6 +38,7 @@ import com.plochem.ssa.bouncepads.BouncePadBreak;
 import com.plochem.ssa.bouncepads.BouncePadInteract;
 import com.plochem.ssa.bouncepads.BouncePadPlace;
 import com.plochem.ssa.economy.BanknoteListener;
+import com.plochem.ssa.economy.BanknoteManager;
 import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.economy.SEconomyImplementer;
 import com.plochem.ssa.generator.Generator;
@@ -272,9 +273,33 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				sender.sendMessage("§cYou do not have permission to perform this command!");
 			}
-		} else if(command.getName().equalsIgnoreCase("getbanknote")) {
-			//TODO give note
-		} else if(command.getName().equalsIgnoreCase("boosterqueue")) { // sends player current queue in boosters
+		} else if(command.getName().equalsIgnoreCase("givebanknote")) {
+			if(!p.hasPermission("sfa.banknote.give")) {
+				p.sendMessage("§cYou do not have permission to perform this command!");
+			}
+			if(args.length != 2) {
+				sender.sendMessage("§cUsage: /givebanknote [player name] [amount]");
+				return false;
+			}
+			Player to = Bukkit.getPlayer(args[0]);
+			if(to == null) {
+				p.sendMessage("§cSorry, but that player cannot be found!");
+				return false;
+			}
+			if(NumberUtils.isNumber(args[1])) {
+				double amt = Double.parseDouble(args[1]);
+				BanknoteManager.giveBanknote(to, amt);
+			} else {
+				p.sendMessage("§cEnter a valid numerical value.");
+			}
+		} else if(command.getName().equalsIgnoreCase("withdraw")) {
+			if(NumberUtils.isNumber(args[1])) {
+				double amt = Double.parseDouble(args[1]);
+				BanknoteManager.withdraw(p, amt);
+			} else {
+				p.sendMessage("§cEnter a valid numerical value.");
+			}
+		}else if(command.getName().equalsIgnoreCase("boosterqueue")) { // sends player current queue in boosters
 			p.sendMessage("§l---------------------------------------------");
 			p.sendMessage("                   §aMoney §eand §3Experience §eBoosters");
 			p.sendMessage("");
@@ -366,7 +391,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				if(i != null)
 					temp.add(i);
 			}
-			KitManager.addKit(new Kit(604800, args[0], new ItemStack(Material.CHEST), temp));
+			KitManager.addKit(new Kit(86400, args[0], new ItemStack(Material.CHEST), temp));
 			p.sendMessage("§aYou created the the §e" + args[0] + " §akit!");
 		} else if(command.getName().equalsIgnoreCase("spawn")) {
 			if(getSpawn()==null)
@@ -695,7 +720,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
-		pm.addPermission(new Permission("sfa.fly"));
 		pm.addPermission(new Permission("sfa.setBal"));
 		pm.addPermission(new Permission("sfa.givebooster"));
 		pm.addPermission(new Permission("sfa.createKit"));
@@ -714,6 +738,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.rewards.master"));
 		pm.addPermission(new Permission("sfa.rewards.legend"));
 		pm.addPermission(new Permission("sfa.rewards.mystic"));
+		pm.addPermission(new Permission("sfa.banknote.give"));
 	}
 
 	public YamlConfiguration getBpData() {
