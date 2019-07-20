@@ -30,14 +30,14 @@ public class PlayerKillEntity implements Listener{
 			} else {
 				return;
 			}
-			int baseMoney = 2;
-			int baseXP = e.getDroppedExp();
+			int baseMoney = 10;
+			int baseXP = e.getDroppedExp() + 30;
 			String boosterMessage = "";
 			String expMessage = "";
 			String killedWhoMessage = " (Killed a mob)";
 			e.setDroppedExp(0);
 			if(entity instanceof Player) {
-				baseMoney = 5;
+				baseMoney = 50;
 				killedWhoMessage = " (Killed a player)";
 			}
 			if(BoosterManager.moneyBoosterIsActive()) {
