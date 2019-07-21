@@ -293,8 +293,12 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cEnter a valid numerical value.");
 			}
 		} else if(command.getName().equalsIgnoreCase("withdraw")) {
-			if(NumberUtils.isNumber(args[1])) {
-				double amt = Double.parseDouble(args[1]);
+			if(args.length != 1) {
+				sender.sendMessage("§cUsage: /withdraw [amount]");
+				return false;
+			}
+			if(NumberUtils.isNumber(args[0])) {
+				double amt = Double.parseDouble(args[0]);
 				BanknoteManager.withdraw(p, amt);
 			} else {
 				p.sendMessage("§cEnter a valid numerical value.");
