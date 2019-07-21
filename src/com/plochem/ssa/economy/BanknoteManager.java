@@ -24,11 +24,15 @@ public class BanknoteManager {
 	public static void withdraw(Player p, double amount) {
 		SSkyblockAddon ssa = SSkyblockAddon.getPlugin(SSkyblockAddon.class);
 		SEconomyImplementer eco = ssa.getSEconomy().getEconomyImplementer();
-		if(eco.getBalance(p) > amount) {
-			giveBanknote(p, amount);
-			eco.withdrawPlayer(p, amount);
+		if(amount > 0) {
+			if(eco.getBalance(p) > amount) {
+				giveBanknote(p, amount);
+				eco.withdrawPlayer(p, amount);
+			} else {
+				p.sendMessage("§cYou do not have enough money to withdraw this amount.");
+			}
 		} else {
-			p.sendMessage("§cYou do not have enough money to withdraw this amount.");
+			p.sendMessage("§cYou may only withdraw a positive amount.");
 		}
 
 	}
