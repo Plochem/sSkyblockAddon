@@ -42,3 +42,5 @@ commands:
    setpvpspawn:
    setKillLb:
    setDeathLb:
+   ores:
+   tags:
