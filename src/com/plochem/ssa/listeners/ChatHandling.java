@@ -6,7 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
 import com.plochem.ssa.SSkyblockAddon;
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
+import com.plochem.ssa.tags.TagManager;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -21,8 +21,8 @@ public class ChatHandling implements Listener{
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
 		String rank = PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§");
-		long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((p.getUniqueId()));
-		e.setFormat(rank + p.getName() + " §7[§a" + islandLevel + "§7]§r: " + e.getMessage().replaceAll("%", "%%"));
+		String tag = TagManager.getTag(p);
+		e.setFormat(rank + p.getName()  + tag + "§r: " + e.getMessage().replaceAll("%", "%%"));
 	}
 
 }

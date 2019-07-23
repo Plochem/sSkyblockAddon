@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
@@ -59,6 +60,7 @@ import com.plochem.ssa.listeners.PlayerMove;
 import com.plochem.ssa.listeners.PlayerRespawn;
 import com.plochem.ssa.menu.MenuListener;
 import com.plochem.ssa.oregen.OreGenListener;
+import com.plochem.ssa.oregen.OreManager;
 import com.plochem.ssa.perks.PerkListeners;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
@@ -66,6 +68,8 @@ import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
 import com.plochem.ssa.stats.LeaderboardHandler;
 import com.plochem.ssa.stats.StatsListener;
+import com.plochem.ssa.tags.TagManager;
+import com.plochem.ssa.tags.TagsMenuListener;
 import com.plochem.ssa.trading.TradeListener;
 import com.plochem.ssa.trading.TradeManager;
 
@@ -118,7 +122,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				}
 				BoosterManager.activate(BoosterType.EXPERIENCE);
 				BoosterManager.activate(BoosterType.MONEY);	
-
+				TagManager.createTagFiles();
 
 				if(!(bpFile.exists())) {
 					Bukkit.getServer().getLogger().info("[SFA] Creating bounce pad storage file!");
@@ -629,6 +633,46 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
+		} else if(command.getName().equalsIgnoreCase("ores")) {
+			OreManager.openOresMenu(p);
+		} else if(command.getName().equalsIgnoreCase("tags")) {
+			if(args.length == 0) {
+				TagManager.openMenu(p);
+			} else {
+				if(args[0].equalsIgnoreCase("create")) {
+					if(args.length < 3) {
+						p.sendMessage("§cUsage: /tags create [identifier] [tag]");
+					} else {
+						if(!p.hasPermission("sfa.tagsadmin")) {
+							p.sendMessage("§cYou do not have permission to perform this command!");
+							return false;
+						}
+						if(TagManager.exists(args[1])) {
+							p.sendMessage("§cA tag by this identifier already exists!");
+							return false;
+						}
+						TagManager.create(args[1], String.join(" ", ArrayUtils.subarray(args, 2, args.length)));
+						p.sendMessage("§aYou have created a new tag called §6" + args[1] + "§a.");
+					}
+				} else if(args[0].equalsIgnoreCase("delete")) {
+					if(!p.hasPermission("sfa.tagsadmin")) {
+						p.sendMessage("§cYou do not have permission to perform this command!");
+						return false;
+					}
+					if(args.length != 2) {
+						p.sendMessage("§cUsage: /tags delete [identifier]");
+					} else {
+						if(!TagManager.exists(args[1])) {
+							p.sendMessage("§cA tag by this identifier does not exist!");
+							return false;
+						}
+						TagManager.delete(args[1]);
+						p.sendMessage("§aYou have deleted a tag called §6" + args[1] + "§a.");
+					}
+				} else if(args[0].equalsIgnoreCase("help")) {
+					
+				}
+			}
 		}
 		// new cmd
 		return false;
@@ -721,6 +765,8 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new StatsListener(), this);
 		pm.registerEvents(new OreGenListener(), this);
 		pm.registerEvents(new TradeListener(), this);
+		pm.registerEvents(new OreManager(), this);
+		pm.registerEvents(new TagsMenuListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
@@ -743,6 +789,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.rewards.legend"));
 		pm.addPermission(new Permission("sfa.rewards.mystic"));
 		pm.addPermission(new Permission("sfa.banknote.give"));
+		pm.addPermission(new Permission("sfa.tagsadmin"));
 	}
 
 	public YamlConfiguration getBpData() {
