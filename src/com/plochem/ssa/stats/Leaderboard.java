@@ -20,7 +20,9 @@ public class Leaderboard {
 	}
 
 	public void show() {
-		if(loc == null) return;
+		if(loc == null) {
+			return;
+		}
 		Location displayLoc = loc.clone().add(0, (gap * text.size()) - 1.97D, 0);
 		for (int i = 0; i < text.size(); i++) {
 			ArmorStand as = (ArmorStand) displayLoc.getWorld().spawnEntity(displayLoc, EntityType.ARMOR_STAND);
