@@ -13,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 import com.plochem.ssa.SSkyblockAddon;
 
-import net.citizensnpcs.api.event.NPCClickEvent;
 
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -61,11 +60,6 @@ public class EventsCancelInSpawn implements Listener{
 		if(worldNames.contains(e.getLocation().getWorld().getName())) {
 			e.setCancelled(true);
 		}
-	}
-	
-	@EventHandler
-	public void f(NPCClickEvent e) {
-		
 	}
 	
 }
