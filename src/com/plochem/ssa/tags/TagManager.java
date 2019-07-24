@@ -16,10 +16,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 public class TagManager {
-	private static File tagFile = new File("plugins/sfa/tags/tags.yml");
+	private static File tagFile = new File("plugins/SFA/tags/tags.yml");
 	private static YamlConfiguration tagData = YamlConfiguration.loadConfiguration(tagFile);
-	private static File playerTagFile = new File("plugins/sfa/tags/playerTags.yml");
+	private static File playerTagFile = new File("plugins/SFA/tags/playerTags.yml");
 	private static YamlConfiguration playerTagData = YamlConfiguration.loadConfiguration(playerTagFile);
 	public static void openMenu(Player p) {
 		Inventory menu = Bukkit.createInventory(null, 54, "Tags");
@@ -59,8 +61,14 @@ public class TagManager {
 	}
 	
 	public static void delete(String identifier) {
+		PluginManager pm = Bukkit.getServer().getPluginManager();
+		pm.removePermission(new Permission("sfa.tags." + identifier.toLowerCase()));
 		tagData.set(identifier.toLowerCase(), null);
 		saveTagFile();
+	}
+	
+	public static void giveTag(String identifier, String name) {
+		PermissionsEx.getUser(name).addPermission("sfa.tags." + identifier.toLowerCase());
 	}
 	
 	public static boolean exists(String identifier) {

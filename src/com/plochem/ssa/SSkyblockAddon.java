@@ -84,7 +84,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
-	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen");
+	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen", "tags");
 
 	public void onEnable(){
 		sEco.hook();
@@ -637,40 +637,66 @@ public class SSkyblockAddon extends JavaPlugin {
 			OreManager.openOresMenu(p);
 		} else if(command.getName().equalsIgnoreCase("tags")) {
 			if(args.length == 0) {
-				TagManager.openMenu(p);
+				if(!(sender instanceof Player))	
+					sender.sendMessage("[SFA] You must be a player to do this!");
+				else
+					TagManager.openMenu(p);
 			} else {
 				if(args[0].equalsIgnoreCase("create")) {
 					if(args.length < 3) {
-						p.sendMessage("§cUsage: /tags create [identifier] [tag]");
+						sender.sendMessage("§cUsage: /tags create [identifier] [tag]");
 					} else {
-						if(!p.hasPermission("sfa.tagsadmin")) {
-							p.sendMessage("§cYou do not have permission to perform this command!");
+						if(!sender.hasPermission("sfa.tagsadmin")) {
+							sender.sendMessage("§cYou do not have permission to perform this command!");
 							return false;
 						}
 						if(TagManager.exists(args[1])) {
-							p.sendMessage("§cA tag by this identifier already exists!");
+							sender.sendMessage("§cA tag by this identifier already exists!");
+							return false;
+						}
+						
+						if(!StringUtils.isAlphanumeric(args[1])) {
+							sender.sendMessage("§cThe identifier has to be alphanumeric!");
 							return false;
 						}
 						TagManager.create(args[1], String.join(" ", ArrayUtils.subarray(args, 2, args.length)));
-						p.sendMessage("§aYou have created a new tag called §6" + args[1] + "§a.");
+						sender.sendMessage("§aYou have created a new tag called §6" + args[1] + "§a.");
 					}
 				} else if(args[0].equalsIgnoreCase("delete")) {
-					if(!p.hasPermission("sfa.tagsadmin")) {
-						p.sendMessage("§cYou do not have permission to perform this command!");
+					if(!sender.hasPermission("sfa.tagsadmin")) {
+						sender.sendMessage("§cYou do not have permission to perform this command!");
 						return false;
 					}
 					if(args.length != 2) {
-						p.sendMessage("§cUsage: /tags delete [identifier]");
+						sender.sendMessage("§cUsage: /tags delete [identifier]");
 					} else {
 						if(!TagManager.exists(args[1])) {
-							p.sendMessage("§cA tag by this identifier does not exist!");
+							sender.sendMessage("§cA tag by this identifier does not exist!");
 							return false;
 						}
 						TagManager.delete(args[1]);
-						p.sendMessage("§aYou have deleted a tag called §6" + args[1] + "§a.");
+						sender.sendMessage("§aYou have deleted a tag called §6" + args[1] + "§a.");
 					}
-				} else if(args[0].equalsIgnoreCase("help")) {
-					
+				} else if(args[0].equalsIgnoreCase("give")) {
+					if(!sender.hasPermission("sfa.tagsadmin")) {
+						sender.sendMessage("§cYou do not have permission to perform this command!");
+						return false;
+					}
+					if(args.length != 3) {
+						sender.sendMessage("§cUsage: /tags give [player name] [identifier]");
+					} else {
+						if(!TagManager.exists(args[2])) {
+							sender.sendMessage("§cA tag by this identifier does not exist!");
+							return false;
+						}
+						OfflinePlayer target = Bukkit.getOfflinePlayer(args[1]);
+						if(!target.hasPlayedBefore()) {
+							sender.sendMessage("§cSorry, but that player cannot be found!");
+							return false;
+						}
+						TagManager.giveTag(args[2], args[1]);
+						sender.sendMessage("§aYou gave a tag called §6" + args[2] + " §ato " + args[1] + ".");
+					}
 				}
 			}
 		}
