@@ -30,13 +30,17 @@ public class KitManager {
 	static {
         new BukkitRunnable() {
         	int time = 0;
+        	List<UUID> toRemove = new ArrayList<>();
             @Override
             public void run() {
             	for(UUID id : cooldowns.keySet()) {
             		if(cooldowns.get(id) == 0)
-            			cooldowns.remove(id);
+            			toRemove.add(id);
             		else
             			cooldowns.put(id, cooldowns.get(id) - 1);
+            	}
+            	for(UUID id : toRemove) {
+        			cooldowns.remove(id);
             	}
             	time++;
             	if(time == 60) {
