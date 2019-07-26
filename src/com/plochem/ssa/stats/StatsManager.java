@@ -16,6 +16,8 @@ import org.bukkit.scoreboard.Scoreboard;
 import com.plochem.ssa.SSkyblockAddon;
 import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
+import ru.tehkode.permissions.bukkit.PermissionsEx;
+
 
 public class StatsManager {
 	public static void addDeath(Player killed) {
@@ -84,6 +86,11 @@ public class StatsManager {
             }
         }.runTaskLater(sfa, 20);
 
+	}
+	
+	public static void updateTab(Player joiner) {
+		long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((joiner.getUniqueId()));
+		joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
 	}
 	
 	

@@ -19,9 +19,6 @@ import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.homes.Home;
 import com.plochem.ssa.kits.KitManager;
 import com.plochem.ssa.stats.StatsManager;
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
-
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class PlayerJoin implements Listener{
 	private File playerFile;
@@ -31,8 +28,6 @@ public class PlayerJoin implements Listener{
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) throws IOException{
 		Player joiner = e.getPlayer();
-		long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((joiner.getUniqueId()));
-		joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
 		KitManager.readCooldownFiles(joiner.getUniqueId());
         new BukkitRunnable() {
             @Override
@@ -110,5 +105,6 @@ public class PlayerJoin implements Listener{
 		}
 		
 		StatsManager.showScoreboard(joiner);
+		StatsManager.updateTab(joiner);
 	}
 }

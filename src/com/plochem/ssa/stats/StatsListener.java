@@ -30,24 +30,29 @@ public class StatsListener implements Listener {
 	@EventHandler
 	public void onIslandJoin(IslandJoinEvent e) {
 		ASkyBlockAPI.getInstance().calculateIslandLevel(e.getIslandOwner());
+		StatsManager.updateTab(Bukkit.getPlayer(e.getPlayer()));
 	}
 	
 	@EventHandler
 	public void onIslandLeave(IslandLeaveEvent e) {
 		StatsManager.showScoreboard(Bukkit.getPlayer(e.getPlayer()));
+		StatsManager.updateTab(Bukkit.getPlayer(e.getPlayer()));
 	}
 	
 	@EventHandler
 	public void onIslandCreate(IslandNewEvent e) {
 		StatsManager.showScoreboard(e.getPlayer());
+		StatsManager.updateTab(e.getPlayer());
 	}
 	
 	@EventHandler
 	public void onIslandCreate(IslandPostLevelEvent e) {
 		for(UUID id : e.getIsland().getMembers()) {
 			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+			StatsManager.updateTab(Bukkit.getPlayer(e.getPlayer()));
 		}
 		StatsManager.showScoreboard(Bukkit.getPlayer(e.getIslandOwner()));
+		StatsManager.updateTab(Bukkit.getPlayer(e.getPlayer()));
 
 	}
 
