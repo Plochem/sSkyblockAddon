@@ -62,6 +62,7 @@ import com.plochem.ssa.menu.MenuListener;
 import com.plochem.ssa.oregen.OreGenListener;
 import com.plochem.ssa.oregen.OreManager;
 import com.plochem.ssa.perks.PerkListeners;
+import com.plochem.ssa.repair.RepairManager;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
@@ -113,6 +114,9 @@ public class SSkyblockAddon extends JavaPlugin {
 				KitManager.createKitFile();
 				GeneratorManager.createGeneratorFile();
 				GeneratorManager.startGlobalCounter();
+				RewardManager.resetListTimer();
+				RepairManager.createRepairFile();
+				RepairManager.startTimer();
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					KitManager.readCooldownFiles(p.getUniqueId());
 				}
@@ -132,7 +136,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
 				}
 				LeaderboardHandler.update(SSkyblockAddon.getPlugin(SSkyblockAddon.class), storageData);
-				
+
 			}
 
 		}.runTaskLater(this, 1);	
@@ -654,7 +658,7 @@ public class SSkyblockAddon extends JavaPlugin {
 							sender.sendMessage("§cA tag by this identifier already exists!");
 							return false;
 						}
-						
+
 						if(!StringUtils.isAlphanumeric(args[1])) {
 							sender.sendMessage("§cThe identifier has to be alphanumeric!");
 							return false;
@@ -699,8 +703,25 @@ public class SSkyblockAddon extends JavaPlugin {
 					}
 				}
 			}
+		} else if(command.getName().equalsIgnoreCase("repair")) {
+			if(!p.hasPermission("sfa.repair.5")) {
+				sender.sendMessage("§cYou do not have permission to perform this command!");
+				return false;
+			}
+			if(RepairManager.canRepair(p)) {
+				ItemStack curr = p.getItemInHand();
+				if(curr.getDurability() > (short)0) {
+					curr.setDurability((short)0);
+					p.sendMessage("§aYou repaired the current item in your hand.");
+					RepairManager.addRepair(p);
+				} else {
+					p.sendMessage("§cThis item is either already fully repaired or not repairable.");
+				}
+
+			} else {
+				p.sendMessage("§cYou already exceeded the maximum number of repairs. Purchase a rank to increase the limit or wait for one week.");
+			}
 		}
-		// new cmd
 		return false;
 	}
 
@@ -737,6 +758,10 @@ public class SSkyblockAddon extends JavaPlugin {
 	}
 
 	private void teleportCoolDown(Location loc, Player p, int sec) {
+		if(p.hasPermission("sfa.bypassteleportcooldown")) {
+			p.teleport(loc);
+			return;
+		}
 		if(runningSomeTPCmd.contains(p.getUniqueId())) {
 			p.sendMessage("§cWait for the command to finish executing!");
 			return;
@@ -816,6 +841,10 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.rewards.mystic"));
 		pm.addPermission(new Permission("sfa.banknote.give"));
 		pm.addPermission(new Permission("sfa.tagsadmin"));
+		pm.addPermission(new Permission("sfa.bypassteleportcooldown"));
+		pm.addPermission(new Permission("sfa.repair.5"));
+		pm.addPermission(new Permission("sfa.repair.10"));
+		pm.addPermission(new Permission("sfa.repair.15"));
 	}
 
 	public YamlConfiguration getBpData() {
