@@ -132,7 +132,7 @@ public enum PerkType {
 				    }
 				}.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), level*3*20, 0);
 			} else {
-				source.setHealth(source.getHealth() + ((Double)other[0]));
+				source.setHealth(Math.min(20.0, source.getHealth() + ((Double)other[0])));
 				source.sendMessage("§a" + target.getName() + "'s attack healed you by " + (Double)other[0] + " HP.");
 				target.sendMessage("§cYour attack healed " + source.getName() + " by " + (Double)other[0] + " HP.");
 			}
