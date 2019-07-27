@@ -4,14 +4,12 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.text.WordUtils;
@@ -24,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 public class RewardManager {
+	
 	public static void openRewardMenu(Player p) {
 		Inventory menu = Bukkit.createInventory(null, 36, "Rewards");
 		ItemStack i = new ItemStack(Material.STORAGE_MINECART);
@@ -32,9 +31,9 @@ public class RewardManager {
 		for(int j = 0; j < RewardType.values().length; j++) {
 			im.setDisplayName("§e" + WordUtils.capitalizeFully(RewardType.values()[j].toString().replaceAll("_", " ")) + " Rewards");
 			List<String> lore = new ArrayList<>(Arrays.asList("§6$" + RewardType.values()[j].getMoney(),
-												"§3"+RewardType.values()[j].getXp() + " XP", 
-												"§7" + RewardType.values()[j].getCrateKey() + " key",
-												"")); 
+					"§3"+RewardType.values()[j].getXp() + " XP", 
+					"§7" + RewardType.values()[j].getCrateKey() + " key",
+					"")); 
 			if(notClaim(p, RewardType.values()[j])) {
 				lore.add("§eClick to claim!");
 				i.setType(Material.STORAGE_MINECART);
@@ -48,7 +47,7 @@ public class RewardManager {
 		}
 		p.openInventory(menu);
 	}
-	
+
 	public static void createCollectedFile() {
 		File f = new File("plugins/SFA/claimedplayers.yml");
 		YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
@@ -69,15 +68,14 @@ public class RewardManager {
 			Bukkit.getServer().getLogger().info("[SFA] Claimed reward file already exists! Skipping creation...");
 		}
 	}
-	
+
 	public static void resetListTimer() {
-		Timer timer = new Timer();
-		LocalDateTime tomorrowMidnight = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT).plusDays(1);
-		Date date = Date.from(tomorrowMidnight.atZone(ZoneId.systemDefault()).toInstant());
-		
-		timer.scheduleAtFixedRate(new TimerTask() {
+		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
+		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
+		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.MINUTES);
+		schedule.scheduleAtFixedRate(new Runnable() {
 			@Override
-			public void run() { // runs when is tomorrowMidnight
+			public void run() {
 				File f = new File("plugins/SFA/claimedplayers.yml");
 				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
 				for(RewardType type : RewardType.values()) {
@@ -94,10 +92,12 @@ public class RewardManager {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+
 			}
-		}, date, TimeUnit.DAYS.toMillis(1));
+		}, midnight, TimeUnit.DAYS.toMinutes(1), TimeUnit.MINUTES);
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void addToClaim(Player clicker, RewardType type) {
 		File f = new File("plugins/SFA/claimedplayers.yml");
@@ -111,7 +111,7 @@ public class RewardManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static boolean notClaim(Player clicker, RewardType type) {
 		File f = new File("plugins/SFA/claimedplayers.yml");
@@ -122,5 +122,5 @@ public class RewardManager {
 		}
 		return true;
 	}
-	
+
 }
