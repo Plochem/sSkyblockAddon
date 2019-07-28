@@ -2,6 +2,7 @@ package com.plochem.ssa.repair;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -43,8 +44,9 @@ public class RepairManager {
 
 	public static boolean canRepair(Player p) {
 		int timesRepaired = repairData.getInt(p.getUniqueId().toString());
-		//System.out.println(timesRepaired);
-		if(p.hasPermission("sfa.repair.15")) { // 5 times
+		if(p.hasPermission("sfa.repair.unlimited")) {
+			return true;
+		} else if(p.hasPermission("sfa.repair.15")) { // 5 times
 			if(timesRepaired < 15) {
 				return true;
 			} else {
@@ -73,10 +75,12 @@ public class RepairManager {
 		schedule.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				for(String id : repairData.getKeys(false)) {
-					repairData.set(id, null);
+				if(LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY) { // runs every monday at 12am
+					for(String id : repairData.getKeys(false)) {
+						repairData.set(id, null);
+					}
+					saveRepairFile();
 				}
-				saveRepairFile();
 			}
 		}, midnight, TimeUnit.DAYS.toMinutes(1), TimeUnit.MINUTES);
 

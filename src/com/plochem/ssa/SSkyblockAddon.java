@@ -845,6 +845,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.repair.5"));
 		pm.addPermission(new Permission("sfa.repair.10"));
 		pm.addPermission(new Permission("sfa.repair.15"));
+		pm.addPermission(new Permission("sfa.repair.unlimited"));
 	}
 
 	public YamlConfiguration getBpData() {
