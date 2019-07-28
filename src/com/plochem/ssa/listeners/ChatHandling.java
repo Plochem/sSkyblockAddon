@@ -22,7 +22,11 @@ public class ChatHandling implements Listener{
 		Player p = e.getPlayer();
 		String rank = PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§");
 		String tag = TagManager.getTag(p);
-		e.setFormat(rank + p.getName()  + tag + "§r: " + e.getMessage().replaceAll("%", "%%"));
+		String msg = e.getMessage();
+		if(p.hasPermission("sfa.coloredchat")) {
+			msg = msg.replaceAll("&", "§");
+		}
+		e.setFormat(rank + p.getName()  + tag + "§r: " + msg.replaceAll("%", "%%"));
 	}
 
 }
