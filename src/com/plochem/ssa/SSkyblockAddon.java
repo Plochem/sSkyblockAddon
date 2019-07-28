@@ -54,6 +54,7 @@ import com.plochem.ssa.kits.KitSelection;
 import com.plochem.ssa.listeners.ChatHandling;
 import com.plochem.ssa.listeners.EventsCancelInSpawn;
 import com.plochem.ssa.listeners.InvseeEdit;
+import com.plochem.ssa.listeners.PlayerDeath;
 import com.plochem.ssa.listeners.PlayerJoin;
 import com.plochem.ssa.listeners.PlayerKillEntity;
 import com.plochem.ssa.listeners.PlayerMove;
@@ -818,6 +819,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new TradeListener(), this);
 		pm.registerEvents(new OreManager(), this);
 		pm.registerEvents(new TagsMenuListener(), this);
+		pm.registerEvents(new PlayerDeath(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
@@ -847,6 +849,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.repair.15"));
 		pm.addPermission(new Permission("sfa.repair.unlimited"));
 		pm.addPermission(new Permission("sfa.coloredchat"));
+		pm.addPermission(new Permission("sfa.keepexp"));
 	}
 
 	public YamlConfiguration getBpData() {
