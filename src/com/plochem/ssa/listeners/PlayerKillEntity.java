@@ -32,7 +32,7 @@ public class PlayerKillEntity implements Listener{
 				return;
 			}
 			int baseMoney = 10;
-			int baseXP = e.getDroppedExp() + 20;
+			int baseXP = e.getDroppedExp();
 			int stackSize = StackUtils.getStackSize(e.getEntity());
 			String boosterMessage = "";
 			String expMessage = "";
@@ -42,6 +42,7 @@ public class PlayerKillEntity implements Listener{
 				baseMoney = 50;
 				killedWhoMessage = " (Killed a player)";
 			} else {
+				if(stackSize == 0) stackSize = 1;
 				baseMoney *= stackSize;
 				baseXP *= stackSize;
 			}
