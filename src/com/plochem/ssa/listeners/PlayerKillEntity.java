@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
+import com.kiwifisher.mobstacker.utils.StackUtils;
 import com.plochem.ssa.SSkyblockAddon;
 import com.plochem.ssa.boosters.BoosterManager;
 
@@ -31,7 +32,8 @@ public class PlayerKillEntity implements Listener{
 				return;
 			}
 			int baseMoney = 10;
-			int baseXP = e.getDroppedExp() + 30;
+			int baseXP = e.getDroppedExp() + 20;
+			int stackSize = StackUtils.getStackSize(e.getEntity());
 			String boosterMessage = "";
 			String expMessage = "";
 			String killedWhoMessage = " (Killed a mob)";
@@ -39,6 +41,9 @@ public class PlayerKillEntity implements Listener{
 			if(entity instanceof Player) {
 				baseMoney = 50;
 				killedWhoMessage = " (Killed a player)";
+			} else {
+				baseMoney *= stackSize;
+				baseXP *= stackSize;
 			}
 			if(BoosterManager.moneyBoosterIsActive()) {
 				baseMoney *= 2;
