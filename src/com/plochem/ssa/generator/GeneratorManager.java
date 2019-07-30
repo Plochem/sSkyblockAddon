@@ -75,7 +75,7 @@ public class GeneratorManager {
 				timeElapsed++;
 				for(Generator gen: gens) {
 					if(timeElapsed >= gen.getType().getInterval() && timeElapsed % gen.getType().getInterval() == 0) {
-						if(gen.getNumGenerated() < Integer.MAX_VALUE) { // prevent overflowing
+						if(gen.getNumGenerated() < gen.getType().getMax()) { // limit
 							gen.setNumGenerated(gen.getNumGenerated()+1);
 							Block signBlock = gen.getLoc().getBlock().getRelative(gen.getSignDir());
 							Sign sign = (Sign) (signBlock.getState());
