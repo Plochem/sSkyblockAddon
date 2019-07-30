@@ -36,7 +36,7 @@ public class PlayerKillEntity implements Listener{
 			int stackSize = StackUtils.getStackSize(e.getEntity());
 			String boosterMessage = "";
 			String expMessage = "";
-			String killedWhoMessage = " (Killed a mob)";
+			String killedWhoMessage;
 			e.setDroppedExp(0);
 			if(entity instanceof Player) {
 				baseMoney = 50;
@@ -44,7 +44,7 @@ public class PlayerKillEntity implements Listener{
 			} else {
 				if(stackSize == 0) stackSize = 1;
 				baseMoney *= stackSize;
-				baseXP *= stackSize;
+				killedWhoMessage = " (Killed " + stackSize + " mob(s))";
 			}
 			if(BoosterManager.moneyBoosterIsActive()) {
 				baseMoney *= 2;
