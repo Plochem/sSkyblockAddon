@@ -73,21 +73,26 @@ public class GeneratorManager {
 					this.cancel();
 				}
 				timeElapsed++;
-				for(Generator gen: gens) {
+				for(int i = 0; i < gens.size(); i++) {
+					Generator gen = gens.get(i);
 					if(timeElapsed >= gen.getType().getInterval() && timeElapsed % gen.getType().getInterval() == 0) {
 						if(gen.getNumGenerated() < gen.getType().getMax()) { // limit
 							gen.setNumGenerated(gen.getNumGenerated()+1);
 							Block signBlock = gen.getLoc().getBlock().getRelative(gen.getSignDir());
-							Sign sign = (Sign) (signBlock.getState());
-							sign.setLine(2, String.valueOf(gen.getNumGenerated()));
-							sign.update();
+							if(signBlock.getState().getType() != Material.WALL_SIGN) {
+								remove(gen);
+							} else {
+								Sign sign = (Sign) (signBlock.getState());
+								sign.setLine(2, String.valueOf(gen.getNumGenerated()));
+								sign.update();
+							}
 						}
 					}
 				}
 				saveGenFile();
 				if(timeElapsed == lcm) timeElapsed = 0;
 			}
-        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20L); // TODO change to  1200
+        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 1200L); // TODO change to  1200
 	}
 	
 	public static void giveGenerator(CommandSender sender, String name, String type) {
