@@ -40,6 +40,8 @@ public class MenuListener implements Listener{
 							openGenShop((Player)e.getWhoClicked());
 						} else if (name.equals("§aShop")) {
 							Bukkit.getServer().dispatchCommand(p, "shop");
+						} else if (name.equals("§aRewards")) {
+							Bukkit.getServer().dispatchCommand(p, "rewards");
 						}
 					}
 
