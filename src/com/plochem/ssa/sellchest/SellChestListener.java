@@ -35,7 +35,7 @@ public class SellChestListener implements Listener{
 							DoubleChest doubleChest = (DoubleChest) inventory.getHolder();
 							inventory = doubleChest.getInventory();
 						}
-						if(!e.getPlayer().isOp() && ASkyBlockAPI.getInstance().playerIsOnIsland(e.getPlayer())) {
+						if(e.getPlayer().isOp() || ASkyBlockAPI.getInstance().playerIsOnIsland(e.getPlayer())) {
 							double soldCost = 0.0;
 							int numItems = 0;
 							for(int i = 0; i < inventory.getSize(); i++) {
