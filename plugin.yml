@@ -3,8 +3,8 @@ name: sSkyblockAddon
 version: 1.9.4
 author: Plochem
 description: Skyblock Addon for Straxidus.
-depend: [Vault, Citizens]
-loadbefore: [ASkyBlock, ShopGUIPlus]
+depend: [Vault]
+loadbefore: [ASkyBlock, ShopGUIPlus, FusedSpawner]
 commands:
    giveBouncePad:
    bal:
@@ -24,7 +24,6 @@ commands:
    tpaccept:
    tpdeny:
    invsee:
-   givesellwand:
    givegen:
    sethome:
    home:
@@ -45,3 +44,4 @@ commands:
    ores:
    tags:
    repair:
+   giveSellChest:

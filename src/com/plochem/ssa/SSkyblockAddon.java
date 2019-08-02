@@ -66,6 +66,8 @@ import com.plochem.ssa.perks.PerkListeners;
 import com.plochem.ssa.repair.RepairManager;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
+import com.plochem.ssa.sellchest.SellChestListener;
+import com.plochem.ssa.sellchest.SellChestManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
 import com.plochem.ssa.stats.LeaderboardHandler;
@@ -722,12 +724,31 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				p.sendMessage("§cYou already exceeded the maximum number of repairs. Purchase a rank to increase the limit or wait for one week.");
 			}
+		} else if(command.getName().equalsIgnoreCase("giveSellChest")) {
+			if(!sender.hasPermission("sfa.givesellchest")) {
+				sender.sendMessage("§cYou do not have permission to perform this command!");
+				return false;
+			}
+			if(args.length != 2) {
+				sender.sendMessage("§cUsage: /givesellchest [player] [amount]");
+				return false;
+			}
+			Player target = Bukkit.getPlayer(args[0]);
+			if(target == null) {
+				sender.sendMessage("§cSorry, but that player cannot be found!");
+				return false;
+			}
+			if(!StringUtils.isNumeric(args[1]) || Integer.parseInt(args[1]) > 64) {
+				sender.sendMessage("§cThe amount has to be numeric and at most 64.");
+				return false;
+			}
+			SellChestManager.giveItem(target, Integer.parseInt(args[1]));
 		}
 		return false;
 	}
 
 	private Inventory buildMenu() {
-		Inventory i = Bukkit.createInventory(null, 27, "Menu");
+		Inventory i = Bukkit.createInventory(null, 54, "Menu");
 		ItemStack item = new ItemStack(Material.SLIME_BALL);
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName("§aCosmetics");
@@ -755,6 +776,20 @@ public class SSkyblockAddon extends JavaPlugin {
 		im.setLore(Arrays.asList("§7Click here to purchase other items."));
 		item.setItemMeta(im);
 		i.setItem(16, item);
+		
+		item = new ItemStack(Material.STORAGE_MINECART);
+		im = item.getItemMeta();
+		im.setDisplayName("§aRewards");
+		im.setLore(Arrays.asList("§7Click here to open the rewards menu."));
+		item.setItemMeta(im);
+		i.setItem(29, item);
+		
+//		item = new ItemStack(Material.ENDER_CHEST);
+//		im = item.getItemMeta();
+//		im.setDisplayName("§a???");
+//		im.setLore(Arrays.asList("§7Click here to purchases special items."));
+//		item.setItemMeta(im);
+//		i.setItem(33, item);
 		return i;
 	}
 
@@ -820,6 +855,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new OreManager(), this);
 		pm.registerEvents(new TagsMenuListener(), this);
 		pm.registerEvents(new PlayerDeath(), this);
+		pm.registerEvents(new SellChestListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
@@ -850,6 +886,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.repair.unlimited"));
 		pm.addPermission(new Permission("sfa.coloredchat"));
 		pm.addPermission(new Permission("sfa.keepexp"));
+		pm.addPermission(new Permission("sfa.givesellchest"));
 	}
 
 	public YamlConfiguration getBpData() {
