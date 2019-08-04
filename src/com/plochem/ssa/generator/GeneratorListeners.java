@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.plochem.ssa.SSkyblockAddon;
 import com.plochem.ssa.economy.SEconomyImplementer;
+import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 public class GeneratorListeners implements Listener{
 	private static BlockFace[] axis = { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
@@ -74,34 +75,38 @@ public class GeneratorListeners implements Listener{
 				if(gen.getLoc().equals(block.getLocation()) && (gen.getSignDir() == matSign.getFacing())) {
 					Player p = e.getPlayer();
 					if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-						int amt = gen.getNumGenerated();
-						if(amt == 0) {
-							p.sendMessage("§cThe generator is currently empty. Wait for at least one ore to be generated.");
-							return;
-						}
-						if(amt != Integer.parseInt(sign.getLine(2))) {
-							p.sendMessage("§cThe amount on the sign does not match with amount on the server. You'll receive the amount from the server instead.");
-						}
-						ItemStack items = new ItemStack(Material.valueOf(gen.getType().toString()), amt);
-						HashMap<Integer,ItemStack> extra = p.getInventory().addItem(items);
-						p.sendMessage("§aYou have claimed your ores!");
-						//TODO sound
-						if(!extra.isEmpty()) {	
-							for(Entry<Integer, ItemStack> entry : extra.entrySet()){   
-								p.getWorld().dropItem(p.getLocation(), entry.getValue());
+						if(p.isOp() || ASkyBlockAPI.getInstance().playerIsOnIsland(e.getPlayer())) {
+							int amt = gen.getNumGenerated();
+							if(amt == 0) {
+								p.sendMessage("§cThe generator is currently empty. Wait for at least one ore to be generated.");
+								return;
 							}
-							p.sendMessage("§cSome ores dropped on the ground because your inventory is full.");
+							if(amt != Integer.parseInt(sign.getLine(2))) {
+								p.sendMessage("§cThe amount on the sign does not match with amount on the server. You'll receive the amount from the server instead.");
+							}
+							ItemStack items = new ItemStack(Material.valueOf(gen.getType().toString()), amt);
+							HashMap<Integer,ItemStack> extra = p.getInventory().addItem(items);
+							p.sendMessage("§aYou have claimed your ores!");
+							//TODO sound
+							if(!extra.isEmpty()) {	
+								for(Entry<Integer, ItemStack> entry : extra.entrySet()){   
+									p.getWorld().dropItem(p.getLocation(), entry.getValue());
+								}
+								p.sendMessage("§cSome ores dropped on the ground because your inventory is full.");
+							}
+							sign.setLine(2, "0");
+							sign.update();
+							gen.setNumGenerated(0);
+						} else {
+							p.sendMessage("§cYou may not claim ores from generators that are not on your island.");
 						}
-						sign.setLine(2, "0");
-						sign.update();
-						gen.setNumGenerated(0);
 					}
 					break;
 				}
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onBreak(BlockBreakEvent e) {
 		Block target = e.getBlock();
@@ -121,7 +126,7 @@ public class GeneratorListeners implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onExplode(EntityExplodeEvent e) {
 		for(Block block : new ArrayList<Block>(e.blockList())) {
@@ -141,7 +146,7 @@ public class GeneratorListeners implements Listener{
 			}
 		}
 	}
-	
+
 	@EventHandler
 	public void onPurchase(InventoryClickEvent e) {
 		if(e.getClickedInventory() != null && e.getClickedInventory().getItem(e.getSlot()) != null) {
