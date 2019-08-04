@@ -89,8 +89,10 @@ public class StatsManager {
 	}
 	
 	public static void updateTab(Player joiner) {
-		long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((joiner.getUniqueId()));
-		joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
+		if(joiner != null) {
+			long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((joiner.getUniqueId()));
+			joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
+		}	
 	}
 	
 	
