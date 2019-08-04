@@ -748,7 +748,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	}
 
 	private Inventory buildMenu() {
-		Inventory i = Bukkit.createInventory(null, 54, "Menu");
+		Inventory i = Bukkit.createInventory(null, 45, "Menu");
 		ItemStack item = new ItemStack(Material.SLIME_BALL);
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName("§aCosmetics");
@@ -784,12 +784,20 @@ public class SSkyblockAddon extends JavaPlugin {
 		item.setItemMeta(im);
 		i.setItem(29, item);
 		
-//		item = new ItemStack(Material.ENDER_CHEST);
-//		im = item.getItemMeta();
-//		im.setDisplayName("§a???");
-//		im.setLore(Arrays.asList("§7Click here to purchases special items."));
-//		item.setItemMeta(im);
-//		i.setItem(33, item);
+		item = new ItemStack(Material.ENDER_CHEST);
+		im = item.getItemMeta();
+		im.setDisplayName("§aCrates");
+		im.setLore(Arrays.asList("§7Click here to open the crates menu"));
+		item.setItemMeta(im);
+		i.setItem(31, item);
+		
+		item = new ItemStack(Material.CHEST);
+		im = item.getItemMeta();
+		im.setDisplayName("§aKits");
+		im.setLore(Arrays.asList("§7Click here to open the kits menu"));
+		item.setItemMeta(im);
+		i.setItem(33, item);
+		
 		return i;
 	}
 
