@@ -23,14 +23,15 @@ public class TagManager {
 	private static YamlConfiguration tagData = YamlConfiguration.loadConfiguration(tagFile);
 	private static File playerTagFile = new File("plugins/SFA/tags/playerTags.yml");
 	private static YamlConfiguration playerTagData = YamlConfiguration.loadConfiguration(playerTagFile);
-	public static void openMenu(Player p) {
-		Inventory menu = Bukkit.createInventory(null, 54, "Tags");
+	public static void openMenu(Player p, int page) {
+		Inventory menu = Bukkit.createInventory(null, 54, "Tags - Page: " + page);
 		if(tagData.getKeys(false).isEmpty()) {
 			p.sendMessage("§cNo tags have been created yet!");
 			return;
 		}
-		for(String identifier : tagData.getKeys(false)) {
-			identifier = identifier.toLowerCase();
+		List<String> keys = new ArrayList<>(tagData.getKeys(false));
+		for(int i = (45*page); i < Math.min(45 * (page+1), keys.size()); i++) {
+			String identifier = keys.get(i).toLowerCase();
 			String tag = tagData.getString(identifier).replaceAll("&", "§");
 			ItemStack item = new ItemStack(Material.NAME_TAG);
 			ItemMeta itemMeta = item.getItemMeta();
@@ -50,6 +51,25 @@ public class TagManager {
 			item.setItemMeta(itemMeta);
 			menu.addItem(item);
 		}
+		if(page != 0) {
+			ItemStack item = new ItemStack(Material.ARROW);
+			ItemMeta itemMeta = item.getItemMeta();
+			itemMeta.setDisplayName("§ePrevious page");
+			item.setItemMeta(itemMeta);
+			menu.setItem(48, item);
+		}
+		if(45 * (page+1) < keys.size()) { // checks if current page has enough space
+			ItemStack item = new ItemStack(Material.ARROW);
+			ItemMeta itemMeta = item.getItemMeta();
+			itemMeta.setDisplayName("§eNext page");
+			item.setItemMeta(itemMeta);
+			menu.setItem(50, item);
+		}
+		ItemStack item = new ItemStack(Material.STAINED_GLASS, 1, (short)14);
+		ItemMeta itemMeta = item.getItemMeta();
+		itemMeta.setDisplayName("§cRemove current tag");
+		item.setItemMeta(itemMeta);
+		menu.setItem(49, item);
 		p.openInventory(menu);
 	}
 	
@@ -99,7 +119,12 @@ public class TagManager {
 		} else {
 			p.sendMessage("§cThat tag does not seem to exist anymore.");
 		}
-
+	}
+	
+	public static void removeTag(Player p) {
+		playerTagData.set(p.getUniqueId().toString(), null);
+		savePlayerTagFile();
+		p.sendMessage("§aYour tag has been removed.");
 	}
 
 	public static void createTagFiles() {
