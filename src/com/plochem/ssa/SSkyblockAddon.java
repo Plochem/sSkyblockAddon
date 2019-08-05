@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +25,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -88,10 +90,19 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
-	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen", "tags");
+	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote");
 
 	public void onEnable(){
 		sEco.hook();
+        Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
+        Recipe recipe;
+        while(it.hasNext())
+        {
+            recipe = it.next();
+            if (recipe != null && recipe.getResult().getType() == Material.HOPPER){
+                it.remove();
+            }
+        }
 		new BukkitRunnable() { // waits for one tick before reading config because worlds have to be loaded first
 			@Override
 			public void run() {
@@ -285,8 +296,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				sender.sendMessage("§cYou do not have permission to perform this command!");
 			}
 		} else if(command.getName().equalsIgnoreCase("givebanknote")) {
-			if(!p.hasPermission("sfa.banknote.give")) {
-				p.sendMessage("§cYou do not have permission to perform this command!");
+			if(!sender.hasPermission("sfa.banknote.give")) {
+				sender.sendMessage("§cYou do not have permission to perform this command!");
 			}
 			if(args.length != 2) {
 				sender.sendMessage("§cUsage: /givebanknote [player name] [amount]");
@@ -294,14 +305,14 @@ public class SSkyblockAddon extends JavaPlugin {
 			}
 			Player to = Bukkit.getPlayer(args[0]);
 			if(to == null) {
-				p.sendMessage("§cSorry, but that player cannot be found!");
+				sender.sendMessage("§cSorry, but that player cannot be found!");
 				return false;
 			}
 			if(NumberUtils.isNumber(args[1])) {
 				double amt = Double.parseDouble(args[1]);
 				BanknoteManager.giveBanknote(to, amt);
 			} else {
-				p.sendMessage("§cEnter a valid numerical value.");
+				sender.sendMessage("§cEnter a valid numerical value.");
 			}
 		} else if(command.getName().equalsIgnoreCase("withdraw")) {
 			if(args.length != 1) {
@@ -647,7 +658,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				if(!(sender instanceof Player))	
 					sender.sendMessage("[SFA] You must be a player to do this!");
 				else
-					TagManager.openMenu(p);
+					TagManager.openMenu(p, 0);
 			} else {
 				if(args[0].equalsIgnoreCase("create")) {
 					if(args.length < 3) {
