@@ -2,11 +2,11 @@ package com.plochem.ssa.rewards;
 
 public enum RewardType {
 	DAILY(200,300, "Rare"),
-	MONTHLY(5000,3000, "Straxidus"),
+	MONTHLY(5000,3000, "Mythic"),
 	ELITE_MONTHLY(5000,3000, "Destiny"),
 	MASTER_MONTHLY(5000,3000, "Destiny"),
-	LEGEND_MONTHLY(5000,3000, "Straxidus"),
-	MYSTIC_MONTHLY(5000,3000, "Straxidus");
+	LEGEND_MONTHLY(5000,3000, "Mythic"),
+	MYSTIC_MONTHLY(5000,3000, "Mythic");
 	
 	private int money;
 	private int xp;
