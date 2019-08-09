@@ -3,8 +3,8 @@ name: sSkyblockAddon
 version: 1.9.5
 author: Plochem
 description: Skyblock Addon for Straxidus.
-depend: [Vault]
-loadbefore: [ASkyBlock, ShopGUIPlus, FusedSpawner]
+depend: [Vault, SuperiorSkyblock2, WorldEdit]
+loadbefore: [ShopGUIPlus]
 commands:
    giveBouncePad:
    bal:
