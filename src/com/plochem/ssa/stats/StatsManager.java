@@ -2,7 +2,6 @@ package com.plochem.ssa.stats;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
@@ -13,8 +12,9 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
+import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.plochem.ssa.SSkyblockAddon;
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 import ru.tehkode.permissions.bukkit.PermissionsEx;
 
@@ -59,38 +59,44 @@ public class StatsManager {
 		if(p==null)
 			return;
         new BukkitRunnable() {
-            @Override
+            @SuppressWarnings("deprecation")
+			@Override
             public void run() {
-            	String islandName = ASkyBlockAPI.getInstance().getIslandName(p.getUniqueId());
-            	long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((p.getUniqueId()));
-            	if(ASkyBlockAPI.getInstance().getIslandOwnedBy(p.getUniqueId()) == null) // doesnt own/part of island
-            		islandName = "None";
-            	if(ASkyBlockAPI.getInstance().inTeam(p.getUniqueId())) {// if in team, get the team's leader uuid to get island name
-            		UUID owner = ASkyBlockAPI.getInstance().getTeamLeader(p.getUniqueId());
-            		islandName = ASkyBlockAPI.getInstance().getIslandName(owner);
-            		islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel(owner);
+            	Island curr = SuperiorSkyblockAPI.getPlayer(p).getIsland();
+            	String islandName = "None";
+            	int islandLevel = 0;
+            	int numMembers = 0;
+            	if(curr != null) {
+                	islandName = curr.getName();
+                	islandLevel = curr.getIslandLevel();
+                	numMembers = curr.getAllMembers().size();
             	}
 
         		Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = sb.registerNewObjective("stats", "dummy");
                 obj.setDisplaySlot(DisplaySlot.SIDEBAR);
                 obj.setDisplayName("§e§lStraxidus Skyblock");
-                obj.getScore(StringUtils.center("§7Statistics", 33)).setScore(6);
-                obj.getScore("Kills: §a" + getKills(p)).setScore(5);
-                obj.getScore("Deaths: §a" + getDeaths(p)).setScore(4);
-                obj.getScore("Balance: §a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(3);
-                obj.getScore("").setScore(2);
-                obj.getScore("Island name: §a" + islandName).setScore(1);
-                obj.getScore("Island level: §a" + islandLevel).setScore(0);
+                obj.getScore(StringUtils.center("§7Statistics", 33)).setScore(7);
+                obj.getScore("Kills: §a" + getKills(p)).setScore(6);
+                obj.getScore("Deaths: §a" + getDeaths(p)).setScore(5);
+                obj.getScore("Balance: §a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(4);
+                obj.getScore("").setScore(3);
+                obj.getScore("Island name: §a" + islandName).setScore(2);
+                obj.getScore("Island level: §a" + islandLevel).setScore(1);
+                obj.getScore("Number of members: §a" + numMembers).setScore(0);
                 p.setScoreboard(sb);
             }
         }.runTaskLater(sfa, 20);
 
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void updateTab(Player joiner) {
 		if(joiner != null) {
-			long islandLevel = ASkyBlockAPI.getInstance().getLongIslandLevel((joiner.getUniqueId()));
+        	Island curr =  SuperiorSkyblockAPI.getPlayer(joiner).getIsland();
+        	int islandLevel = 0;
+        	if(curr != null)
+        		islandLevel = curr.getIslandLevel();
 			joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
 		}	
 	}

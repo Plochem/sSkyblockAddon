@@ -22,9 +22,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.plochem.ssa.SSkyblockAddon;
 import com.plochem.ssa.economy.SEconomyImplementer;
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 public class GeneratorListeners implements Listener{
 	private static BlockFace[] axis = { BlockFace.NORTH, BlockFace.EAST, BlockFace.SOUTH, BlockFace.WEST};
@@ -75,7 +75,8 @@ public class GeneratorListeners implements Listener{
 				if(gen.getLoc().equals(block.getLocation()) && (gen.getSignDir() == matSign.getFacing())) {
 					Player p = e.getPlayer();
 					if(e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-						if(p.isOp() || ASkyBlockAPI.getInstance().playerIsOnIsland(e.getPlayer())) {
+						// checks if current location of player is in own island
+						if(p.isOp() || SuperiorSkyblockAPI.getIslandAt(p.getLocation()).isMember(SuperiorSkyblockAPI.getPlayer(p))) {
 							int amt = gen.getNumGenerated();
 							if(amt == 0) {
 								p.sendMessage("§cThe generator is currently empty. Wait for at least one ore to be generated.");

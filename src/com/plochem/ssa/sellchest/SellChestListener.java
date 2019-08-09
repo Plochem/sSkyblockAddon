@@ -13,8 +13,8 @@ import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.plochem.ssa.SSkyblockAddon;
-import com.wasteofplastic.askyblock.ASkyBlockAPI;
 
 import net.brcdev.shopgui.ShopGuiPlusApi;
 import net.brcdev.shopgui.api.exception.PlayerDataNotLoadedException;
@@ -35,7 +35,7 @@ public class SellChestListener implements Listener{
 							DoubleChest doubleChest = (DoubleChest) inventory.getHolder();
 							inventory = doubleChest.getInventory();
 						}
-						if(e.getPlayer().isOp() || ASkyBlockAPI.getInstance().playerIsOnIsland(e.getPlayer())) {
+						if(e.getPlayer().isOp() || SuperiorSkyblockAPI.getIslandAt(e.getPlayer().getLocation()).isMember(SuperiorSkyblockAPI.getPlayer(e.getPlayer()))) {
 							double soldCost = 0.0;
 							int numItems = 0;
 							for(int i = 0; i < inventory.getSize(); i++) {
