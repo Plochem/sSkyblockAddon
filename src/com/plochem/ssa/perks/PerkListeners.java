@@ -5,13 +5,10 @@ import java.util.Arrays;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Arrow;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -37,38 +34,6 @@ public class PerkListeners implements Listener{
 		}
 	}
 
-	@EventHandler
-	public void onReceiveDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player && e.getDamager() instanceof LivingEntity) { // if player hits mob/player
-			Player damaged = (Player)e.getEntity();
-			int currLevel = PerkManager.currentLevel(PerkType.DEFLECT, damaged);
-			if(currLevel > 0) { // deflects melee
-				PerkType.DEFLECT.performAction(damaged, (LivingEntity)e.getDamager(), currLevel);
-			}
-		}
-
-		if(e.getEntity() instanceof Player && (e.getDamager() instanceof Player || e.getDamager() instanceof Projectile)) { // if player hits player
-			Player damaged = (Player)e.getEntity();
-			Player damager; // shooter of projectile or melee attacker
-			if(e.getDamager() instanceof Projectile) {
-				if(((Projectile) e.getDamager()).getShooter() instanceof Player){
-					damager = (Player)(((Projectile)e.getDamager()).getShooter());
-				} else {
-					return;
-				}
-			} else {
-				damager = (Player)e.getDamager();
-			}
-			int currLevel = PerkManager.currentLevel(PerkType.FREEZE, damager);
-			if(currLevel > 0) {
-				PerkType.FREEZE.performAction(damager, (Player)e.getEntity(), currLevel);
-			}
-			currLevel = PerkManager.currentLevel(PerkType.LEECH, damaged);
-			if(currLevel > 0) {
-				PerkType.LEECH.performAction(damaged, damager, currLevel, e.getDamage());
-			}
-		}
-	}
 	
 	@EventHandler
 	public void onDamage(EntityDamageEvent e) {

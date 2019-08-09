@@ -11,9 +11,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import com.plochem.ssa.SSkyblockAddon;
 
 public enum PerkType {
 	REGENERATION(new ItemStack(Material.GOLDEN_APPLE), 1000, 2, 5){
@@ -26,52 +23,6 @@ public enum PerkType {
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
 			String[] desc = new String[] {"§7Gives you Regeneration II for", "§7" + (3*level) + " seconds after killing a player."};
-			return desc;
-		}
-	},
-	DEFLECT(new ItemStack(Material.BARRIER), 5000, 4, 3){
-		@Override
-		public void performAction(LivingEntity source, LivingEntity target, int level, Object...other) {
-			int num = new Random().nextInt(100) + 1;
-			if (num <= level) {
-				target.damage(((Player)source).getLastDamage(), source);
-				target.sendMessage("§c" + ((Player)source).getName() + " deflected your attack!");
-				source.sendMessage("§eYou deflected the attack because of your §bDeflect §eperk!");
-			}
-		}
-
-		@Override
-		public String[] buildDescription(Player viewer) {
-			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of deflecting melee", "§7damage back to your opponent."};
-			return desc;
-		}
-	},
-	FREEZE(new ItemStack(Material.ICE), 4000, 3, 3){
-		@Override
-		public void performAction(LivingEntity source, LivingEntity target, int level, Object...other) {
-			int num = new Random().nextInt(100) + 1;
-			if (num <= level) {
-				Player to = (Player)target;
-				int duration = level*2;
-				source.sendMessage("§eYour attack froze " +  to.getName() + " because of your §bFreeze §eperk!");
-				to.sendMessage("§c" + source.getName() + "'s attack froze you for " + duration + " seconds!");
-				PerkManager.frozenPlayers.add(to.getUniqueId());
-				new BukkitRunnable() {
-				    @Override
-				    public void run() {
-				    	PerkManager.frozenPlayers.remove(to.getUniqueId());
-				    	to.sendMessage("§eYou are now able to move again!");
-				       	this.cancel();
-				    }
-				}.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), duration*20, 0);
-			}
-		}
-
-		@Override
-		public String[] buildDescription(Player viewer) {
-			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of freezing a player", "§7for " + level*2 + " §7seconds."};
 			return desc;
 		}
 	},
@@ -111,38 +62,6 @@ public enum PerkType {
 		public String[] buildDescription(Player viewer) {
 			int level = PerkManager.getNextLvlUpgrade(this, viewer);
 			String[] desc = new String[] {"§7" + 4*level + "% chance of getting an extra", "§7drop from any mined ore."};
-			return desc;
-		}
-		
-	},
-	LEECH(new ItemStack(Material.REDSTONE), 5000, 5, 3){
-		@Override
-		public void performAction(LivingEntity source, LivingEntity target, int level, Object... other) { // other[0] = damage received
-			int num = new Random().nextInt(100) + 1;
-			if (num <= level && !PerkManager.playersInLeech.contains(source.getUniqueId())) { // prevents chance of activating perk while active
-				source.sendMessage("§eYour §bLeech §eperk has been activated for " + level*3 + " seconds!");
-				target.sendMessage("§c" + ((Player)source).getName() + "'s §bLeech §cperk has been activated!");
-				PerkManager.playersInLeech.add(source.getUniqueId());
-				new BukkitRunnable() {
-				    @Override
-				    public void run() {
-				    	PerkManager.playersInLeech.remove(source.getUniqueId());
-				    	source.sendMessage("§eYour §bLeech §eperk has expired!");
-				       	this.cancel();
-				    }
-				}.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), level*3*20, 0);
-			} else {
-				source.setHealth(Math.min(20.0, source.getHealth() + ((Double)other[0])));
-				source.sendMessage("§a" + target.getName() + "'s attack healed you by " + (Double)other[0] + " HP.");
-				target.sendMessage("§cYour attack healed " + source.getName() + " by " + (Double)other[0] + " HP.");
-			}
-			
-		}
-
-		@Override
-		public String[] buildDescription(Player viewer) {
-			int level = PerkManager.getNextLvlUpgrade(this, viewer);
-			String[] desc = new String[] {"§7" + level + "% chance of converting damage to", "§7health for " + level*3 + " seconds. However, you will", "§7die if the damage you received is greater", "§7than your current health."};
 			return desc;
 		}
 		
