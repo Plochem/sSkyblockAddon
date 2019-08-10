@@ -29,15 +29,11 @@ import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
 import com.bgsoftware.superiorskyblock.utils.threads.SuperiorThread;
 import com.bgsoftware.superiorskyblock.wrappers.SBlockPosition;
-import com.sk89q.worldedit.CuboidClipboard;
-import com.sk89q.worldedit.EditSession;
-import com.sk89q.worldedit.MaxChangedBlocksException;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
-import com.sk89q.worldedit.schematic.MCEditSchematicFormat;
-import com.sk89q.worldedit.world.DataException;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.math.transform.Transform;
 
-@SuppressWarnings("deprecation")
 public class StatsListener implements Listener {
 	
 	@EventHandler
@@ -92,18 +88,13 @@ public class StatsListener implements Listener {
 		String path = "plugins/SuperiorSkyblock2/schematics/";
 		String schem = e.getSchematic() + ".schematic";
 		File schematic = new File(path + schem);
+		
 		try {
-			CuboidClipboard cc = MCEditSchematicFormat.getFormat(schematic).load(schematic);
-			EditSession editSession = new EditSession(new BukkitWorld(e.getIsland().getCenter().getWorld()), 999999999);
-			editSession.enableQueue();
-			cc.paste(editSession, BukkitUtil.toVector(e.getIsland().getCenter()), true);
-			editSession.flushQueue();
-		} catch (DataException | IOException ex) {
-			ex.printStackTrace();
-		} catch (MaxChangedBlocksException ex) {
+			ClipboardFormat.findByFile(schematic).load(schematic).paste(new BukkitWorld(island.getCenter().getWorld()), BukkitUtil.toVector(island.getCenter()), false, true, (Transform) null);
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
-
+		
         island.getAllChunks(true).forEach(chunk -> plugin.getNMSAdapter().refreshChunk(chunk));
         island.setBonusWorth(BigDecimal.ZERO);
         island.setBiome(Biome.PLAINS);
