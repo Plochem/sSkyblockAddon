@@ -1,6 +1,6 @@
 main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
-version: 1.9.5
+version: 1.10.6
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, SuperiorSkyblock2, WorldEdit]
@@ -45,3 +45,4 @@ commands:
    tags:
    repair:
    giveSellChest:
+   season:
