@@ -68,21 +68,22 @@ public class RepairManager {
 		return false;
 	}
 
-	public static void startTimer() {
+	public static void startTimer() {		
 		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
-		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.MINUTES);
+		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS);
 		schedule.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				if(LocalDate.now().getDayOfWeek() == DayOfWeek.MONDAY) { // runs every monday at 12am
+				System.out.println(LocalDate.now().getDayOfWeek().toString());
+				if(LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY) { // runs every sunday at 23:59:59
 					for(String id : repairData.getKeys(false)) {
 						repairData.set(id, null);
 					}
 					saveRepairFile();
 				}
 			}
-		}, midnight, TimeUnit.DAYS.toMinutes(1), TimeUnit.MINUTES);
+		}, midnight, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
 
 	}
 
