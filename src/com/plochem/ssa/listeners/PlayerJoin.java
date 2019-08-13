@@ -104,6 +104,15 @@ public class PlayerJoin implements Listener{
 			Bukkit.getServer().getLogger().info("[SFA] Player stats file already exists for " + joiner.getName()+ "! Skipping creation...");
 		}
 		
+		playerFile = new File("plugins/SFA/seasons/playerdata/" + joiner.getUniqueId().toString() + ".yml");
+		playerData = YamlConfiguration.loadConfiguration(playerFile);
+		if(!(playerFile.exists())) {
+			Bukkit.getServer().getLogger().info("[SFA] Creating player season file for " + joiner.getName() + "!");
+			playerData.save(playerFile);
+		}  else {
+			Bukkit.getServer().getLogger().info("[SFA] Player season file already exists for " + joiner.getName()+ "! Skipping creation...");
+		}
+		
 		StatsManager.showScoreboard(joiner);
 		StatsManager.updateTab(joiner);
 	}

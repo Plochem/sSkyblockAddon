@@ -68,6 +68,8 @@ import com.plochem.ssa.perks.PerkListeners;
 import com.plochem.ssa.repair.RepairManager;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
+import com.plochem.ssa.seasons.SeasonManager;
+import com.plochem.ssa.seasons.SeasonMenuListener;
 import com.plochem.ssa.sellchest.SellChestListener;
 import com.plochem.ssa.sellchest.SellChestManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
@@ -102,7 +104,7 @@ public class SSkyblockAddon extends JavaPlugin {
             if (recipe != null && recipe.getResult().getType() == Material.HOPPER){
                 it.remove();
             }
-        }
+        }        
 		new BukkitRunnable() { // waits for one tick before reading config because worlds have to be loaded first
 			@Override
 			public void run() {
@@ -131,6 +133,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				RewardManager.resetListTimer();
 				RepairManager.createRepairFile();
 				RepairManager.startTimer();
+				SeasonManager.createRepairFile();
+				
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					KitManager.readCooldownFiles(p.getUniqueId());
 				}
@@ -150,7 +154,6 @@ public class SSkyblockAddon extends JavaPlugin {
 					Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
 				}
 				LeaderboardHandler.update(SSkyblockAddon.getPlugin(SSkyblockAddon.class), storageData);
-
 			}
 
 		}.runTaskLater(this, 1);	
@@ -754,6 +757,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				return false;
 			}
 			SellChestManager.giveItem(target, Integer.parseInt(args[1]));
+		} else if(command.getName().equalsIgnoreCase("season")) {
+			SeasonManager.openMenu(p);
 		}
 		return false;
 	}
@@ -875,6 +880,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new TagsMenuListener(), this);
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new SellChestListener(), this);
+		pm.registerEvents(new SeasonMenuListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
