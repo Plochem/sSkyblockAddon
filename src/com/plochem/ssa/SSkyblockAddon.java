@@ -757,8 +757,19 @@ public class SSkyblockAddon extends JavaPlugin {
 				return false;
 			}
 			SellChestManager.giveItem(target, Integer.parseInt(args[1]));
-		} else if(command.getName().equalsIgnoreCase("season")) {
-			SeasonManager.openMenu(p);
+		} else if(command.getName().equalsIgnoreCase("season") || command.getName().equalsIgnoreCase("seasons")) {
+			if(args.length == 0)
+				SeasonManager.openMenu(p);
+			else if(args.length == 1) {
+				if(args[0].equalsIgnoreCase("reload")) {
+					if(p.hasPermission("sfa.season.reload")) {
+						SeasonManager.refreshRewards();
+						p.sendMessage("§aSeason rewards reloaded!");
+					} else {
+						p.sendMessage("§cYou do not have permission to perform this command.");
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -912,6 +923,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.coloredchat"));
 		pm.addPermission(new Permission("sfa.keepexp"));
 		pm.addPermission(new Permission("sfa.givesellchest"));
+		pm.addPermission(new Permission("sfa.season.reload"));
 	}
 
 	public YamlConfiguration getBpData() {
