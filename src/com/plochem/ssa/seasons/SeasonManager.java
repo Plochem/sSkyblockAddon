@@ -2,14 +2,27 @@ package com.plochem.ssa.seasons;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
+import com.bgsoftware.superiorskyblock.handlers.GridHandler;
+import com.bgsoftware.superiorskyblock.island.IslandRegistry;
 
 public class SeasonManager {
 	private static File seasonFile =  new File("plugins/SFA/seasons/season.yml");
@@ -30,6 +43,46 @@ public class SeasonManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void startTimer() {
+		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
+		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
+		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS);
+		schedule.scheduleAtFixedRate(new Runnable() {
+			@Override
+			public void run() {
+				File f = new File("plugins/SFA/seasons/season.yml");
+				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
+				if(LocalDateTime.now().getDayOfMonth() == LocalDate.now().lengthOfMonth()) { // 11:59:59 pm on the last day of the month
+					int justEndedSeason = fData.getInt("season");
+					fData.set("season", justEndedSeason+1);
+					save(seasonFile, seasonData); // update season number
+					
+					try {
+						Field islands = GridHandler.class.getDeclaredField("islands");
+						islands.setAccessible(true);
+						IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
+						is.sort();
+						for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
+							YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
+							for(int i = 0; i < is.size(); i++) {
+								if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
+									c.set(String.valueOf(justEndedSeason) + ".rank", i+1);
+									save(data, c);
+									break;
+								}
+							}
+						}
+						
+					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+
+			}
+		}, midnight, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
 	}
 	
 	public static void refreshRewards() {
