@@ -133,8 +133,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				RewardManager.resetListTimer();
 				RepairManager.createRepairFile();
 				RepairManager.startTimer();
-				SeasonManager.createRepairFile();
-				
+				SeasonManager.createSeasonFile();
+				SeasonManager.startTimer();
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					KitManager.readCooldownFiles(p.getUniqueId());
 				}
