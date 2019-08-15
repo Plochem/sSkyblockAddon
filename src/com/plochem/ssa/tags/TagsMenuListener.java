@@ -20,7 +20,7 @@ public class TagsMenuListener implements Listener{
 						if(TagManager.has((Player)e.getWhoClicked(), identifier)) {
 							TagManager.setTag((Player)e.getWhoClicked(), identifier);
 						} else {
-							e.getWhoClicked().sendMessage("§cYou do not have this tag! Purchase them at the server store.");
+							e.getWhoClicked().sendMessage("§cYou do not own this tag!");
 						}
 						e.getWhoClicked().closeInventory();
 					} else if(e.getCurrentItem().getType() == Material.ARROW) {

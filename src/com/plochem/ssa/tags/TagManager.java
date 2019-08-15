@@ -24,6 +24,7 @@ public class TagManager {
 	private static File playerTagFile = new File("plugins/SFA/tags/playerTags.yml");
 	private static YamlConfiguration playerTagData = YamlConfiguration.loadConfiguration(playerTagFile);
 	public static void openMenu(Player p, int page) {
+		tagData = YamlConfiguration.loadConfiguration(tagFile);
 		Inventory menu = Bukkit.createInventory(null, 54, "Tags - Page: " + page);
 		if(tagData.getKeys(false).isEmpty()) {
 			p.sendMessage("§cNo tags have been created yet!");
@@ -32,7 +33,7 @@ public class TagManager {
 		List<String> keys = new ArrayList<>(tagData.getKeys(false));
 		for(int i = (45*page); i < Math.min(45 * (page+1), keys.size()); i++) {
 			String identifier = keys.get(i).toLowerCase();
-			String tag = tagData.getString(identifier).replaceAll("&", "§");
+			String tag = tagData.getString(identifier + ".tag").replaceAll("&", "§");
 			ItemStack item = new ItemStack(Material.NAME_TAG);
 			ItemMeta itemMeta = item.getItemMeta();
 			itemMeta.setDisplayName("§6Tag§f:§6 " + StringUtils.capitalize(identifier));
@@ -45,7 +46,7 @@ public class TagManager {
 				lore.add("§eClick to select!");
 			} else {
 				lore.add("§cYou do not have this tag!");
-				lore.add("§cPurchase them at the server store.");
+				lore.add(tagData.getString(identifier + ".nothave").replaceAll("&", "§"));
 			}
 			itemMeta.setLore(lore);
 			item.setItemMeta(itemMeta);
@@ -76,7 +77,8 @@ public class TagManager {
 	public static void create(String identifier, String tag) {
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.addPermission(new Permission("sfa.tags." + identifier.toLowerCase()));
-		tagData.set(identifier.toLowerCase(), tag);
+		tagData.set(identifier.toLowerCase() + ".tag", tag);
+		tagData.set(identifier.toLowerCase() + ".nothave", "&cPurchase it on the server store.");
 		saveTagFile();
 	}
 	
@@ -102,7 +104,7 @@ public class TagManager {
 		if(identifier == null) {
 			return "";
 		}
-		String tag = tagData.getString(identifier.toLowerCase());
+		String tag = tagData.getString(identifier.toLowerCase() + ".tag");
 		if(tag == null) {
 			playerTagData.set(p.getUniqueId().toString(), null);
 			savePlayerTagFile();
