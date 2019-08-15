@@ -13,12 +13,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.handlers.GridHandler;
@@ -28,20 +29,12 @@ public class SeasonManager {
 	private static File seasonFile =  new File("plugins/SFA/seasons/season.yml");
 	private static YamlConfiguration seasonData = YamlConfiguration.loadConfiguration(seasonFile);
 
-	public static void createRepairFile() {
+	public static void createSeasonFile() {
 		if(!(seasonFile.exists())) {
 			Bukkit.getServer().getLogger().info("[SFA] Creating season rewards file!");
-			saveRepairFile();
+			save(seasonFile, seasonData);
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Season rewards file already exists! Skipping creation...");
-		}
-	}
-	
-	private static void saveRepairFile() {
-		try {
-			seasonData.save(seasonFile);
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -54,11 +47,9 @@ public class SeasonManager {
 			public void run() {
 				File f = new File("plugins/SFA/seasons/season.yml");
 				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
-				if(LocalDateTime.now().getDayOfMonth() == LocalDate.now().lengthOfMonth()) { // 11:59:59 pm on the last day of the month
 					int justEndedSeason = fData.getInt("season");
 					fData.set("season", justEndedSeason+1);
-					save(seasonFile, seasonData); // update season number
-					
+					save(f, fData); // update season number
 					try {
 						Field islands = GridHandler.class.getDeclaredField("islands");
 						islands.setAccessible(true);
@@ -68,7 +59,7 @@ public class SeasonManager {
 							YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
 							for(int i = 0; i < is.size(); i++) {
 								if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
-									c.set(String.valueOf(justEndedSeason) + ".rank", i+1);
+									c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
 									save(data, c);
 									break;
 								}
@@ -78,17 +69,14 @@ public class SeasonManager {
 					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
 						e1.printStackTrace();
 					}
-					
-				}
 
 			}
 		}, midnight, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
 	}
 	
 	public static void refreshRewards() {
-		seasonFile =  new File("plugins/SFA/seasons/season.yml");
 		seasonData = YamlConfiguration.loadConfiguration(seasonFile);
-		saveRepairFile();
+		save(seasonFile, seasonData);
 	}
 	
 	/*
@@ -102,20 +90,48 @@ public class SeasonManager {
 	 * 
 	 */
 	public static void openMenu(Player p) {
-		Inventory menu = Bukkit.createInventory(null, 36, "Season Rewards");
-		for(String seasonNum : seasonData.getKeys(false)) {
-			if(NumberUtils.isNumber(seasonNum)) {
-				for(String reward : seasonData.getConfigurationSection(seasonNum).getKeys(false)) {
-					ItemStack item = seasonData.getConfigurationSection(seasonNum).getItemStack(reward + ".itemRep");
-					int slot = seasonData.getConfigurationSection(seasonNum).getInt(reward + ".slot");
-					menu.setItem(slot, item);
-				}
+		Inventory menu = Bukkit.createInventory(null, 45, "Season Rewards");
+		int[] firstSlots = {12,13,14,15,16};
+		int[] secondSlots = {30,31,32,33,34};
+		int seasonNum = getCurrentSeason();
+		int prevSeason = seasonNum - 1;
+		int idx = 0;
+		ItemStack seasonItem = new ItemStack(Material.BEACON);
+		ItemMeta seasonItemMeta = seasonItem.getItemMeta();
+		ItemStack menuFiller = new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)15);
+		if(prevSeason != 0) {
+			seasonItemMeta.setDisplayName("§eSeason " + prevSeason + " Rewards");
+			seasonItem.setAmount(prevSeason);
+			seasonItem.setItemMeta(seasonItemMeta);
+			menu.setItem(10, seasonItem);
+			for(String reward : seasonData.getConfigurationSection(String.valueOf(prevSeason)).getKeys(false)) {
+				ItemStack item = seasonData.getConfigurationSection(String.valueOf(prevSeason)).getItemStack(reward + ".itemRep");
+				item.setAmount(prevSeason);
+				menu.setItem(firstSlots[idx], item);
+				idx++;
 			}
 		}
 
+		idx = 0;
+		seasonItemMeta.setDisplayName("§eSeason " + seasonNum + " Rewards");
+		seasonItem.setAmount(seasonNum);
+		seasonItem.setItemMeta(seasonItemMeta);
+		menu.setItem(28, seasonItem);
+		for(String reward : seasonData.getConfigurationSection(String.valueOf(seasonNum)).getKeys(false)) {
+			ItemStack item = seasonData.getConfigurationSection(String.valueOf(seasonNum)).getItemStack(reward + ".itemRep");
+			item.setAmount(seasonNum);
+			menu.setItem(secondSlots[idx], item);
+			idx++;
+		}
+		
+		for(int i = 0; i < menu.getSize(); i++) {
+			if(menu.getItem(i) == null) {
+				menu.setItem(i, menuFiller);
+			}
+		}
 		p.openInventory(menu);
 	}
-	
+
 	public static int getLeastRank(int season, String reward){
 		return seasonData.getConfigurationSection(String.valueOf(season)).getInt(reward + ".leastRank");
 	}
