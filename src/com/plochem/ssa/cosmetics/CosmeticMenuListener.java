@@ -26,6 +26,8 @@ public class CosmeticMenuListener implements Listener{
 							CosmeticManager.openShop(p, CosmeticType.Projectile_Trail);
 						} else if(itemName.equalsIgnoreCase("trail effects")) {
 							CosmeticManager.openShop(p, CosmeticType.Trail_Effect);
+						} else if(itemName.equalsIgnoreCase("close")) {
+							p.closeInventory();
 						} else { // 
 							p.sendMessage("§cComing soon!");
 							p.closeInventory();
@@ -34,7 +36,7 @@ public class CosmeticMenuListener implements Listener{
 						String type = e.getClickedInventory().getTitle().replaceAll(" ", "_");
 						CosmeticType cosmeticType = CosmeticType.valueOf(e.getClickedInventory().getTitle().replaceAll(" ", "_"));
 						String itemNameEnum = itemName.replaceAll(" ", "_");
-						if(p.hasPermission("sfa.cosmetics." + type + "." + itemName)){  
+						if(itemName.equals("Default") || p.hasPermission("sfa.cosmetics." + type + "." + itemName)){  
 							if(cosmeticType == CosmeticType.Projectile_Trail) {
 								CosmeticManager.projectile.put(p.getUniqueId(), ProjectileTrail.valueOf(itemNameEnum));
 							} else if(cosmeticType == CosmeticType.Trail_Effect) {

@@ -91,7 +91,7 @@ public class CosmeticManager {
 			ItemMeta im = item.getItemMeta();
 			String itemName = cos.toString();
 			String itemDisplayName = cos.toString().replaceAll("_", " ");
-			if(p.hasPermission("sfa.cosmetics." + type.toString() + "." + itemName)){  
+			if(itemName.equals("Default") || p.hasPermission("sfa.cosmetics." + type.toString() + "." + itemName)){  
 				im.setDisplayName("§a" + itemDisplayName);
 				if(selectedCosmetic(cos, p)){
 					im.setLore(Arrays.asList("§7Selects the " + itemDisplayName, "§7" + shopName + ".", "", "§aSelected!"));
