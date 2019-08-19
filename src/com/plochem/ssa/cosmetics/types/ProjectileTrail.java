@@ -16,33 +16,33 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
-		
+
 	},
-	Water_Droplet(Material.WATER, Effect.WATERDRIP) {
+	Water_Droplet(Material.WATER_BUCKET, Effect.WATERDRIP) {
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 3, 100);
 			}
-			
+
 		}
 	},
 	Flame(Material.TORCH, Effect.FLAME) {
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
 	},
-	Lava(Material.LAVA_BUCKET, Effect.LAVADRIP) {
+	Lava(Material.LAVA_BUCKET, Effect.LAVA_POP) {
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);			
 			}
 		}
 	},
@@ -50,7 +50,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
 	},
@@ -58,7 +58,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
 	},
@@ -66,7 +66,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}			
 		}
 	},
@@ -74,7 +74,8 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 1, 1, 1);
+				System.out.println(projectile.getLocation().getBlockX());
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
 	},
@@ -82,28 +83,28 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 1, 1, 1, 1, 1, 1);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, (float)0.1, (float)0.1, (float)0.1, 1, 3, 100);
 			}
 		}
 	};
-	
+
 	private Effect[] particles;
 	private Material material;
 	public Effect[] getParticles() {
 		return particles;
 	}
-	
+
 	@Override
 	public Material getMaterial() {
 		return material;
 	}
-	
-	
+
+
 	private ProjectileTrail(Material material, Effect... particles) {
 		this.particles = particles;
 		this.material = material;
 	}	
-	
+
 	public abstract void displayParticle(Projectile projectile, Player shooter);
 }
 
