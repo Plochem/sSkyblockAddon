@@ -15,6 +15,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import com.plochem.ssa.cosmetics.CosmeticManager;
 import com.plochem.ssa.generator.GeneratorType;
 import com.plochem.ssa.perks.PerkManager;
 import com.plochem.ssa.perks.PerkType;
@@ -32,8 +33,7 @@ public class MenuListener implements Listener{
 					if(name != null) {
 						Player p = (Player)e.getWhoClicked();
 						if(name.equals("§aCosmetics")) {
-							p.sendMessage("§cThis feature is coming soon!");
-							p.closeInventory();
+							CosmeticManager.openMainMenu(p);
 						} else if (name.equals("§aPerks")) {
 							openPerkShop(p);
 						} else if (name.equals("§aOre Generators")) {
