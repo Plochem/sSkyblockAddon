@@ -18,6 +18,10 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
 import com.plochem.ssa.cosmetics.types.Cosmetic;
+import com.plochem.ssa.cosmetics.types.DeathSound;
+import com.plochem.ssa.cosmetics.types.KillEffect;
+import com.plochem.ssa.cosmetics.types.KillMessage;
+import com.plochem.ssa.cosmetics.types.LevelColor;
 import com.plochem.ssa.cosmetics.types.ProjectileTrail;
 import com.plochem.ssa.cosmetics.types.TrailEffect;
 
@@ -80,8 +84,6 @@ public class CosmeticManager {
 
 	public static void openShop(Player p, CosmeticType type) {
 		Inventory menu = Bukkit.createInventory(null, 54, type.toString().replaceAll("_", " "));
-		File f = new File("plugins/SFA/cosmetics/playerdata/" + p.getUniqueId().toString() + ".yml");
-		YamlConfiguration c = YamlConfiguration.loadConfiguration(f);
 		String shopName = type.toString().replaceAll("_", " ").toLowerCase();
 		Cosmetic[] cosmetics = getCosmetics(type);
 		for(Cosmetic cos : cosmetics) { //
@@ -91,7 +93,7 @@ public class CosmeticManager {
 			String itemDisplayName = cos.toString().replaceAll("_", " ");
 			if(p.hasPermission("sfa.cosmetics." + type.toString() + "." + itemName)){  
 				im.setDisplayName("§a" + itemDisplayName);
-				if(c.getString(type.toString()).equals(itemName)){
+				if(selectedCosmetic(cos, p)){
 					im.setLore(Arrays.asList("§7Selects the " + itemDisplayName, "§7" + shopName + ".", "", "§aSelected!"));
 				} else {
 					im.setLore(Arrays.asList("§7Selects the " + itemDisplayName , "§7" + shopName + ".", "", "§eClick to select!"));
@@ -107,6 +109,15 @@ public class CosmeticManager {
 
 	}
 
+	private static boolean selectedCosmetic(Cosmetic cos, Player p) {
+		if(cos instanceof ProjectileTrail && projectile.get(p.getUniqueId()).equals(cos)) {
+			return true;
+		} else if(cos instanceof TrailEffect && trail.get(p.getUniqueId()).equals(cos)) {
+			return true;
+		}
+		return false;
+	}
+
 	public static String getObtainMethod(String cosmeticType, String itemName) {
 		File f = new File("plugins/SFA/cosmetics/cosmetics.yml");
 		YamlConfiguration c = YamlConfiguration.loadConfiguration(f);
@@ -118,6 +129,14 @@ public class CosmeticManager {
 			return ProjectileTrail.values();
 		} else if(type == CosmeticType.Trail_Effect) {
 			return TrailEffect.values();
+		} else if(type == CosmeticType.Level_Color) {
+			return LevelColor.values();
+		} else if(type == CosmeticType.Kill_Effect) {
+			return KillEffect.values();
+		} else if(type == CosmeticType.Kill_Message) {
+			return KillMessage.values();
+		} else if(type == CosmeticType.Death_Sound) {
+			return DeathSound.values();
 		}
 		return null;
 	}
@@ -173,6 +192,7 @@ public class CosmeticManager {
 		shop.setItem(29, trailsItem);
 		shop.setItem(31, lvlDisplayItem); 
 		shop.setItem(49, close);
-
+		
+		p.openInventory(shop);
 	}
 }
