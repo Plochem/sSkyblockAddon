@@ -40,6 +40,8 @@ import com.plochem.ssa.boosters.BoosterType;
 import com.plochem.ssa.bouncepads.BouncePadBreak;
 import com.plochem.ssa.bouncepads.BouncePadInteract;
 import com.plochem.ssa.bouncepads.BouncePadPlace;
+import com.plochem.ssa.cosmetics.CosmeticManager;
+import com.plochem.ssa.cosmetics.CosmeticMenuListener;
 import com.plochem.ssa.economy.BanknoteListener;
 import com.plochem.ssa.economy.BanknoteManager;
 import com.plochem.ssa.economy.SEconomy;
@@ -135,6 +137,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				RepairManager.startTimer();
 				SeasonManager.createSeasonFile();
 				SeasonManager.startTimer();
+				CosmeticManager.registerPerms();
+				CosmeticManager.createConfig();
 				for(Player p : Bukkit.getOnlinePlayers()) {
 					KitManager.readCooldownFiles(p.getUniqueId());
 				}
@@ -161,6 +165,7 @@ public class SSkyblockAddon extends JavaPlugin {
 
 	public void onDisable(){
 		sEco.unhook();
+		CosmeticManager.saveSelections();
 		LeaderboardHandler.deleteLeaderboards();
 	}
 
@@ -892,6 +897,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new PlayerDeath(), this);
 		pm.registerEvents(new SellChestListener(), this);
 		pm.registerEvents(new SeasonMenuListener(), this);
+		pm.registerEvents(new CosmeticMenuListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
