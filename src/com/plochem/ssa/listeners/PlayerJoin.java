@@ -15,6 +15,10 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.plochem.ssa.SSkyblockAddon;
 import com.plochem.ssa.boosters.Booster;
+import com.plochem.ssa.cosmetics.CosmeticManager;
+import com.plochem.ssa.cosmetics.CosmeticType;
+import com.plochem.ssa.cosmetics.types.ProjectileTrail;
+import com.plochem.ssa.cosmetics.types.TrailEffect;
 import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.homes.Home;
 import com.plochem.ssa.kits.KitManager;
@@ -112,6 +116,20 @@ public class PlayerJoin implements Listener{
 		}  else {
 			Bukkit.getServer().getLogger().info("[SFA] Player season file already exists for " + joiner.getName()+ "! Skipping creation...");
 		}
+		
+		playerFile = new File("plugins/SFA/cosmetics/playerdata/" + joiner.getUniqueId().toString() + ".yml");
+		playerData = YamlConfiguration.loadConfiguration(playerFile);
+		if(!(playerFile.exists())) {
+			Bukkit.getServer().getLogger().info("[SFA] Creating player cosmetic file for " + joiner.getName() + "!");
+			for(CosmeticType type : CosmeticType.values())
+				playerData.set(type.toString(), "Default");
+			playerData.save(playerFile);
+		}  else {
+			Bukkit.getServer().getLogger().info("[SFA] Player cosmetic file already exists for " + joiner.getName()+ "! Skipping creation...");
+		}
+		CosmeticManager.projectile.put(joiner.getUniqueId(), ProjectileTrail.valueOf(playerData.getString(CosmeticType.Projectile_Trail.toString())));
+		CosmeticManager.trail.put(joiner.getUniqueId(), TrailEffect.valueOf(playerData.getString(CosmeticType.Trail_Effect.toString())));
+		//
 		
 		StatsManager.showScoreboard(joiner);
 		StatsManager.updateTab(joiner);
