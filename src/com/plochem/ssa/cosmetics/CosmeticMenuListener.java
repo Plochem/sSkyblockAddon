@@ -38,7 +38,12 @@ public class CosmeticMenuListener implements Listener{
 							if(cosmeticType == CosmeticType.Projectile_Trail) {
 								CosmeticManager.projectile.put(p.getUniqueId(), ProjectileTrail.valueOf(itemNameEnum));
 							} else if(cosmeticType == CosmeticType.Trail_Effect) {
-								CosmeticManager.trail.put(p.getUniqueId(), TrailEffect.valueOf(itemNameEnum));								
+								if(CosmeticManager.trail.get(p.getUniqueId()) == TrailEffect.Default) {
+									CosmeticManager.trail.put(p.getUniqueId(), TrailEffect.valueOf(itemNameEnum));	
+									TrailEffect.particleRunnable(p);
+								} else {
+									CosmeticManager.trail.put(p.getUniqueId(), TrailEffect.valueOf(itemNameEnum));	
+								}
 							}
 							p.sendMessage("§aSelected!");
 							//
