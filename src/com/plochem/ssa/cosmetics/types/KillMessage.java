@@ -1,6 +1,8 @@
 package com.plochem.ssa.cosmetics.types;
 
-public enum KillMessage {
+import org.bukkit.Material;
+
+public enum KillMessage implements Cosmetic{
 	Default,
 	Insect(5000, "has squished");
 	
@@ -21,5 +23,11 @@ public enum KillMessage {
 	
 	public String getKillMessage(){
 		return killMessage;
+	}
+
+	@Override
+	public Material getMaterial() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

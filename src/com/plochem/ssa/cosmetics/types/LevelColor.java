@@ -1,8 +1,9 @@
 package com.plochem.ssa.cosmetics.types;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 
-public enum LevelColor {
+public enum LevelColor implements Cosmetic{
 	Default,
 	Green(1000, 35, ChatColor.GREEN);
 	
@@ -28,6 +29,11 @@ public enum LevelColor {
 	
 	public int getMinLevel() {
 		return minLevel;
+	}
+	@Override
+	public Material getMaterial() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

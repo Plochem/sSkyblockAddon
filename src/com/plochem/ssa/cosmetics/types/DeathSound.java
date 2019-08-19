@@ -1,9 +1,10 @@
 package com.plochem.ssa.cosmetics.types;
 
+import org.bukkit.Material;
 import org.bukkit.Sound;
 
 
-public enum DeathSound{
+public enum DeathSound implements Cosmetic{
 	Default,
 	Pig(5000, Sound.PIG_DEATH);
 	
@@ -24,5 +25,10 @@ public enum DeathSound{
 
 	public Sound getSound() {
 		return sound;
+	}
+
+	@Override
+	public Material getMaterial() {
+		return null;
 	}
 }
