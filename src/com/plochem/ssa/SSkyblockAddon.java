@@ -40,6 +40,7 @@ import com.plochem.ssa.boosters.BoosterType;
 import com.plochem.ssa.bouncepads.BouncePadBreak;
 import com.plochem.ssa.bouncepads.BouncePadInteract;
 import com.plochem.ssa.bouncepads.BouncePadPlace;
+import com.plochem.ssa.cosmetics.CosmeticListener;
 import com.plochem.ssa.cosmetics.CosmeticManager;
 import com.plochem.ssa.cosmetics.CosmeticMenuListener;
 import com.plochem.ssa.economy.BanknoteListener;
@@ -898,6 +899,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new SellChestListener(), this);
 		pm.registerEvents(new SeasonMenuListener(), this);
 		pm.registerEvents(new CosmeticMenuListener(), this);
+		pm.registerEvents(new CosmeticListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
