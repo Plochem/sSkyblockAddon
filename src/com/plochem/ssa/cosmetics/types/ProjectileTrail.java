@@ -74,7 +74,6 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				System.out.println(projectile.getLocation().getBlockX());
 				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
 			}
 		}
