@@ -92,14 +92,16 @@ public class BoosterManager {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void claimBooster(Booster booster, String color) {
+	public static void claimBooster(Booster booster, String color, int amount) {
 		File playerFile = new File("plugins/SFA/playerBoosters/" + booster.getUUID().toString() + ".yml");
 		YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
 		List<Booster> playerBoosters = ((List<Booster>)playerData.getList("boosters"));
-		playerBoosters.add(booster);
+		for(int i = 0; i < amount; i++) {
+			playerBoosters.add(booster);
+		}
 		playerData.set("boosters", playerBoosters);
 		BoosterManager.savePlayerBooster(playerData, playerFile);
-		Bukkit.getPlayer(booster.getUUID()).sendMessage("§aYou have received a(n) " + color + booster.getType().toString().toLowerCase() + " §abooster!");
+		Bukkit.getPlayer(booster.getUUID()).sendMessage("§aYou have received " + amount + " " + color + booster.getType().toString().toLowerCase() + " §abooster(s)!");
 	}
 
 	public static void savePlayerBooster(YamlConfiguration c, File f) {

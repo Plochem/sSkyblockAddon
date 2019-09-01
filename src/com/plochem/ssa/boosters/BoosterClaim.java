@@ -22,7 +22,7 @@ public class BoosterClaim implements Listener{
 				if(splitName[1].equalsIgnoreCase("hour")) {
 					duration *= 60;
 				}
-				BoosterManager.claimBooster(new Booster(e.getPlayer().getUniqueId(), duration, duration, type, e.getItem().getItemMeta().getDisplayName().replaceAll("§", "&")), color);
+				BoosterManager.claimBooster(new Booster(e.getPlayer().getUniqueId(), duration, duration, type, e.getItem().getItemMeta().getDisplayName().replaceAll("§", "&")), color, 1);
 				int amt = e.getPlayer().getItemInHand().getAmount() - 1;
 				if(amt == 0) {
 					e.getPlayer().getInventory().setItemInHand(new ItemStack(Material.AIR));
