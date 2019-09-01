@@ -5,30 +5,23 @@ import org.bukkit.Sound;
 
 
 public enum DeathSound implements Cosmetic{
-	Default,
-	Pig(5000, Sound.PIG_DEATH);
+	Default (Material.BARRIER),
+	Pig(Material.RAW_BEEF, Sound.PIG_DEATH);
 	
-	private int cost;
-	private Sound sound;
+	private Material material;
+	private Sound[] sound;
 	
-	private DeathSound(int cost, Sound sound) {
-		this.cost = cost;
+	private DeathSound(Material material, Sound... sound) {
+		this.material = material;
 		this.sound = sound;
 	}
-	
-	private DeathSound() {
-	}
-	
-	public int getCost() {
-		return cost;
-	}
 
-	public Sound getSound() {
+	public Sound[] getSound() {
 		return sound;
 	}
 
 	@Override
 	public Material getMaterial() {
-		return null;
+		return material;
 	}
 }

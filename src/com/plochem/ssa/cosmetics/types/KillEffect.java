@@ -1,28 +1,27 @@
 package com.plochem.ssa.cosmetics.types;
 
+import org.bukkit.Effect;
 import org.bukkit.Material;
 
 public enum KillEffect implements Cosmetic{
-	Default,
-	Lightning_Bolt(5000);
+	Default(Material.BARRIER),
+	Lightning_Bolt(Material.ANVIL);
 	
-	private int cost;
+	private Material material;
+	private Effect[] effect;
 	
-	private KillEffect(int cost) {
-		this.cost = cost;
+	private KillEffect(Material material, Effect...effect) {
+		this.material = material;
+		this.effect = effect;
 	}
 	
-	private KillEffect() {
-	}
-	
-	public int getCost() {
-		return cost;
+	public Effect[] getEffect() {
+		return effect;
 	}
 
 	@Override
 	public Material getMaterial() {
-		// TODO Auto-generated method stub
-		return null;
+		return material;
 	}
 
 }
