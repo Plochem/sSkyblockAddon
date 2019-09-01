@@ -8,8 +8,6 @@ import org.bukkit.event.player.AsyncPlayerChatEvent;
 import com.plochem.ssa.SSkyblockAddon;
 import com.plochem.ssa.tags.TagManager;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
-
 public class ChatHandling implements Listener{
 	SSkyblockAddon sfa;
 	
@@ -20,13 +18,8 @@ public class ChatHandling implements Listener{
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
 		Player p = e.getPlayer();
-		String rank = PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§");
 		String tag = TagManager.getTag(p);
-		String msg = e.getMessage();
-		if(p.hasPermission("sfa.coloredchat")) {
-			msg = msg.replaceAll("&", "§");
-		}
-		e.setFormat(rank + p.getName()  + tag + "§r: " + msg.replaceAll("%", "%%"));
+		e.setFormat(e.getFormat().replaceAll("§r:", tag + "§r:"));
 	}
 
 }

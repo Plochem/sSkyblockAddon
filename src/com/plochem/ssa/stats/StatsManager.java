@@ -16,7 +16,6 @@ import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.plochem.ssa.SSkyblockAddon;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 
 public class StatsManager {
@@ -97,7 +96,7 @@ public class StatsManager {
         	int islandLevel = 0;
         	if(curr != null)
         		islandLevel = curr.getIslandLevel();
-			joiner.setPlayerListName(PermissionsEx.getUser(joiner).getPrefix().replaceAll("&", "§") + joiner.getName() + " §7[§a" + islandLevel + "§7]");
+			joiner.setPlayerListName(joiner.getPlayerListName() + " §7[§a" + islandLevel + "§7]");
 		}	
 	}
 	

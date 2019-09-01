@@ -16,13 +16,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
+import me.lucko.luckperms.LuckPerms;
+import me.lucko.luckperms.api.LuckPermsApi;
+import me.lucko.luckperms.api.Node;
 
 public class TagManager {
 	private static File tagFile = new File("plugins/SFA/tags/tags.yml");
 	private static YamlConfiguration tagData = YamlConfiguration.loadConfiguration(tagFile);
 	private static File playerTagFile = new File("plugins/SFA/tags/playerTags.yml");
 	private static YamlConfiguration playerTagData = YamlConfiguration.loadConfiguration(playerTagFile);
+	private static LuckPermsApi api = LuckPerms.getApi();
+	
 	public static void openMenu(Player p, int page) {
 		tagData = YamlConfiguration.loadConfiguration(tagFile);
 		Inventory menu = Bukkit.createInventory(null, 54, "Tags - Page: " + page);
@@ -90,7 +94,8 @@ public class TagManager {
 	}
 	
 	public static void giveTag(String identifier, String name) {
-		PermissionsEx.getUser(name).addPermission("sfa.tags." + identifier.toLowerCase());
+		Node node = api.getNodeFactory().newBuilder("sfa.tags." + identifier.toLowerCase()).build();
+		api.getUser(name).setPermission(node);
 	}
 	
 	public static boolean exists(String identifier) {

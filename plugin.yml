@@ -3,7 +3,7 @@ name: sSkyblockAddon
 version: 1.11.7
 author: Plochem
 description: Skyblock Addon for Straxidus.
-depend: [Vault, SuperiorSkyblock2, WorldEdit]
+depend: [Vault, SuperiorSkyblock2, WorldEdit, LuckPerms]
 loadbefore: [ShopGUIPlus]
 commands:
    giveBouncePad:
@@ -15,7 +15,6 @@ commands:
    boosterqueue:
    myboosters:
    givebooster:
-   spawn:
    pvp:
    kits:
    kit:
@@ -37,7 +36,6 @@ commands:
    giveBanknote:
    withdraw:
    trade:
-   setspawn:
    setpvpspawn:
    setKillLb:
    setDeathLb:
