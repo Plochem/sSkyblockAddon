@@ -79,7 +79,6 @@ public class CosmeticManager {
 				pm.addPermission(new Permission("sfa.cosmetics." + type.toString() + "." + c.toString()));
 			}
 		}
-		//
 	}
 
 	public static void openShop(Player p, CosmeticType type) {
