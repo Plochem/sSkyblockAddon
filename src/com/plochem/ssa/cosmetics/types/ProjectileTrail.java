@@ -16,7 +16,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}
 		}
 
@@ -34,7 +34,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}
 		}
 	},
@@ -42,7 +42,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);			
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);			
 			}
 		}
 	},
@@ -50,15 +50,15 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}
 		}
 	},
-	Vampire(Material.INK_SACK, Effect.LARGE_SMOKE, Effect.COLOURED_DUST) {
+	Vampire(Material.INK_SACK, Effect.PARTICLE_SMOKE, Effect.COLOURED_DUST) {
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}
 		}
 	},
@@ -66,7 +66,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}			
 		}
 	},
@@ -74,7 +74,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 1, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, 0, 0, 0, 0, 0, 100);
 			}
 		}
 	},
@@ -82,7 +82,7 @@ public enum ProjectileTrail implements Cosmetic{
 		@Override
 		public void displayParticle(Projectile projectile, Player shooter) {
 			for(Effect e : this.getParticles()) {
-				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, (float)0.1, (float)0.1, (float)0.1, 1, 3, 100);
+				shooter.spigot().playEffect(projectile.getLocation(), e, 0, 0, (float)0.1, (float)0.1, (float)0.1, 1, 2, 100);
 			}
 		}
 	};
