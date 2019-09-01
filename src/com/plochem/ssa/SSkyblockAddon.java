@@ -84,7 +84,6 @@ import com.plochem.ssa.tags.TagsMenuListener;
 import com.plochem.ssa.trading.TradeListener;
 import com.plochem.ssa.trading.TradeManager;
 
-import ru.tehkode.permissions.bukkit.PermissionsEx;
 
 public class SSkyblockAddon extends JavaPlugin {
 	private File bpFile;
@@ -377,8 +376,8 @@ public class SSkyblockAddon extends JavaPlugin {
 			}
 			p.openInventory(inv);
 		} else if(command.getName().equalsIgnoreCase("givebooster")) {
-			if(args.length != 3) {
-				sender.sendMessage("§cUsage: /getbooster [name] [experience/money] [minutes]");
+			if(args.length != 4) {
+				sender.sendMessage("§cUsage: /givebooster [name] [experience/money] [minutes] [amount]");
 				return false;
 			}
 			if(!sender.hasPermission("sfa.getbooster")) {
@@ -400,8 +399,12 @@ public class SSkyblockAddon extends JavaPlugin {
 				return false;
 			}
 			if(StringUtils.isNumeric(args[2])) {
-				String name = color + Integer.parseInt(args[2]) + " minute " + args[1].toLowerCase() + " booster"; //TODO
-				BoosterManager.claimBooster(new Booster(target.getUniqueId(), Integer.parseInt(args[2]), Integer.parseInt(args[2]), BoosterType.valueOf(args[1].toUpperCase()), name), color);
+				if(StringUtils.isNumeric(args[3])) {
+					String name = color + Integer.parseInt(args[2]) + " minute " + args[1].toLowerCase() + " booster"; //TODO
+					BoosterManager.claimBooster(new Booster(target.getUniqueId(), Integer.parseInt(args[2]), Integer.parseInt(args[2]), BoosterType.valueOf(args[1].toUpperCase()), name), color, Integer.parseInt(args[3]));
+				} else {
+					sender.sendMessage("§cEnter a valid amount of boosters to give.");
+				}
 			} else {
 				sender.sendMessage("§cEnter a valid integer amount of minutes.");
 				return false;
@@ -428,11 +431,6 @@ public class SSkyblockAddon extends JavaPlugin {
 			}
 			KitManager.addKit(new Kit(86400, args[0], new ItemStack(Material.CHEST), temp));
 			p.sendMessage("§aYou created the the §e" + args[0] + " §akit!");
-		} else if(command.getName().equalsIgnoreCase("spawn")) {
-			if(getSpawn()==null)
-				p.sendMessage("§cThe spawnpoint has not been created yet!");
-			else
-				teleportCoolDown(getSpawn(), p, 5);
 		} else if(command.getName().equalsIgnoreCase("pvp")) {
 			if(getSpawn()==null)
 				p.sendMessage("§cThe PVP spawnpoint has not been created yet!");
@@ -462,8 +460,8 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cWait for the command to finish executing!");
 				return false;
 			}
-			p.sendMessage("§aRequest sent to " + PermissionsEx.getUser(to).getPrefix().replaceAll("&", "§") + "§f" + to.getName() + "§a.");
-			to.sendMessage(PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§") + "§f" + p.getName() + "§6 requested to teleport to you.");
+			p.sendMessage("§aRequest sent to §f" + to.getName() + "§a.");
+			to.sendMessage("§f" + p.getName() + "§6 requested to teleport to you.");
 			to.sendMessage("§6Do §c/tpaccept §6to accept the request or §c/tpdeny §6to decline the request.");
 			tpReq.put(to.getUniqueId(), p.getUniqueId());
 		} else if (command.getName().equalsIgnoreCase("tpaccept")) {
@@ -474,7 +472,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					Player from = Bukkit.getPlayer(tpReq.get(p.getUniqueId()));
 					{
 						runningSomeTPCmd.add(from.getUniqueId());
-						from.sendMessage(PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§") + "§f" + p.getName() + "§a has accepted your request! §cDon't move!");
+						from.sendMessage("§f" + p.getName() + "§a has accepted your request! §cDon't move!");
 					}
 					@Override
 					public void run() {
@@ -502,7 +500,7 @@ public class SSkyblockAddon extends JavaPlugin {
 			if(tpReq.containsKey(p.getUniqueId())) {
 				Player from = Bukkit.getPlayer(tpReq.get(p.getUniqueId()));
 				p.sendMessage("§aYou declined the teleport request!");
-				from.sendMessage(PermissionsEx.getUser(p).getPrefix().replaceAll("&", "§") + "§f" + p.getName() + " §chas declined your request!");
+				from.sendMessage("§f" + p.getName() + " §chas declined your request!");
 				tpReq.remove(p.getUniqueId());
 			} else {
 				p.sendMessage("§cNobody has requested to teleport to you.");
@@ -623,14 +621,6 @@ public class SSkyblockAddon extends JavaPlugin {
 				}
 			} else {
 				p.sendMessage("§cUsage: /trade [player name] or /trade [accept/deny] [player name]");
-			}
-		} else if(command.getName().equalsIgnoreCase("setspawn")) {
-			if(p.hasPermission("sfa.setspawns")) {
-				storageData.set("spawn", p.getLocation());
-				saveStorage();
-				p.sendMessage("§aYou have successfully set a new spawn point.");
-			} else {
-				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
 		} else if(command.getName().equalsIgnoreCase("setpvpspawn")) {
 			if(p.hasPermission("sfa.setspawns")) {
@@ -928,7 +918,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.repair.10"));
 		pm.addPermission(new Permission("sfa.repair.15"));
 		pm.addPermission(new Permission("sfa.repair.unlimited"));
-		pm.addPermission(new Permission("sfa.coloredchat"));
 		pm.addPermission(new Permission("sfa.keepexp"));
 		pm.addPermission(new Permission("sfa.givesellchest"));
 		pm.addPermission(new Permission("sfa.season.reload"));
