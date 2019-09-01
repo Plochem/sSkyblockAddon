@@ -37,7 +37,7 @@ public class SeasonManager {
 			Bukkit.getServer().getLogger().info("[SFA] Season rewards file already exists! Skipping creation...");
 		}
 	}
-	
+
 	public static void startTimer() {
 		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
@@ -47,38 +47,38 @@ public class SeasonManager {
 			public void run() {
 				File f = new File("plugins/SFA/seasons/season.yml");
 				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
-					int justEndedSeason = fData.getInt("season");
-					fData.set("season", justEndedSeason+1);
-					save(f, fData); // update season number
-					try {
-						Field islands = GridHandler.class.getDeclaredField("islands");
-						islands.setAccessible(true);
-						IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
-						is.sort();
-						for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
-							YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
-							for(int i = 0; i < is.size(); i++) {
-								if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
-									c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
-									save(data, c);
-									break;
-								}
+				int justEndedSeason = fData.getInt("season");
+				fData.set("season", justEndedSeason+1);
+				save(f, fData); // update season number
+				try {
+					Field islands = GridHandler.class.getDeclaredField("islands");
+					islands.setAccessible(true);
+					IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
+					is.sort();
+					for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
+						YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
+						for(int i = 0; i < is.size(); i++) {
+							if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
+								c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
+								save(data, c);
+								break;
 							}
 						}
-						
-					} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
-						e1.printStackTrace();
 					}
+
+				} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
+					e1.printStackTrace();
+				}
 
 			}
 		}, midnight, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
 	}
-	
+
 	public static void refreshRewards() {
 		seasonData = YamlConfiguration.loadConfiguration(seasonFile);
 		save(seasonFile, seasonData);
 	}
-	
+
 	/*
 	 * Coal Tier
 	 *      itemRep: ITemStack
@@ -123,7 +123,7 @@ public class SeasonManager {
 			menu.setItem(secondSlots[idx], item);
 			idx++;
 		}
-		
+
 		for(int i = 0; i < menu.getSize(); i++) {
 			if(menu.getItem(i) == null) {
 				menu.setItem(i, menuFiller);
@@ -135,15 +135,15 @@ public class SeasonManager {
 	public static int getLeastRank(int season, String reward){
 		return seasonData.getConfigurationSection(String.valueOf(season)).getInt(reward + ".leastRank");
 	}
-	
+
 	public static int getHighestRank(int season, String reward){
 		return seasonData.getConfigurationSection(String.valueOf(season)).getInt(reward + ".highestRank");
 	}
-	
+
 	public static List<String> getCommands(int season, String reward){
 		return seasonData.getConfigurationSection(String.valueOf(season)).getStringList(reward + ".commands");
 	}
-	
+
 	public static int getCurrentSeason() {
 		return seasonData.getInt("season");
 	}
@@ -151,7 +151,7 @@ public class SeasonManager {
 	public static String getClaimMsg(int season, String reward) {
 		return seasonData.getConfigurationSection(String.valueOf(season)).getString(reward + ".claimMessage");
 	}
-	
+
 	public static int getRankInSeason(int season, Player p) {
 		File playerFile = new File("plugins/SFA/seasons/playerdata/" + p.getUniqueId().toString() + ".yml");
 		YamlConfiguration playerData = YamlConfiguration.loadConfiguration(playerFile);
@@ -183,14 +183,14 @@ public class SeasonManager {
 		playerData.set(String.valueOf(seasonRewardIsIn) + "." + reward, true);
 		save(playerFile, playerData);
 	}
-	
+
 	public static void save(File f, YamlConfiguration c) {
 		try {
 			c.save(f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 }
