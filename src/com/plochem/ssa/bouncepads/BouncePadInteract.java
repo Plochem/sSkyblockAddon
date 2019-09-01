@@ -24,7 +24,7 @@ public class BouncePadInteract implements Listener{
 		if(e.getAction() == Action.PHYSICAL && e.getClickedBlock().getType() == Material.GOLD_PLATE && locs != null && locs.contains( e.getClickedBlock().getLocation())) {
 			p.getWorld().playSound(p.getLocation(), Sound.WOOD_CLICK, 3.0F, 3.0F);
 	        p.getWorld().playEffect(p.getLocation(), Effect.SMOKE, 3);
-	        p.setVelocity(p.getLocation().getDirection().multiply(30).setY(2));
+	        p.setVelocity(p.getLocation().getDirection().normalize().multiply(30).setY(2));
 		}
 	}
 }
