@@ -306,6 +306,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		} else if(command.getName().equalsIgnoreCase("givebanknote")) {
 			if(!sender.hasPermission("sfa.banknote.give")) {
 				sender.sendMessage("§cYou do not have permission to perform this command!");
+				return false;
 			}
 			if(args.length != 2) {
 				sender.sendMessage("§cUsage: /givebanknote [player name] [amount]");
