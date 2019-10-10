@@ -24,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
+import com.plochem.ssa.SSkyblockAddon;
 
 public class SeasonManager {
 	private static File seasonFile =  new File("plugins/SFA/seasons/season.yml");
@@ -50,35 +51,41 @@ public class SeasonManager {
 		schedule.schedule(new Runnable() {
 			@Override
 			public void run() {
-				File f = new File("plugins/SFA/seasons/season.yml");
-				YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
-				int justEndedSeason = fData.getInt("season");
-				fData.set("season", justEndedSeason+1);
-				save(f, fData); // update season number
-				try {
-					Field islands = GridHandler.class.getDeclaredField("islands");
-					islands.setAccessible(true);
-					IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
-					is.sort();
-					for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
-						YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
-						for(int i = 0; i < is.size(); i++) {
-							if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
-								c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
-								save(data, c);
-								break;
-							}
-						}
-					}
-					
-					
-					schedule.shutdown();
-				} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
-					e1.printStackTrace();
-				}
-
+				prepNewSeason();
+				schedule.shutdown();
 			}
 		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
+		startTimer();
+	}
+	
+	public static void prepNewSeason() {
+		File f = new File("plugins/SFA/seasons/season.yml");
+		YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
+		int justEndedSeason = fData.getInt("season");
+		fData.set("season", justEndedSeason+1);
+		save(f, fData); // update season number
+		try {
+			Field islands = GridHandler.class.getDeclaredField("islands");
+			islands.setAccessible(true);
+			IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
+			is.sort();
+			for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
+				YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
+				for(int i = 0; i < is.size(); i++) {
+					if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
+						c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
+						save(data, c);
+						break;
+					}
+				}
+			}
+			
+		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
+			e1.printStackTrace();
+		}
+		
+		SSkyblockAddon.getPlugin(SSkyblockAddon.class).getSEconomy().clearBalances();
+		
 	}
 
 	public static void refreshRewards() {

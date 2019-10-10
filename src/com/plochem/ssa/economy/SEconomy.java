@@ -1,5 +1,6 @@
 package com.plochem.ssa.economy;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -60,6 +61,12 @@ public class SEconomy {
 		});
 	    return results.subList(0, Math.min(10, results.size()));
 		
+	}
+	
+	public void clearBalances() {
+		playerBank.clear();
+		File f = new File("plugins/SFA/playerbalance");
+		f.delete();
 	}
 
 }
