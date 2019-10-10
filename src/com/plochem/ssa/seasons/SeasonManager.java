@@ -40,9 +40,14 @@ public class SeasonManager {
 
 	public static void startTimer() {
 		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
+		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS); // time till midnight
+		
+		LocalDate current = LocalDate.now();
+		int daysOfMonth = current.lengthOfMonth();
+		int currentDay = current.getDayOfMonth() + 1; // day of tomorrow
+		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1);
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
-		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS);
-		schedule.scheduleAtFixedRate(new Runnable() {
+		schedule.schedule(new Runnable() {
 			@Override
 			public void run() {
 				File f = new File("plugins/SFA/seasons/season.yml");
@@ -65,13 +70,15 @@ public class SeasonManager {
 							}
 						}
 					}
-
+					
+					
+					schedule.shutdown();
 				} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
 					e1.printStackTrace();
 				}
 
 			}
-		}, midnight, TimeUnit.DAYS.toSeconds(1), TimeUnit.SECONDS);
+		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
 	}
 
 	public static void refreshRewards() {
