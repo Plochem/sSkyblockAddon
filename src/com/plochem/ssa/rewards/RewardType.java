@@ -5,8 +5,8 @@ public enum RewardType {
 	MONTHLY(5000,3000, "Mythic"),
 	ELITE_MONTHLY(5000,3000, "Destiny"),
 	MASTER_MONTHLY(5000,3000, "Destiny"),
-	LEGEND_MONTHLY(5000,3000, "Mythic"),
-	MYSTIC_MONTHLY(5000,3000, "Mythic");
+	LEGEND_MONTHLY(5000,3000, "Mythical"),
+	MYSTIC_MONTHLY(5000,3000, "Mythical");
 	
 	private int money;
 	private int xp;
