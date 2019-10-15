@@ -53,9 +53,9 @@ public class SeasonManager {
 			public void run() {
 				prepNewSeason();
 				schedule.shutdown();
+				startTimer();
 			}
 		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
-		startTimer();
 	}
 	
 	public static void prepNewSeason() {
