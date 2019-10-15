@@ -49,6 +49,8 @@ public class TagManager {
 			if(has(p, identifier)) {
 				lore.add("§eClick to select!");
 			} else {
+				item.setType(Material.STAINED_GLASS_PANE);
+				item.setDurability((short)14);
 				lore.add("§cYou do not have this tag!");
 				lore.add(tagData.getString(identifier + ".nothave").replaceAll("&", "§"));
 			}
