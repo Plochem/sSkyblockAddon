@@ -4,9 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -25,32 +23,23 @@ public class KitManager {
 	private static File kitFile = new File("plugins/SFA/kits.yml");
 	private static YamlConfiguration kitData = YamlConfiguration.loadConfiguration(kitFile);
 	private static List<Kit> kits = new ArrayList<>();
-	private static Map<UUID, Integer> cooldowns = new HashMap<>();
 	
 	static {
         new BukkitRunnable() {
-        	int time = 0;
-        	List<UUID> toRemove = new ArrayList<>();
             @Override
             public void run() {
-            	for(UUID id : cooldowns.keySet()) {
-            		if(cooldowns.get(id) == 0)
-            			toRemove.add(id);
-            		else
-            			cooldowns.put(id, cooldowns.get(id) - 1);
-            	}
-            	for(UUID id : toRemove) {
-        			cooldowns.remove(id);
-            	}
-            	time++;
-            	if(time == 60) {
-                	for(UUID id : cooldowns.keySet()) {
-                		saveCoolDown(id, cooldowns.get(id));
-                	}
-            		time = 0;
+            	for(File f : new File("plugins/SFA/kitcooldowns").listFiles()) {
+            		YamlConfiguration cooldown = YamlConfiguration.loadConfiguration(f);
+            		for(Kit kit : kits) {
+            			int curr = cooldown.getInt(kit.getName() + "-time");
+            			if(curr != 0) {
+            				 cooldown.set(kit.getName() + "-time", curr-1);
+            			}
+            		}
+            		saveCoolDown(f,cooldown);
             	}
             }
-        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20);
+        }.runTaskTimerAsynchronously(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20);
 	}
 	@SuppressWarnings("unchecked")
 	public static void createKitFile() {
@@ -62,20 +51,23 @@ public class KitManager {
 			kits = ((List<Kit>)kitData.getList("kits"));
 			if(kits==null) kits = new ArrayList<>();
 			for(Kit k : kits) {
-				Bukkit.getPluginManager().addPermission(new Permission("sfa.kit" + k.getName().toLowerCase()));
+				Bukkit.getPluginManager().addPermission(new Permission("sfa.kits." + k.getName().toLowerCase()));
 			}
 		}
 	}
 	
-	public static void saveCoolDown(UUID id, int time) {
-		File cooldownFile = new File("plugins/SFA/kitcooldowns/" + id.toString() + ".yml");
-		YamlConfiguration cooldownData = YamlConfiguration.loadConfiguration(cooldownFile);
-		cooldownData.set("time", time);
+	public static void saveCoolDown(File f, YamlConfiguration c) {
 		try {
-			cooldownData.save(cooldownFile);
+			c.save(f);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static int getCoolDown(UUID id, String kitName) {
+		File f =  new File("plugins/SFA/kitcooldowns/" + id.toString() + ".yml");
+		YamlConfiguration cooldown = YamlConfiguration.loadConfiguration(f);
+		return cooldown.getInt(kitName + "-time");
 	}
 	
 	public static void saveKitFile() {
@@ -87,15 +79,11 @@ public class KitManager {
 		}	
 	}
 	
-	public static void readCooldownFiles(UUID id) {
-		File cooldownFile = new File("plugins/SFA/kitcooldowns/" + id.toString() + ".yml");
-		YamlConfiguration cooldownData = YamlConfiguration.loadConfiguration(cooldownFile);
-		int cooldown = cooldownData.getInt("time");
-		if(cooldown != 0) {
-			cooldowns.put(id, cooldown);
-		} else {
-			cooldowns.remove(id);
-		}
+	public static void setCoolDown(UUID id, String kitName, int timeLeft) {
+		File f =  new File("plugins/SFA/kitcooldowns/" + id.toString() + ".yml");
+		YamlConfiguration cooldown = YamlConfiguration.loadConfiguration(f);
+		cooldown.set(kitName + "-time", timeLeft);
+		saveCoolDown(f, cooldown);
 	}
 	
 	public static void openMenu(Player p) {
@@ -121,7 +109,8 @@ public class KitManager {
 	}
 	
 	public static void giveKit(Player p, Kit k) {
-		if(!cooldowns.containsKey(p.getUniqueId()) || cooldowns.get(p.getUniqueId()) == 0 || p.isOp()) {
+		int cooldown = getCoolDown(p.getUniqueId(), k.getName());
+		if(cooldown == 0 || p.isOp()) {
 			boolean drop = false;
 			for(ItemStack i : k.getItems()) {
 				if(p.getInventory().firstEmpty() == -1) {
@@ -135,20 +124,18 @@ public class KitManager {
 			if(drop) {
 				p.sendMessage("§cSome items are dropped on the ground because your inventory is full!");
 			}
-			cooldowns.put(p.getUniqueId(), k.getCooldown());
-			saveCoolDown(p.getUniqueId(), k.getCooldown());
+			setCoolDown(p.getUniqueId(), k.getName(), k.getCooldown());
 		} else {
-			int time = cooldowns.get(p.getUniqueId());
-			int days = (int) TimeUnit.SECONDS.toDays(time);
-			time -= TimeUnit.DAYS.toSeconds(days);
+			int days = (int) TimeUnit.SECONDS.toDays(cooldown);
+			cooldown -= TimeUnit.DAYS.toSeconds(days);
 
-			int hours = (int) TimeUnit.SECONDS.toHours(time);
-			time -= TimeUnit.HOURS.toSeconds(hours);
+			int hours = (int) TimeUnit.SECONDS.toHours(cooldown);
+			cooldown -= TimeUnit.HOURS.toSeconds(hours);
 
-			int minutes = (int) TimeUnit.SECONDS.toMinutes(time);
-			time -= TimeUnit.MINUTES.toSeconds(minutes);
+			int minutes = (int) TimeUnit.SECONDS.toMinutes(cooldown);
+			cooldown -= TimeUnit.MINUTES.toSeconds(minutes);
 
-			int seconds = time;
+			int seconds = cooldown;
 			
 			
 			p.sendMessage("§cYou already chose a kit. Wait for " + days + " days " + hours + " hours " + minutes + " minutes " + seconds + " seconds before choosing another kit.");

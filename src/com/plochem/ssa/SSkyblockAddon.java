@@ -139,9 +139,6 @@ public class SSkyblockAddon extends JavaPlugin {
 				SeasonManager.startTimer();
 				CosmeticManager.registerPerms();
 				CosmeticManager.createConfig();
-				for(Player p : Bukkit.getOnlinePlayers()) {
-					KitManager.readCooldownFiles(p.getUniqueId());
-				}
 				for(File f : new File("plugins/SFA/playerbalance").listFiles()) { //loads balance from file to hashmap
 					YamlConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 					sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));

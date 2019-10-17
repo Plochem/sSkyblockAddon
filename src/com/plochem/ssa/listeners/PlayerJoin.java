@@ -21,7 +21,6 @@ import com.plochem.ssa.cosmetics.types.ProjectileTrail;
 import com.plochem.ssa.cosmetics.types.TrailEffect;
 import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.homes.Home;
-import com.plochem.ssa.kits.KitManager;
 import com.plochem.ssa.stats.StatsManager;
 
 public class PlayerJoin implements Listener{
@@ -32,7 +31,6 @@ public class PlayerJoin implements Listener{
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) throws IOException{
 		Player joiner = e.getPlayer();
-		KitManager.readCooldownFiles(joiner.getUniqueId());
         new BukkitRunnable() {
             @Override
             public void run() {
