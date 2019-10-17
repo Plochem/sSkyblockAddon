@@ -30,7 +30,7 @@ public class KitSelection implements Listener{
 									}
 									e.getWhoClicked().openInventory(preview);
 								} else { // give kit
-									if(e.getWhoClicked().hasPermission("sfa.kit" + name)) {
+									if(e.getWhoClicked().hasPermission("sfa.kits" + name)) {
 										KitManager.giveKit((Player)e.getWhoClicked(), k);
 									} else {
 										e.getWhoClicked().sendMessage("§cYou do not have permission to use this kit! Purchase a rank to use it.");
