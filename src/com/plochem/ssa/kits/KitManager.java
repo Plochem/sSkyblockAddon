@@ -138,7 +138,7 @@ public class KitManager {
 			int seconds = cooldown;
 			
 			
-			p.sendMessage("§cYou already chose a kit. Wait for " + days + " days " + hours + " hours " + minutes + " minutes " + seconds + " seconds before choosing another kit.");
+			p.sendMessage("§cYou already chose this kit. Wait for " + days + " days " + hours + " hours " + minutes + " minutes " + seconds + " seconds before choosing this kit.");
 		}
 	}
 }
