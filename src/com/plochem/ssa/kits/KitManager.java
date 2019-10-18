@@ -89,12 +89,15 @@ public class KitManager {
 	public static void openMenu(Player p) {
 		Inventory menu = Bukkit.createInventory(p, 9, "Kit Menu");
 		for(Kit k : kits) {
-			ItemStack i = k.getItemRep();
+			ItemStack i = k.getItemRepNotOwn();		
+			if(p.hasPermission("sfa.kits." + k.getName().toLowerCase())) {
+				i = k.getItemRepOwn();
+			}
 			ItemMeta im = i.getItemMeta();
 			im.setDisplayName("§f" + k.getName());
 			im.setLore(Arrays.asList("§eLeft click to claim the kit!", "", "§eRight click to preview the kit!"));
 			i.setItemMeta(im);
-			menu.addItem(k.getItemRep());
+			menu.addItem(i);
 		}
 		p.openInventory(menu);
 	}

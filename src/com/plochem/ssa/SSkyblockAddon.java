@@ -427,7 +427,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				if(i != null)
 					temp.add(i);
 			}
-			KitManager.addKit(new Kit(86400, args[0], new ItemStack(Material.CHEST), temp));
+			KitManager.addKit(new Kit(86400, args[0], new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)5), new ItemStack(Material.STAINED_GLASS_PANE, 1, (short)14), temp));
 			p.sendMessage("§aYou created the the §e" + args[0] + " §akit!");
 		} else if(command.getName().equalsIgnoreCase("pvp")) {
 			if(getSpawn()==null)

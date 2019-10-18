@@ -10,13 +10,15 @@ import org.bukkit.inventory.ItemStack;
 public class Kit implements ConfigurationSerializable{
 	private int cooldown;
 	private String name;
-	private ItemStack itemRep;
+	private ItemStack itemRepOwn;
+	private ItemStack itemRepNotOwn;
 	private List<ItemStack> items;
 	
-	public Kit(int cooldown, String name, ItemStack itemRep, List<ItemStack> items) {
+	public Kit(int cooldown, String name, ItemStack itemRepOwn, ItemStack itemRepNotOwn,List<ItemStack> items) {
 		this.cooldown = cooldown;
 		this.name = name;
-		this.itemRep = itemRep;
+		this.itemRepOwn = itemRepOwn;
+		this.itemRepNotOwn = itemRepNotOwn;
 		this.items = items;
 	}
 	
@@ -24,7 +26,8 @@ public class Kit implements ConfigurationSerializable{
 	public Kit(Map<String, Object> map) {
 		this.cooldown =(Integer)map.get("cooldown");
 		this.name = (String)map.get("name");
-		this.itemRep = (ItemStack)map.get("itemRep");
+		this.itemRepOwn = (ItemStack)map.get("itemRepOwn");
+		this.itemRepNotOwn = (ItemStack)map.get("itemRepNotOwn");
 		this.items = (List<ItemStack>)map.get("items");
 	}
 	
@@ -33,7 +36,8 @@ public class Kit implements ConfigurationSerializable{
         Map<String, Object> map = new HashMap<>();
         map.put("cooldown", cooldown);
         map.put("name", name);
-        map.put("itemRep", itemRep);
+        map.put("itemRepOwn", itemRepOwn);
+        map.put("itemRepNotOwn", itemRepNotOwn);
         map.put("items", items);
         return map;
 	}
@@ -54,12 +58,20 @@ public class Kit implements ConfigurationSerializable{
 		this.name = name;
 	}
 
-	public ItemStack getItemRep() {
-		return itemRep;
+	public ItemStack getItemRepOwn() {
+		return itemRepOwn;
 	}
 
-	public void setItemRep(ItemStack itemRep) {
-		this.itemRep = itemRep;
+	public void setItemRepOwn(ItemStack itemRepOwn) {
+		this.itemRepOwn = itemRepOwn;
+	}
+	
+	public ItemStack getItemRepNotOwn() {
+		return itemRepNotOwn;
+	}
+
+	public void setItemRepNotOwn(ItemStack itemRepNotOwn) {
+		this.itemRepNotOwn = itemRepNotOwn;
 	}
 
 	public List<ItemStack> getItems() {
