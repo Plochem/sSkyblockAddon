@@ -1,6 +1,6 @@
 main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
-version: 1.11.7
+version: 1.11.8
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, SuperiorSkyblock2, WorldEdit, LuckPerms]
