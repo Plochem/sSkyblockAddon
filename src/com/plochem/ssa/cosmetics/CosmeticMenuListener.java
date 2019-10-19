@@ -49,6 +49,7 @@ public class CosmeticMenuListener implements Listener{
 							}
 							p.sendMessage("§aSelected!");
 							//
+							CosmeticManager.saveSelections();
 						} else {
 							p.sendMessage("§cYou do not own this cosmetic!");
 						}
