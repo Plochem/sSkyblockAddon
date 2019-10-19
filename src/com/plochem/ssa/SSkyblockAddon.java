@@ -32,6 +32,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import com.plochem.core.Core;
 import com.plochem.ssa.boosters.Booster;
 import com.plochem.ssa.boosters.BoosterActivate;
 import com.plochem.ssa.boosters.BoosterClaim;
@@ -946,7 +947,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	}
 
 	public Location getSpawn() {
-		return (Location)storageData.get("spawn");
+		return Core.getPlugin(Core.class).getSpawn();
 	}
 
 	public List<UUID> getWhoRunningSomeTPCmd(){
