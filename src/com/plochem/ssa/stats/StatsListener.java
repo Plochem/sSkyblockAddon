@@ -57,7 +57,6 @@ public class StatsListener implements Listener {
 	public void onIslandLeave(IslandLeaveEvent e) {
 		for(UUID id : e.getIsland().getAllMembers()) {
 			StatsManager.showScoreboard(Bukkit.getPlayer(id));
-			StatsManager.updateTab(Bukkit.getPlayer(id));
 		}
 	}
 	
@@ -113,7 +112,6 @@ public class StatsListener implements Listener {
 	public void onIslandCreate(IslandKickEvent e) {
 		for(UUID id : e.getIsland().getAllMembers()) {
 			StatsManager.showScoreboard(Bukkit.getPlayer(id));
-			StatsManager.updateTab(Bukkit.getPlayer(id));
 		}
 	}
 	
@@ -121,7 +119,6 @@ public class StatsListener implements Listener {
 	public void onIslandCreate(IslandDisbandEvent e) {
 		for(UUID id : e.getIsland().getAllMembers()) {
 			StatsManager.showScoreboard(Bukkit.getPlayer(id));
-			StatsManager.updateTab(Bukkit.getPlayer(id));
 		}
 	}
 	
@@ -129,7 +126,6 @@ public class StatsListener implements Listener {
 	public void onIslandCreate(IslandWorthCalculatedEvent e) {
 		for(UUID id : e.getIsland().getAllMembers()) {
 			StatsManager.showScoreboard(Bukkit.getPlayer(id));
-			StatsManager.updateTab(Bukkit.getPlayer(id));
 		}
 
 	}

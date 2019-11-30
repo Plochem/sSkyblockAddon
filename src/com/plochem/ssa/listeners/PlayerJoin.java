@@ -38,6 +38,7 @@ public class PlayerJoin implements Listener{
                 	joiner.teleport(sfa.getSpawn());
                 	Bukkit.dispatchCommand(joiner, "help");
             	}
+        		StatsManager.showScoreboard(joiner);
             }
         }.runTaskLater(sfa, 1);
 		
@@ -128,8 +129,5 @@ public class PlayerJoin implements Listener{
 		CosmeticManager.projectile.put(joiner.getUniqueId(), ProjectileTrail.valueOf(playerData.getString(CosmeticType.Projectile_Trail.toString())));
 		CosmeticManager.trail.put(joiner.getUniqueId(), TrailEffect.valueOf(playerData.getString(CosmeticType.Trail_Effect.toString())));
 		//
-		
-		StatsManager.showScoreboard(joiner);
-		StatsManager.updateTab(joiner);
 	}
 }

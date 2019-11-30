@@ -2,8 +2,8 @@ package com.plochem.ssa.stats;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 
-import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -58,46 +58,37 @@ public class StatsManager {
 		if(p==null)
 			return;
         new BukkitRunnable() {
-            @SuppressWarnings("deprecation")
 			@Override
             public void run() {
             	Island curr = SuperiorSkyblockAPI.getPlayer(p).getIsland();
             	String islandName = "None";
-            	int islandLevel = 0;
+            	BigInteger islandLevel = BigInteger.valueOf(0);
             	int numMembers = 0;
             	if(curr != null) {
                 	islandName = curr.getName();
-                	islandLevel = curr.getIslandLevel();
+                	islandLevel = curr.getIslandLevelAsBigDecimal().toBigInteger();
                 	numMembers = curr.getAllMembers().size();
             	}
 
         		Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
                 Objective obj = sb.registerNewObjective("stats", "dummy");
                 obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-                obj.setDisplayName("�e�lStraxidus Skyblock");
-                obj.getScore(StringUtils.center("�7Statistics", 33)).setScore(7);
-                obj.getScore("Kills: �a" + getKills(p)).setScore(6);
-                obj.getScore("Deaths: �a" + getDeaths(p)).setScore(5);
-                obj.getScore("Balance: �a$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(4);
-                obj.getScore("").setScore(3);
-                obj.getScore("Island name: �a" + islandName).setScore(2);
-                obj.getScore("Island level: �a" + islandLevel).setScore(1);
-                obj.getScore("Number of members: �a" + numMembers).setScore(0);
+                obj.setDisplayName("§b§lStraxidus §3§lSkyblock");
+                obj.getScore("§f————————————————————————————————").setScore(10);
+                obj.getScore("§b§lYou").setScore(9);
+                obj.getScore("§3❖ §fKills: §b" + getKills(p)).setScore(8);
+                obj.getScore("§3❖ §fDeaths: §b" + getDeaths(p)).setScore(7);
+                obj.getScore("§3❖ §fBalance: §b$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(6);
+                obj.getScore("").setScore(5);
+                obj.getScore("§b§lIsland").setScore(4);
+                obj.getScore("§3❖ §fIsland name: §b" + islandName).setScore(3);
+                obj.getScore("§3❖ §fIsland level: §b" + islandLevel).setScore(2);
+                obj.getScore("§3❖ §fNumber of members: §b" + numMembers).setScore(1);
+                obj.getScore("————————————————————————————————").setScore(0);
                 p.setScoreboard(sb);
             }
         }.runTaskLater(sfa, 20);
 
-	}
-	
-	@SuppressWarnings("deprecation")
-	public static void updateTab(Player joiner) {
-		if(joiner != null) {
-        	Island curr =  SuperiorSkyblockAPI.getPlayer(joiner).getIsland();
-        	int islandLevel = 0;
-        	if(curr != null)
-        		islandLevel = curr.getIslandLevel();
-			joiner.setPlayerListName(joiner.getPlayerListName() + " �7[�a" + islandLevel + "�7]");
-		}	
 	}
 	
 	
