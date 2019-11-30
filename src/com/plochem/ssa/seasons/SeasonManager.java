@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -23,6 +22,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
+import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
 import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
 import com.plochem.ssa.SSkyblockAddon;
@@ -83,6 +83,10 @@ public class SeasonManager {
 						break;
 					}
 				}
+			}
+			
+			for(UUID id: SuperiorSkyblockPlugin.getPlugin().getGrid().getAllIslands()) { //deletes island
+				SuperiorSkyblockAPI.deleteIsland(is.get(id));
 			}
 			
 		} catch (IllegalArgumentException | IllegalAccessException | NoSuchFieldException e1) {
