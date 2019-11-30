@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
@@ -40,13 +41,17 @@ public class SeasonManager {
 	}
 
 	public static void startTimer() {
+		int seasonMonthLength = 3; // makes total season length this amt + 1
 		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
 		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS); // time till midnight
-		
 		LocalDate current = LocalDate.now();
 		int daysOfMonth = current.lengthOfMonth();
 		int currentDay = current.getDayOfMonth() + 1; // day of tomorrow
 		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1);
+		long nextMonthsSeconds = 0;
+		for(int i = 1; i < seasonMonthLength; i++) {
+			nextMonthsSeconds += TimeUnit.DAYS.toSeconds(current.getMonth().plus(i).minLength());
+		}
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
 		schedule.schedule(new Runnable() {
 			@Override
@@ -55,7 +60,7 @@ public class SeasonManager {
 				schedule.shutdown();
 				startTimer();
 			}
-		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
+		}, midnight + secondsTillEndMonth + nextMonthsSeconds, TimeUnit.SECONDS);
 	}
 	
 	public static void prepNewSeason() {
