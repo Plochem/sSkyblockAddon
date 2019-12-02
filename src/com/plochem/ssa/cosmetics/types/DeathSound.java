@@ -6,7 +6,7 @@ import org.bukkit.Sound;
 
 public enum DeathSound implements Cosmetic{
 	Default (Material.BARRIER),
-	Pig(Material.RAW_BEEF, Sound.PIG_DEATH);
+	Pig(Material.RAW_BEEF, Sound.ENTITY_PIG_DEATH);
 	
 	private Material material;
 	private Sound[] sound;

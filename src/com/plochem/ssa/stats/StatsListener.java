@@ -105,7 +105,6 @@ public class StatsListener implements Listener {
         	new SuperiorThread(() -> island.calcIslandWorth(null)).start();
         }
 		plugin.getDataHandler().insertIsland(e.getIsland());
-
 	}
 
 	@EventHandler

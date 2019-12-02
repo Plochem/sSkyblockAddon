@@ -22,9 +22,9 @@ import net.brcdev.shopgui.api.exception.PlayerDataNotLoadedException;
 public class SellChestListener implements Listener{
 	@EventHandler
 	public void onRightClick(PlayerInteractEvent e) {
-		if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getItemInHand().getType() == Material.BLAZE_ROD) {
-			if(e.getPlayer().getItemInHand().getItemMeta().getDisplayName() != null) {
-				if(e.getPlayer().getItemInHand().getItemMeta().getDisplayName().equals("§eSell-Chest Wand")){
+		if(e.getAction() == Action.RIGHT_CLICK_BLOCK && e.getPlayer().getInventory().getItemInMainHand().getType() == Material.BLAZE_ROD) {
+			if(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName() != null) {
+				if(e.getPlayer().getInventory().getItemInMainHand().getItemMeta().getDisplayName().equals("§eSell-Chest Wand")){
 					Block theChestBlock = e.getClickedBlock(); 
 					BlockState state = theChestBlock.getState();
 					if (state instanceof Chest) {
@@ -60,9 +60,9 @@ public class SellChestListener implements Listener{
 								soldCost*=1.25;
 								e.getPlayer().sendMessage("§aShop > §fYou sold " + numItems + " items from your chest for a total of " + soldCost + "$. (x1.25 multiplier)");
 								SSkyblockAddon.getPlugin(SSkyblockAddon.class).getSEconomy().getEconomyImplementer().depositPlayer(e.getPlayer(), soldCost);
-								int amt = e.getPlayer().getItemInHand().getAmount() - 1;
+								int amt = e.getPlayer().getInventory().getItemInMainHand().getAmount() - 1;
 								if(amt == 0) {
-									e.getPlayer().getInventory().setItemInHand(new ItemStack(Material.AIR));
+									e.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR));
 								} else {
 									e.getItem().setAmount(amt);						
 								}

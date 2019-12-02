@@ -22,7 +22,7 @@ public class BouncePadInteract implements Listener{
 		Player p = e.getPlayer();
 		List<Location> locs = (List<Location>)sfa.getBpData().getList("bp.locs");		
 		if(e.getAction() == Action.PHYSICAL && e.getClickedBlock().getType() == Material.GOLD_PLATE && locs != null && locs.contains( e.getClickedBlock().getLocation())) {
-			p.getWorld().playSound(p.getLocation(), Sound.WOOD_CLICK, 3.0F, 3.0F);
+			p.getWorld().playSound(p.getLocation(), Sound.BLOCK_WOOD_PRESSUREPLATE_CLICK_ON, 3.0F, 3.0F);
 	        p.getWorld().playEffect(p.getLocation(), Effect.SMOKE, 3);
 	        p.setVelocity(p.getLocation().getDirection().normalize().multiply(30).setY(2));
 		}

@@ -1,7 +1,7 @@
 package com.plochem.ssa.cosmetics.types;
 
-import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -13,47 +13,48 @@ public enum TrailEffect implements Cosmetic{
 
 		@Override
 		public void displayParticle(Player p) {
+			
 		}
 
 	},
-	Smoke_Aura(Material.INK_SACK, Effect.PARTICLE_SMOKE) {
+	Smoke_Aura(Material.INK_SACK, Particle.SMOKE_NORMAL) {
 
 		@Override
 		public void displayParticle(Player p) {
-			for(Effect e : this.getEffect()) {
-				p.spigot().playEffect(p.getLocation(), e, 0, 0, (float)0.1, (float)0.4, (float)0.1, 0, 1, 100);	
+			for(Particle e : this.getEffect()) {
+				p.spawnParticle(e, p.getLocation(), 3, 0.1, 0.4, 0.1);
 			}		
 		}
 
 	},
-	Flame_Aura(Material.TORCH, Effect.FLAME) {
+	Flame_Aura(Material.TORCH, Particle.FLAME) {
 		@Override
 		public void displayParticle(Player p) {
-			for(Effect e : this.getEffect()) {
-				p.spigot().playEffect(p.getLocation(), e, 0, 0, (float)0.1, (float)0.4, (float)0.1, 0, 1, 100);	
+			for(Particle e : this.getEffect()) {
+				p.spawnParticle(e, p.getLocation(), 3, 0.1, 0.4, 0.1);
 			}				
 		}
 
 	},
-	Enchantment_Aura(Material.ENCHANTMENT_TABLE, Effect.FLYING_GLYPH) {
+	Enchantment_Aura(Material.ENCHANTMENT_TABLE, Particle.ENCHANTMENT_TABLE) {
 		@Override
 		public void displayParticle(Player p) {
-			for(Effect e : this.getEffect()) {
-				p.spigot().playEffect(p.getLocation(), e, 0, 0, (float)0.1, (float)0.4, (float)0.1, 0, 5, 100);	
+			for(Particle e : this.getEffect()) {
+				p.spawnParticle(e, p.getLocation(), 5, 0.1, 0.4, 0.1);
 			}			
 		}
 
 	};
 
-	private Effect[] effect;
+	private Particle[] effect;
 	private Material material;
 
-	private TrailEffect(Material material, Effect... effect) {
+	private TrailEffect(Material material, Particle... effect) {
 		this.material = material;
 		this.effect = effect;
 	}
 
-	public Effect[] getEffect() {
+	public Particle[] getEffect() {
 		return effect;
 	}
 

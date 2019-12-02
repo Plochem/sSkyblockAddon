@@ -17,8 +17,8 @@ public class BouncePadPlace implements Listener{
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
 		Player p = e.getPlayer();
-		String displayName = p.getItemInHand().getItemMeta().getDisplayName();
-		if((displayName != null) && (displayName.equals("§aBounce Pad")) && (p.getItemInHand().getType() == Material.SLIME_BLOCK)) {
+		String displayName = p.getInventory().getItemInMainHand().getItemMeta().getDisplayName();
+		if((displayName != null) && (displayName.equals("§aBounce Pad")) && (p.getInventory().getItemInMainHand().getType() == Material.SLIME_BLOCK)) {
 			Location place = e.getBlock().getLocation().add(0, 1, 0);
 			@SuppressWarnings("unchecked")
 			List<Location> locs = (List<Location>)sfa.getBpData().getList("bp.locs");

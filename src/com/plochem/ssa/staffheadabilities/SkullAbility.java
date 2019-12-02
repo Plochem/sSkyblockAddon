@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -40,7 +41,7 @@ public class SkullAbility implements Listener{
 		if(sm==null || !sm.hasOwner()) {
 			return;
 		}
-		PotionEffectType type = skullEffect.get(sm.getOwner());
+		PotionEffectType type = skullEffect.get(sm.getOwningPlayer().getName());
 		if(type == null) return;
 		
 		int amplifier = 0;
@@ -55,6 +56,7 @@ public class SkullAbility implements Listener{
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onEntityDeath(EntityDeathEvent event){
         Entity entity = event.getEntity();
@@ -72,7 +74,7 @@ public class SkullAbility implements Listener{
                 		head.setDurability((short) 3);
                 		SkullMeta im = (SkullMeta) head.getItemMeta();
                 		im.setDisplayName("§cMask of " + randName);
-                		im.setOwner(randName);
+                		im.setOwningPlayer(Bukkit.getOfflinePlayer(randName));
                 		head.setItemMeta(im);
                 		p.getWorld().dropItem(entity.getLocation(), head);
                 	}
