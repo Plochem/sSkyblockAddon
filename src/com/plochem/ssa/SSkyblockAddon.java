@@ -286,7 +286,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					if(target.isOnline())
 						target.getPlayer().sendMessage("§eYour balance has been set to §a$" + String.format("%,.2f", amt) + "§e.");
 				} else {
-					sender.sendMessage("§cEnter a valid numerical amount to send.");
+					sender.sendMessage("§cEnter a valid numerical amount to set.");
 				}
 			} else {
 				sender.sendMessage("§cYou do not have permission to perform this command!");
