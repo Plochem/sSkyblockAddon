@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -25,7 +24,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
@@ -60,6 +58,7 @@ import com.plochem.ssa.kits.KitSelection;
 import com.plochem.ssa.listeners.ChatHandling;
 import com.plochem.ssa.listeners.EventsCancelInSpawn;
 import com.plochem.ssa.listeners.InvseeEdit;
+import com.plochem.ssa.listeners.ItemCraftListener;
 import com.plochem.ssa.listeners.PlayerDeath;
 import com.plochem.ssa.listeners.PlayerJoin;
 import com.plochem.ssa.listeners.PlayerKillEntity;
@@ -98,16 +97,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote");
 
 	public void onEnable(){
-		sEco.hook();
-        Iterator<Recipe> it = Bukkit.getServer().recipeIterator();
-        Recipe recipe;
-        while(it.hasNext())
-        {
-            recipe = it.next();
-            if (recipe != null && recipe.getResult().getType() == Material.HOPPER){
-                it.remove();
-            }
-        }        
+		sEco.hook();   
 		new BukkitRunnable() { // waits for one tick before reading config because worlds have to be loaded first
 			@Override
 			public void run() {
@@ -889,6 +879,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new SeasonMenuListener(), this);
 		pm.registerEvents(new CosmeticMenuListener(), this);
 		pm.registerEvents(new CosmeticListener(), this);
+		pm.registerEvents(new ItemCraftListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
