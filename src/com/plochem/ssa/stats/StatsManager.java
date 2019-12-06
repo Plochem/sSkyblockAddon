@@ -3,6 +3,8 @@ package com.plochem.ssa.stats;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -78,7 +80,7 @@ public class StatsManager {
                 obj.getScore("§b§lYou").setScore(9);
                 obj.getScore("§3❖ §fKills: §b" + getKills(p)).setScore(8);
                 obj.getScore("§3❖ §fDeaths: §b" + getDeaths(p)).setScore(7);
-                obj.getScore("§3❖ §fBalance: §b$" + String.format("%,.2f", sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(6);
+                obj.getScore("§3❖ §fBalance: §b$" + formatValue(sfa.getSEconomy().getEconomyImplementer().getBalance(p))).setScore(6);
                 obj.getScore("").setScore(5);
                 obj.getScore("§b§lIsland").setScore(4);
                 obj.getScore("§3❖ §fIsland name: §b" + islandName).setScore(3);
@@ -91,5 +93,18 @@ public class StatsManager {
 
 	}
 	
+	public static String formatValue(double value) {
+		int power; 
+		String suffix = " KMGT";
+		String formattedNumber = "";
+
+		NumberFormat formatter = new DecimalFormat("#,###.##");
+		power = (int)Math.log10(value);
+		value = value/(Math.pow(10,(power/3)*3));
+		formattedNumber=formatter.format(value);
+		formattedNumber = formattedNumber + suffix.charAt(power/3);
+		return formattedNumber.length()>4 ?  formattedNumber.replaceAll("\\.[0-9]+", "") : formattedNumber;  
+	}
+
 	
 }
