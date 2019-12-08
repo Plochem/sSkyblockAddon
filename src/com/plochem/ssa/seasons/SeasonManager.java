@@ -49,7 +49,7 @@ public class SeasonManager {
 		int currentDay = current.getDayOfMonth() + 1; // day of tomorrow
 		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1) - 1;
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
-		schedule.schedule(new Runnable() { //run every month
+		schedule.schedule(new Runnable() { //runs at the end of every month at 11:59:59pm
 			@Override
 			public void run() {
 				if(LocalDate.now().getMonthValue() % 3 == 0) { // if month of 3, 6, 9, 12
