@@ -73,6 +73,7 @@ import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.seasons.SeasonManager;
 import com.plochem.ssa.seasons.SeasonMenuListener;
+import com.plochem.ssa.seasons.SeasonPlayerJoinListener;
 import com.plochem.ssa.sellchest.SellChestListener;
 import com.plochem.ssa.sellchest.SellChestManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
@@ -880,6 +881,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new CosmeticMenuListener(), this);
 		pm.registerEvents(new CosmeticListener(), this);
 		pm.registerEvents(new ItemCraftListener(), this);
+		pm.registerEvents(new SeasonPlayerJoinListener(), this);
 		pm.addPermission(new Permission("sfa.giveBouncePad"));
 		pm.addPermission(new Permission("sfa.editspawn"));
 		pm.addPermission(new Permission("sfa.addBal"));
@@ -911,6 +913,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.addPermission(new Permission("sfa.keepexp"));
 		pm.addPermission(new Permission("sfa.givesellchest"));
 		pm.addPermission(new Permission("sfa.season.reload"));
+		pm.addPermission(new Permission("sfa.season.joinreset"));
 	}
 
 	public YamlConfiguration getBpData() {

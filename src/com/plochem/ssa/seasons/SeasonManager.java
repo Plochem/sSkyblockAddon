@@ -30,7 +30,8 @@ import com.plochem.ssa.SSkyblockAddon;
 public class SeasonManager {
 	private static File seasonFile =  new File("plugins/SFA/seasons/season.yml");
 	private static YamlConfiguration seasonData = YamlConfiguration.loadConfiguration(seasonFile);
-
+	private static boolean isResetting = false;
+	
 	public static void createSeasonFile() {
 		if(!(seasonFile.exists())) {
 			Bukkit.getServer().getLogger().info("[SFA] Creating season rewards file!");
@@ -41,29 +42,28 @@ public class SeasonManager {
 	}
 
 	public static void startTimer() {
-		int seasonMonthLength = 3; // makes total season length this amt + 1
 		LocalDateTime tomorrowMidnight = LocalDate.now().plusDays(1).atStartOfDay();
 		long midnight = LocalDateTime.now().until(tomorrowMidnight, ChronoUnit.SECONDS); // time till midnight
 		LocalDate current = LocalDate.now();
 		int daysOfMonth = current.lengthOfMonth();
 		int currentDay = current.getDayOfMonth() + 1; // day of tomorrow
-		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1);
-		long nextMonthsSeconds = 0;
-		for(int i = 1; i < seasonMonthLength; i++) {
-			nextMonthsSeconds += TimeUnit.DAYS.toSeconds(current.getMonth().plus(i).minLength());
-		}
+		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1) - 1;
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
-		schedule.schedule(new Runnable() {
+		schedule.schedule(new Runnable() { //run every month
 			@Override
 			public void run() {
-				prepNewSeason();
-				schedule.shutdown();
-				startTimer();
+				if(LocalDate.now().getMonthValue() % 3 == 0) { // if month of 3, 6, 9, 12
+					prepNewSeason();
+					schedule.shutdown();
+					startTimer();
+				}
 			}
-		}, midnight + secondsTillEndMonth + nextMonthsSeconds, TimeUnit.SECONDS);
+		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
 	}
 	
 	public static void prepNewSeason() {
+		Bukkit.getServer().setWhitelist(true);
+		isResetting = true;
 		File f = new File("plugins/SFA/seasons/season.yml");
 		YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
 		int justEndedSeason = fData.getInt("season");
@@ -94,7 +94,6 @@ public class SeasonManager {
 		}
 		
 		SSkyblockAddon.getPlugin(SSkyblockAddon.class).getSEconomy().clearBalances();
-		
 	}
 
 	public static void refreshRewards() {
@@ -169,6 +168,10 @@ public class SeasonManager {
 
 	public static int getCurrentSeason() {
 		return seasonData.getInt("season");
+	}
+	
+	public static boolean isResetting() {
+		return isResetting;
 	}
 
 	public static String getClaimMsg(int season, String reward) {
