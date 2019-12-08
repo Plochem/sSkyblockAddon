@@ -46,7 +46,7 @@ public class RepairManager {
 		int timesRepaired = repairData.getInt(p.getUniqueId().toString());
 		if(p.hasPermission("sfa.repair.unlimited")) {
 			return true;
-		} else if(p.hasPermission("sfa.repair.15")) { // 5 times
+		} else if(p.hasPermission("sfa.repair.15")) {
 			if(timesRepaired < 15) {
 				return true;
 			} else {
@@ -75,7 +75,6 @@ public class RepairManager {
 		schedule.scheduleAtFixedRate(new Runnable() {
 			@Override
 			public void run() {
-				System.out.println(LocalDate.now().getDayOfWeek().toString());
 				if(LocalDate.now().getDayOfWeek() == DayOfWeek.SUNDAY) { // runs every sunday at 23:59:59
 					for(String id : repairData.getKeys(false)) {
 						repairData.set(id, null);
