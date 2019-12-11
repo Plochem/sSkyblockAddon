@@ -25,7 +25,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -882,38 +881,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new CosmeticListener(), this);
 		pm.registerEvents(new ItemCraftListener(), this);
 		pm.registerEvents(new SeasonPlayerJoinListener(), this);
-		pm.addPermission(new Permission("sfa.giveBouncePad"));
-		pm.addPermission(new Permission("sfa.editspawn"));
-		pm.addPermission(new Permission("sfa.addBal"));
-		pm.addPermission(new Permission("sfa.setBal"));
-		pm.addPermission(new Permission("sfa.givebooster"));
-		pm.addPermission(new Permission("sfa.createKit"));
-		pm.addPermission(new Permission("sfa.invsee"));
-		pm.addPermission(new Permission("sfa.invsee.edit"));
-		pm.addPermission(new Permission("sfa.givesellwand"));
-		pm.addPermission(new Permission("sfa.givegen"));
-		pm.addPermission(new Permission("sfa.sethomemultiple2"));
-		pm.addPermission(new Permission("sfa.sethomemultiple4"));
-		pm.addPermission(new Permission("sfa.sethomemultiple6"));
-		pm.addPermission(new Permission("sfa.sethomemultiple8"));
-		pm.addPermission(new Permission("sfa.setspawns"));
-		pm.addPermission(new Permission("sfa.clearchat"));
-		pm.addPermission(new Permission("sfa.setleaderboards"));
-		pm.addPermission(new Permission("sfa.rewards.elite"));
-		pm.addPermission(new Permission("sfa.rewards.master"));
-		pm.addPermission(new Permission("sfa.rewards.legend"));
-		pm.addPermission(new Permission("sfa.rewards.mystic"));
-		pm.addPermission(new Permission("sfa.banknote.give"));
-		pm.addPermission(new Permission("sfa.tagsadmin"));
-		pm.addPermission(new Permission("sfa.bypassteleportcooldown"));
-		pm.addPermission(new Permission("sfa.repair.5"));
-		pm.addPermission(new Permission("sfa.repair.10"));
-		pm.addPermission(new Permission("sfa.repair.15"));
-		pm.addPermission(new Permission("sfa.repair.unlimited"));
-		pm.addPermission(new Permission("sfa.keepexp"));
-		pm.addPermission(new Permission("sfa.givesellchest"));
-		pm.addPermission(new Permission("sfa.season.reload"));
-		pm.addPermission(new Permission("sfa.season.joinreset"));
 	}
 
 	public YamlConfiguration getBpData() {

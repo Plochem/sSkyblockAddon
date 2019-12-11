@@ -45,3 +45,68 @@ commands:
    giveSellChest:
    season:
    seasons:
+permissions:
+   sfa.giveBouncePad:
+      default: op
+   sfa.editspawn:
+      default: op
+   sfa.addBal:
+      default: op
+   sfa.setBal:
+      default: op
+   sfa.givebooster:
+      default: op
+   sfa.createKit:
+      default: op
+   sfa.invsee:
+      default: op
+   sfa.invsee.edit:
+      default: op
+   sfa.givesellwand:
+      default: op
+   sfa.givegen:
+      default: op
+   sfa.sethomemultiple2:
+      default: op
+   sfa.sethomemultiple4:
+      default: op
+   sfa.sethomemultiple6:
+      default: op
+   sfa.sethomemultiple8:
+      default: op
+   sfa.setspawns:
+      default: op
+   sfa.clearchat:
+      default: op
+   sfa.setleaderboards:
+      default: op
+   sfa.rewards.elite:
+      default: op
+   sfa.rewards.master:
+      default: op
+   sfa.rewards.legend:
+      default: op
+   sfa.rewards.mystic:
+      default: op
+   sfa.banknote.give:
+      default: op
+   sfa.tagsadmin:
+      default: op
+   sfa.bypassteleportcooldown:
+      default: op
+   sfa.repair.5:
+      default: op
+   sfa.repair.10:
+      default: op
+   sfa.repair.15:
+      default: op
+   sfa.repair.unlimited:
+      default: op
+   sfa.keepexp:
+      default: op
+   sfa.givesellchest:
+      default: op
+   sfa.season.reload:
+      default: op
+   sfa.season.joinreset:
+      default: op
