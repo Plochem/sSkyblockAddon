@@ -1,6 +1,7 @@
 package com.plochem.ssa.stats;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,10 +30,17 @@ import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
 import com.bgsoftware.superiorskyblock.utils.threads.SuperiorThread;
 import com.bgsoftware.superiorskyblock.wrappers.SBlockPosition;
+import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.math.transform.Transform;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.World;
 
 public class StatsListener implements Listener {
 	
@@ -89,8 +97,16 @@ public class StatsListener implements Listener {
 		File schematic = new File(path + schem);
 		
 		try {
-			ClipboardFormat.findByFile(schematic).load(schematic).paste(new BukkitWorld(island.getCenter().getWorld()), BukkitUtil.toVector(island.getCenter()), false, true, (Transform) null);
-		} catch (IOException ex) {
+			World weWorld = new BukkitWorld(island.getCenter().getWorld());
+			Clipboard clipboard = ClipboardFormat.findByFile(schematic).getReader(new FileInputStream(schematic)).read(weWorld.getWorldData());
+			EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
+		    Operation operation = new ClipboardHolder(clipboard, weWorld.getWorldData())
+		    		.createPaste(session, weWorld.getWorldData())
+		            .to(BukkitUtil.toVector(island.getCenter()))
+		            .ignoreAirBlocks(true)
+		            .build();
+		    Operations.complete(operation);
+		} catch (IOException | WorldEditException ex) {
 			ex.printStackTrace();
 		}
 		
