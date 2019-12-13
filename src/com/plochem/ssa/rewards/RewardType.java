@@ -2,7 +2,7 @@ package com.plochem.ssa.rewards;
 
 public enum RewardType {
 	DAILY(200,300, "Rare"),
-	MONTHLY(5000,3000, "Mythic"),
+	MONTHLY(5000,3000, "Mythical"),
 	ELITE_MONTHLY(5000,3000, "Destiny"),
 	MASTER_MONTHLY(5000,3000, "Destiny"),
 	LEGEND_MONTHLY(5000,3000, "Mythical"),
