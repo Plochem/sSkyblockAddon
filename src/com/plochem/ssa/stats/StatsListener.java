@@ -31,16 +31,18 @@ import com.bgsoftware.superiorskyblock.island.IslandRegistry;
 import com.bgsoftware.superiorskyblock.utils.threads.SuperiorThread;
 import com.bgsoftware.superiorskyblock.wrappers.SBlockPosition;
 import com.sk89q.worldedit.EditSession;
+import com.sk89q.worldedit.MaxChangedBlocksException;
+import com.sk89q.worldedit.Vector;
 import com.sk89q.worldedit.WorldEdit;
-import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitUtil;
 import com.sk89q.worldedit.bukkit.BukkitWorld;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
-import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.mask.ExistingBlockMask;
+import com.sk89q.worldedit.function.operation.ForwardExtentCopy;
 import com.sk89q.worldedit.function.operation.Operations;
-import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.World;
+import com.sk89q.worldedit.world.registry.WorldData;
 
 public class StatsListener implements Listener {
 	
@@ -96,20 +98,22 @@ public class StatsListener implements Listener {
 		String schem = e.getSchematic() + ".schematic";
 		File schematic = new File(path + schem);
 		
+		Vector to = BukkitUtil.toVector(island.getCenter());
+
+		World weWorld = new BukkitWorld(island.getCenter().getWorld());
+		WorldData worldData = weWorld.getWorldData();
 		try {
-			World weWorld = new BukkitWorld(island.getCenter().getWorld());
-			Clipboard clipboard = ClipboardFormat.findByFile(schematic).getReader(new FileInputStream(schematic)).read(weWorld.getWorldData());
-			EditSession session = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
-		    Operation operation = new ClipboardHolder(clipboard, weWorld.getWorldData())
-		    		.createPaste(session, weWorld.getWorldData())
-		            .to(BukkitUtil.toVector(island.getCenter()))
-		            .ignoreAirBlocks(true)
-		            .build();
-		    Operations.complete(operation);
-		} catch (IOException | WorldEditException ex) {
-			ex.printStackTrace();
-		}
-		
+			Clipboard clipboard = ClipboardFormat.SCHEMATIC.getReader(new FileInputStream(schematic)).read(worldData);
+			EditSession extent = WorldEdit.getInstance().getEditSessionFactory().getEditSession(weWorld, -1);
+
+			ForwardExtentCopy copy = new ForwardExtentCopy(clipboard, clipboard.getRegion(), clipboard.getOrigin(), extent, to);
+			 copy.setSourceMask(new ExistingBlockMask(clipboard));
+			
+			Operations.completeLegacy(copy);
+			extent.flushQueue();
+		} catch (IOException | MaxChangedBlocksException e2) {
+			e2.printStackTrace();
+		}		
         island.getAllChunks(true).forEach(chunk -> plugin.getNMSAdapter().refreshChunk(chunk));
         island.setBonusWorth(BigDecimal.ZERO);
         island.setBiome(Biome.PLAINS);
