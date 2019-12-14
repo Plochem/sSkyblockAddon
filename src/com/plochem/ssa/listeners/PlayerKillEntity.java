@@ -1,5 +1,6 @@
 package com.plochem.ssa.listeners;
 
+import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -16,7 +17,8 @@ public class PlayerKillEntity implements Listener{
 	SSkyblockAddon sfa = SSkyblockAddon.getPlugin(SSkyblockAddon.class);
 	@EventHandler
 	public void onPlayerKill(EntityDeathEvent e) {
-		Entity entity = e.getEntity();
+		Entity entity = e.getEntity(); // entity that dies
+		if(!(entity instanceof Creature || entity instanceof Player)) return;
 		if(entity.getLastDamageCause() instanceof EntityDamageByEntityEvent){
 			EntityDamageByEntityEvent nEvent = (EntityDamageByEntityEvent) entity.getLastDamageCause();
 			Player killer;
