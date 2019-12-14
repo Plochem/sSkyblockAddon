@@ -55,7 +55,6 @@ import com.plochem.ssa.kits.KitManager;
 import com.plochem.ssa.kits.KitPreview;
 import com.plochem.ssa.kits.KitSelection;
 import com.plochem.ssa.listeners.ChatHandling;
-import com.plochem.ssa.listeners.EventsCancelInSpawn;
 import com.plochem.ssa.listeners.InvseeEdit;
 import com.plochem.ssa.listeners.ItemCraftListener;
 import com.plochem.ssa.listeners.PlayerDeath;
@@ -77,7 +76,6 @@ import com.plochem.ssa.sellchest.SellChestListener;
 import com.plochem.ssa.sellchest.SellChestManager;
 import com.plochem.ssa.staffheadabilities.SkullAbility;
 import com.plochem.ssa.staffheadabilities.SkullEquipListeners;
-import com.plochem.ssa.stats.LeaderboardHandler;
 import com.plochem.ssa.stats.StatsListener;
 import com.plochem.ssa.tags.TagManager;
 import com.plochem.ssa.tags.TagsMenuListener;
@@ -145,7 +143,6 @@ public class SSkyblockAddon extends JavaPlugin {
 				}  else {
 					Bukkit.getServer().getLogger().info("[SFA] Bounce pad storage file already exists! Skipping creation...");
 				}
-				LeaderboardHandler.update(SSkyblockAddon.getPlugin(SSkyblockAddon.class), storageData);
 			}
 
 		}.runTaskLater(this, 1);	
@@ -154,7 +151,6 @@ public class SSkyblockAddon extends JavaPlugin {
 	public void onDisable(){
 		sEco.unhook();
 		CosmeticManager.saveSelections();
-		LeaderboardHandler.deleteLeaderboards();
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -619,26 +615,6 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
-		} else if(command.getName().equalsIgnoreCase("setKillLb")) {
-			if(p.hasPermission("sfa.setleaderboards")) {
-				LeaderboardHandler.deleteLeaderboards();
-				storageData.set("killLb", p.getLocation()); 
-				saveStorage();
-				p.sendMessage("§aYou have successfully set a new location for the Kills Leaderboard.");
-				LeaderboardHandler.createLeaderboards(storageData);
-			} else {
-				p.sendMessage("§cYou do not have permission to perform this command!");
-			}
-		} else if(command.getName().equalsIgnoreCase("setDeathLb")) {
-			if(p.hasPermission("sfa.setleaderboards")) {
-				LeaderboardHandler.deleteLeaderboards();
-				storageData.set("deathLb", p.getLocation()); 
-				saveStorage();
-				p.sendMessage("§aYou have successfully set a new location for the Deaths Leaderboard.");
-				LeaderboardHandler.createLeaderboards(storageData);
-			} else {
-				p.sendMessage("§cYou do not have permission to perform this command!");
-			}
 		} else if(command.getName().equalsIgnoreCase("ores")) {
 			OreManager.openOresMenu(p);
 		} else if(command.getName().equalsIgnoreCase("tags")) {
@@ -854,7 +830,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new BouncePadBreak(), this);
 		pm.registerEvents(new SkullEquipListeners(), this);
 		pm.registerEvents(new SkullAbility(), this);
-		pm.registerEvents(new EventsCancelInSpawn(), this);
 		pm.registerEvents(new PlayerJoin(), this);
 		pm.registerEvents(new BanknoteListener(), this);
 		pm.registerEvents(new BoosterClaim(), this);
