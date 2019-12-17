@@ -1,6 +1,6 @@
 package com.plochem.ssa.economy;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;
@@ -15,10 +15,11 @@ public class BanknoteListener implements Listener{
 	@EventHandler
 	public void onClick(PlayerInteractEvent e) {
 		if(e.getPlayer().getInventory().getItemInMainHand().getType() == Material.PAPER){
-			if(e.getItem().getItemMeta().getDisplayName() != null && e.getItem().getItemMeta().getDisplayName().contains("§")) {
+			ItemStack curr = e.getPlayer().getInventory().getItemInMainHand();
+			if(curr.getItemMeta().hasDisplayName() && curr.getItemMeta().getDisplayName().contains("§")) {
 				String name = ChatColor.stripColor(e.getItem().getItemMeta().getDisplayName().split(" ")[0]);
 				String num = name.replaceAll("\\$", "").replaceAll(",", "");
-				if(StringUtils.isNumeric(num)) {
+				if(NumberUtils.isParsable(num)) {
 					eco.depositPlayer(e.getPlayer(), Double.parseDouble(num));
 					e.getPlayer().sendMessage("§eYou received §a" + name + "§e from the banknote.");
 					int amt = e.getPlayer().getInventory().getItemInMainHand().getAmount() - 1;
@@ -27,7 +28,7 @@ public class BanknoteListener implements Listener{
 					} else {
 						e.getItem().setAmount(amt);						
 					}
-				}
+				} 
 			}
 		}
 	}
