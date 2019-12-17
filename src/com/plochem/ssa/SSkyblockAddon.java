@@ -62,6 +62,7 @@ import com.plochem.ssa.listeners.PlayerJoin;
 import com.plochem.ssa.listeners.PlayerKillEntity;
 import com.plochem.ssa.listeners.PlayerMove;
 import com.plochem.ssa.listeners.PlayerRespawn;
+import com.plochem.ssa.listeners.VoidDamageListener;
 import com.plochem.ssa.menu.MenuListener;
 import com.plochem.ssa.oregen.OreGenListener;
 import com.plochem.ssa.oregen.OreManager;
@@ -856,6 +857,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new CosmeticListener(), this);
 		pm.registerEvents(new ItemCraftListener(), this);
 		pm.registerEvents(new SeasonPlayerJoinListener(), this);
+		pm.registerEvents(new VoidDamageListener(), this);
 	}
 
 	public YamlConfiguration getBpData() {
