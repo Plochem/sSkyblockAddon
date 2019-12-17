@@ -77,13 +77,13 @@ public class StatsManager {
 				if(curr != null) {
 					islandName = curr.getName();
 					islandLevel = curr.getIslandLevelAsBigDecimal().toBigInteger();
-					numMembers = curr.getAllMembers().size();
+					numMembers = curr.getIslandMembers(true).size();
 				}
 
 				Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
 				Objective obj = sb.registerNewObjective("stats", "dummy");
 				obj.setDisplaySlot(DisplaySlot.SIDEBAR);
-				obj.setDisplayName("§3§lSkyblock");
+				obj.setDisplayName("§b§lSKYBLOCK");
 				obj.getScore("§f———————————————————————").setScore(10);
 				obj.getScore("§b§lYou").setScore(9);
 				obj.getScore("§3❖ §fKills: §b" + getKills(p)).setScore(8);
