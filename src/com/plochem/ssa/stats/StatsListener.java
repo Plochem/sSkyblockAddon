@@ -7,7 +7,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.block.Biome;
@@ -15,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import com.bgsoftware.superiorskyblock.Locale;
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
@@ -28,7 +28,6 @@ import com.bgsoftware.superiorskyblock.api.island.Island;
 import com.bgsoftware.superiorskyblock.api.wrappers.SuperiorPlayer;
 import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
-import com.bgsoftware.superiorskyblock.utils.threads.SuperiorThread;
 import com.bgsoftware.superiorskyblock.wrappers.SBlockPosition;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.MaxChangedBlocksException;
@@ -60,13 +59,15 @@ public class StatsListener implements Listener {
 	
 	@EventHandler
 	public void onIslandJoin(IslandJoinEvent e) {
-		e.getIsland().calcIslandWorth(e.getPlayer());
+		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
+			StatsManager.showScoreboard(id.asPlayer());
+		}
 	}
 	
 	@EventHandler
 	public void onIslandLeave(IslandLeaveEvent e) {
-		for(UUID id : e.getIsland().getAllMembers()) {
-			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
+			StatsManager.showScoreboard(id.asPlayer());
 		}
 	}
 	
@@ -122,31 +123,37 @@ public class StatsListener implements Listener {
         	superiorPlayer.asPlayer().teleport(island.getCenter());
         	if (island.isInside(superiorPlayer.getLocation()))
         		Bukkit.getScheduler().runTaskLater(plugin, () -> plugin.getNMSAdapter().setWorldBorder(superiorPlayer, island), 20L);
-        	new SuperiorThread(() -> island.calcIslandWorth(null)).start();
+        	
+        	new BukkitRunnable() {
+				@Override
+				public void run() {
+					island.calcIslandWorth(null);
+				}
+			}.runTaskAsynchronously(plugin);
         }
 		plugin.getDataHandler().insertIsland(e.getIsland());
+		StatsManager.showScoreboard(superiorPlayer.asPlayer());
 	}
 
 	@EventHandler
 	public void onIslandCreate(IslandKickEvent e) {
-		for(UUID id : e.getIsland().getAllMembers()) {
-			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
+			StatsManager.showScoreboard(id.asPlayer());
 		}
 	}
 	
 	@EventHandler
 	public void onIslandCreate(IslandDisbandEvent e) {
-		for(UUID id : e.getIsland().getAllMembers()) {
-			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
+			StatsManager.showScoreboard(id.asPlayer());
 		}
 	}
 	
 	@EventHandler
 	public void onIslandCreate(IslandWorthCalculatedEvent e) {
-		for(UUID id : e.getIsland().getAllMembers()) {
-			StatsManager.showScoreboard(Bukkit.getPlayer(id));
+		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
+			StatsManager.showScoreboard(id.asPlayer());
 		}
-
 	}
 
 	

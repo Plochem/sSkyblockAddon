@@ -23,8 +23,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import com.bgsoftware.superiorskyblock.SuperiorSkyblockPlugin;
 import com.bgsoftware.superiorskyblock.api.SuperiorSkyblockAPI;
+import com.bgsoftware.superiorskyblock.api.island.SortingType;
 import com.bgsoftware.superiorskyblock.handlers.GridHandler;
 import com.bgsoftware.superiorskyblock.island.IslandRegistry;
+import com.bgsoftware.superiorskyblock.wrappers.SSuperiorPlayer;
 import com.plochem.ssa.SSkyblockAddon;
 
 public class SeasonManager {
@@ -73,11 +75,11 @@ public class SeasonManager {
 			Field islands = GridHandler.class.getDeclaredField("islands");
 			islands.setAccessible(true);
 			IslandRegistry is = (IslandRegistry)islands.get(SuperiorSkyblockPlugin.getPlugin().getGrid());
-			is.sort();
+			is.sort(SortingType.getByName("LEVEL"));
 			for(File data : new File("plugins/SFA/seasons/playerdata").listFiles()) {
 				YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
 				for(int i = 0; i < is.size(); i++) {
-					if(is.get(i).getAllMembers().contains(UUID.fromString(FilenameUtils.removeExtension(data.getName())))) {
+					if(is.get(i, SortingType.getByName("LEVEL")).getIslandMembers(true).contains(SSuperiorPlayer.of(UUID.fromString(FilenameUtils.removeExtension(data.getName()))))) {
 						c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
 						save(data, c);
 						break;
