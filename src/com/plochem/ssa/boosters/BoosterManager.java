@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 public class BoosterManager {
 	private static List<Booster> moneyBoosters = new ArrayList<>();
@@ -101,7 +102,9 @@ public class BoosterManager {
 		}
 		playerData.set("boosters", playerBoosters);
 		BoosterManager.savePlayerBooster(playerData, playerFile);
-		Bukkit.getPlayer(booster.getUUID()).sendMessage("§aYou have received " + amount + " " + color + booster.getType().toString().toLowerCase() + " §abooster(s)!");
+		Player p = Bukkit.getPlayer(booster.getUUID());
+		if(p != null)
+			p.sendMessage("§aYou have received " + amount + " " + color + booster.getType().toString().toLowerCase() + " §abooster(s)!");
 	}
 
 	public static void savePlayerBooster(YamlConfiguration c, File f) {
