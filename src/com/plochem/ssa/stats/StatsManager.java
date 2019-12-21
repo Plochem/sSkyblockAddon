@@ -81,10 +81,11 @@ public class StatsManager {
 				}
 
 				Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
+				
 				Objective obj = sb.registerNewObjective("stats", "dummy");
 				obj.setDisplaySlot(DisplaySlot.SIDEBAR);
 				obj.setDisplayName("§b§lSKYBLOCK");
-				obj.getScore("§f———————————————————————").setScore(10);
+				obj.getScore("§f---------------------").setScore(10);
 				obj.getScore("§b§lYou").setScore(9);
 				obj.getScore("§3❖ §fKills: §b" + getKills(p)).setScore(8);
 				obj.getScore("§3❖ §fDeaths: §b" + getDeaths(p)).setScore(7);
@@ -94,7 +95,7 @@ public class StatsManager {
 				obj.getScore("§3❖ §fIsland name: §b" + islandName).setScore(3);
 				obj.getScore("§3❖ §fIsland level: §b" + islandLevel).setScore(2);
 				obj.getScore("§3❖ §fMember count: §b" + numMembers).setScore(1);
-				obj.getScore("———————————————————————").setScore(0);
+				obj.getScore("---------------------").setScore(0);
 				p.setScoreboard(sb);
 			}
 		}.runTaskLater(sfa, 20);
