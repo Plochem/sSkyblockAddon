@@ -19,6 +19,7 @@ import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
@@ -241,7 +242,7 @@ public class SSkyblockAddon extends JavaPlugin {
 			}
 			return true;
 		} else if(command.getName().equalsIgnoreCase("addbal")) {
-			if(sender.hasPermission("sfa.addBal") || sender.isOp()){
+			if(sender.hasPermission("sfa.addBal")){
 				if(args.length != 2) {
 					sender.sendMessage("§cUsage: /addbal [player name] [integer amount]");
 					return false;
@@ -256,8 +257,10 @@ public class SSkyblockAddon extends JavaPlugin {
 					SEconomyImplementer sei = sEco.getEconomyImplementer();
 					sei.depositPlayer(target, amt);
 					sender.sendMessage("§eYou added §a$" + String.format("%,.2f", amt) + "§e to §a" + target.getName() + "'s §eaccount.");
-					if(target.isOnline())
-						target.getPlayer().sendMessage("§eYou received §a$" + String.format("%,.2f", amt) + "§e from §a" + sender.getName() + "§e.");
+					if(target.isOnline()) {
+						if(!(sender instanceof ConsoleCommandSender))
+							target.getPlayer().sendMessage("§eYou received §a$" + String.format("%,.2f", amt) + "§e from §a" + sender.getName() + "§e.");
+					}
 				} else {
 					sender.sendMessage("§cEnter a valid numerical amount to send.");
 				}
@@ -885,7 +888,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	}
 
 	public Location getSpawn() {
-		return Core.getPlugin(Core.class).getSpawn();
+		return Core.plugin.getSpawn();
 	}
 
 	public List<UUID> getWhoRunningSomeTPCmd(){
