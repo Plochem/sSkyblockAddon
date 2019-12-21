@@ -51,14 +51,14 @@ public class SeasonManager {
 		int currentDay = current.getDayOfMonth() + 1; // day of tomorrow
 		long secondsTillEndMonth = TimeUnit.DAYS.toSeconds(daysOfMonth - currentDay + 1) - 1;
 		ScheduledExecutorService schedule = Executors.newScheduledThreadPool(1);
-		schedule.schedule(new Runnable() { //runs at the end of every month at 11:59:59pm
+		schedule.schedule(new Runnable() { //runs at the end of month at 11:59:59pm
 			@Override
 			public void run() {
-				if(LocalDate.now().getMonthValue() % 3 == 0) { // if month of 3, 6, 9, 12
+				if(LocalDate.now().getMonthValue() % 3 == 0 && !seasonData.getBoolean("skip")) { // if month of 3, 6, 9, 12
 					prepNewSeason();
-					schedule.shutdown();
-					startTimer();
 				}
+				schedule.shutdown();
+				startTimer();
 			}
 		}, midnight + secondsTillEndMonth, TimeUnit.SECONDS);
 	}
@@ -66,11 +66,10 @@ public class SeasonManager {
 	public static void prepNewSeason() {
 		Bukkit.getServer().setWhitelist(true);
 		isResetting = true;
-		File f = new File("plugins/SFA/seasons/season.yml");
-		YamlConfiguration fData = YamlConfiguration.loadConfiguration(f);
-		int justEndedSeason = fData.getInt("season");
-		fData.set("season", justEndedSeason+1);
-		save(f, fData); // update season number
+		seasonData = YamlConfiguration.loadConfiguration(seasonFile);
+		int justEndedSeason = seasonData.getInt("season");
+		seasonData.set("season", justEndedSeason+1);
+		save(seasonFile, seasonData); // update season number
 		try {
 			Field islands = GridHandler.class.getDeclaredField("islands");
 			islands.setAccessible(true);
@@ -80,7 +79,7 @@ public class SeasonManager {
 				YamlConfiguration c = YamlConfiguration.loadConfiguration(data);
 				for(int i = 0; i < is.size(); i++) {
 					if(is.get(i, SortingType.getByName("LEVEL")).getIslandMembers(true).contains(SSuperiorPlayer.of(UUID.fromString(FilenameUtils.removeExtension(data.getName()))))) {
-						c.set(String.valueOf(fData.get("season")) + ".rank", i+1);
+						c.set(String.valueOf(seasonData.get("season")) + ".rank", i+1);
 						save(data, c);
 						break;
 					}
