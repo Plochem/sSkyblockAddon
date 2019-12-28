@@ -6,7 +6,6 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,39 +21,27 @@ public class RewardListener implements Listener{
 			if(e.getInventory().getTitle().equalsIgnoreCase("rewards")) {
 				e.setCancelled(true);
 				if(e.getClickedInventory().getTitle().equalsIgnoreCase("rewards")) {
-					String name = ChatColor.stripColor(e.getCurrentItem().getItemMeta().getDisplayName());
+					String name = e.getCurrentItem().getItemMeta().getDisplayName();
 					if(name != null) {
-						LocalTime midnight = LocalTime.MIDNIGHT;
-						LocalDate today = LocalDate.now();
 						LocalDateTime now = LocalDateTime.now();
-						LocalDateTime todayMidnight = LocalDateTime.of(today, midnight);
-						LocalDateTime tomorrowMidnight = todayMidnight.plusDays(1);
-						LocalDateTime beginningNextMonth = LocalDateTime.of(today.plusMonths(1).withDayOfMonth(1), midnight);
 						Player clicker = (Player)e.getWhoClicked();
-						if(name.equalsIgnoreCase("Daily Rewards")) {
-							claimReward(clicker, RewardType.DAILY, now, tomorrowMidnight);
-						} else if(name.equalsIgnoreCase("monthly rewards")) {
-							claimReward(clicker, RewardType.MONTHLY, now, beginningNextMonth);
-						} else if(name.equalsIgnoreCase("elite monthly rewards")) {
-							if(clicker.hasPermission("sfa.rewards.elite"))
-								claimReward(clicker, RewardType.ELITE_MONTHLY, now, beginningNextMonth);
-							else
-								clicker.sendMessage("§cYou must have the §3§lELITE §crank to claim this reward.");
-						} else if(name.equalsIgnoreCase("master monthly rewards")) {
-							if(clicker.hasPermission("sfa.rewards.master"))
-								claimReward(clicker, RewardType.MASTER_MONTHLY, now, beginningNextMonth);
-							else
-								clicker.sendMessage("§cYou must have the §6§lMASTER §crank to claim this reward.");
-						} else if(name.equalsIgnoreCase("legend monthly rewards")) {
-							if(clicker.hasPermission("sfa.rewards.legend"))
-								claimReward(clicker, RewardType.LEGEND_MONTHLY, now, beginningNextMonth);
-							else
-								clicker.sendMessage("§cYou must have the §e§lLEGEND §crank to claim this reward.");
-						} else if(name.equalsIgnoreCase("mystic monthly rewards")) {
-							if(clicker.hasPermission("sfa.rewards.mystic"))
-								claimReward(clicker, RewardType.MYSTIC_MONTHLY, now, beginningNextMonth);
-							else
-								clicker.sendMessage("§cYou must have the §d§lMYSTIC §crank to claim this reward.");
+						for(Reward r : RewardManager.getRewards()) {
+							if(name.equals(r.getName())) {
+								if(r.getPermission().equals("") || clicker.hasPermission(r.getPermission())) {
+									if(RewardManager.notClaim(clicker, r)) {
+										RewardManager.addToClaim(clicker, r);
+										 for(String cmd : r.getCommands()) {
+											 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", clicker.getName()));
+										 }
+										 clicker.sendMessage("§aYou have successfuly claimed the " + r.getName() + " §areward!");
+									} else {
+										clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(r.getType(), now) + ".");
+									}
+								} else {
+									clicker.sendMessage("§cYou do not have the rank to claim this reward!");
+								}
+								break;
+							}
 						}
 						clicker.closeInventory(); 
 					}
@@ -63,38 +50,39 @@ public class RewardListener implements Listener{
 		}
 	}
 	
-	private void claimReward(Player clicker, RewardType type, LocalDateTime now, LocalDateTime end) {
-		if(RewardManager.notClaim(clicker, type)) {
-			sfa.getSEconomy().getEconomyImplementer().depositPlayer(clicker, type.getMoney());
-			clicker.giveExp(type.getXp());
-			RewardManager.addToClaim(clicker, type);
-			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "cc give physical " +  type.getCrateKey() + " 1 " + clicker.getName());
-			clicker.sendMessage("§aYou received a crate key, §6$" + type.getMoney() + " §a, and§3 " + type.getXp() + " XP§a.");
-		} else {
-			clicker.sendMessage("§cYou already claimed this reward. Wait for " + difference(end, now) + ".");
+	private String difference(RewardType type, LocalDateTime now) {
+		LocalDate today = LocalDate.now();
+		LocalDateTime todayMidnight = LocalDateTime.of(today, LocalTime.MIDNIGHT);
+		LocalDateTime tomorrowMidnight = todayMidnight.plusDays(1);
+		LocalDateTime beginningNextMonth = LocalDateTime.of(today.plusMonths(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
+		
+		LocalDateTime end = tomorrowMidnight;
+		if(type == RewardType.MONTHLY) {
+			end = beginningNextMonth;
+		} else if(type == RewardType.YEARLY) {
+			end = LocalDateTime.of(today.plusYears(1).withMonth(1).withDayOfMonth(1), LocalTime.MIDNIGHT);
 		}
-	}
-
-	private String difference(LocalDateTime tomorrowMidnight, LocalDateTime now) {
 		LocalDateTime tempDateTime = LocalDateTime.from(now);
-		long years = tempDateTime.until(tomorrowMidnight, ChronoUnit.YEARS);
+		long years = tempDateTime.until(end, ChronoUnit.YEARS);
 		tempDateTime = tempDateTime.plusYears(years);
 
-		long months = tempDateTime.until(tomorrowMidnight, ChronoUnit.MONTHS);
+		long months = tempDateTime.until(end, ChronoUnit.MONTHS);
 		tempDateTime = tempDateTime.plusMonths(months);
 
-		long days = tempDateTime.until(tomorrowMidnight, ChronoUnit.DAYS);
+		long days = tempDateTime.until(end, ChronoUnit.DAYS);
 		tempDateTime = tempDateTime.plusDays(days);
 
-
-		long hours = tempDateTime.until(tomorrowMidnight, ChronoUnit.HOURS);
+		long hours = tempDateTime.until(end, ChronoUnit.HOURS);
 		tempDateTime = tempDateTime.plusHours(hours);
 
-		long minutes = tempDateTime.until(tomorrowMidnight, ChronoUnit.MINUTES);
+		long minutes = tempDateTime.until(end, ChronoUnit.MINUTES);
 		tempDateTime = tempDateTime.plusMinutes(minutes);
 
-		long seconds = tempDateTime.until(tomorrowMidnight, ChronoUnit.SECONDS);
+		long seconds = tempDateTime.until(end, ChronoUnit.SECONDS);
 		String time = hours + " hours " + minutes + " minutes " + seconds + " seconds";
+		if(months > 0) {
+			time = months + " months " + time;
+		}
 		if(days > 0) {
 			time = days + " days " + time;
 		}

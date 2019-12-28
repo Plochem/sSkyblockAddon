@@ -1,6 +1,6 @@
 main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
-version: 1.11.8
+version: 1.12.8
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, SuperiorSkyblock2, WorldEdit, LuckPerms]
@@ -80,14 +80,6 @@ permissions:
       default: op
    sfa.setleaderboards:
       default: op
-   sfa.rewards.elite:
-      default: op
-   sfa.rewards.master:
-      default: op
-   sfa.rewards.legend:
-      default: op
-   sfa.rewards.mystic:
-      default: op
    sfa.banknote.give:
       default: op
    sfa.tagsadmin:
@@ -109,4 +101,6 @@ permissions:
    sfa.season.reload:
       default: op
    sfa.season.joinreset:
+      default: op
+   sfa.rewardsreload:
       default: op

@@ -69,6 +69,7 @@ import com.plochem.ssa.oregen.OreGenListener;
 import com.plochem.ssa.oregen.OreManager;
 import com.plochem.ssa.perks.PerkListeners;
 import com.plochem.ssa.repair.RepairManager;
+import com.plochem.ssa.rewards.Reward;
 import com.plochem.ssa.rewards.RewardListener;
 import com.plochem.ssa.rewards.RewardManager;
 import com.plochem.ssa.seasons.SeasonManager;
@@ -118,12 +119,13 @@ public class SSkyblockAddon extends JavaPlugin {
 					Bukkit.getServer().getLogger().info("[SFA] General storage file already exists! Skipping creation...");
 				}
 				registerThings();
-				RewardManager.createCollectedFile();
+				RewardManager.createFiles();
 				BoosterManager.createQueueFile();
 				KitManager.createKitFile();
 				GeneratorManager.createGeneratorFile();
 				GeneratorManager.startGlobalCounter();
 				RewardManager.resetListTimer();
+				RewardManager.registerPerms();
 				RepairManager.createRepairFile();
 				RepairManager.startTimer();
 				SeasonManager.createSeasonFile();
@@ -558,6 +560,15 @@ public class SSkyblockAddon extends JavaPlugin {
 				p.sendMessage("§cYou do not have permission to perform this command!");
 			}
 		} else if(command.getName().equalsIgnoreCase("rewards")) {
+			if(args.length == 1) {
+				if(args[0].equalsIgnoreCase("reload")) {
+					if(sender.hasPermission("sfa.rewardsreload")) {
+						RewardManager.reload();
+						sender.sendMessage("§aReloaded rewards!");
+						return false;
+					}
+				}
+			}
 			RewardManager.openRewardMenu(p);
 		} else if(command.getName().equalsIgnoreCase("trade")) {
 			if(args.length == 1) { // trade <name> TODO
@@ -827,6 +838,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Kit.class, "Kit");
 		ConfigurationSerialization.registerClass(Generator.class, "Generator");
 		ConfigurationSerialization.registerClass(Home.class, "Home");
+		ConfigurationSerialization.registerClass(Reward.class, "Reward");
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.registerEvents(new ChatHandling(this), this);
 		pm.registerEvents(new BouncePadInteract(), this);
