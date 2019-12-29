@@ -83,8 +83,19 @@ public class RewardManager {
 	
 	public static void registerPerms() {
 		for(Reward r : rewards) {
-			Bukkit.getPluginManager().addPermission(new Permission(r.getPermission()));
+			if(!containsPerm(r.getPermission())) {
+				Bukkit.getPluginManager().addPermission(new Permission(r.getPermission()));
+			}
 		}
+	}
+	
+	private static boolean containsPerm(String perm) {
+		for(Permission p : Bukkit.getPluginManager().getPermissions()) {
+			if(p.getName().equals(perm)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static void resetListTimer() {
