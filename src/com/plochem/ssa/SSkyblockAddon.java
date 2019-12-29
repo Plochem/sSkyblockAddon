@@ -785,21 +785,28 @@ public class SSkyblockAddon extends JavaPlugin {
 		im.setDisplayName("§aRewards");
 		im.setLore(Arrays.asList("§7Click here to open the rewards menu."));
 		item.setItemMeta(im);
-		i.setItem(29, item);
+		i.setItem(28, item);
 		
 		item = new ItemStack(Material.ENDER_CHEST);
 		im = item.getItemMeta();
 		im.setDisplayName("§aCrates");
 		im.setLore(Arrays.asList("§7Click here to open the crates menu"));
 		item.setItemMeta(im);
-		i.setItem(31, item);
+		i.setItem(30, item);
 		
 		item = new ItemStack(Material.CHEST);
 		im = item.getItemMeta();
 		im.setDisplayName("§aKits");
 		im.setLore(Arrays.asList("§7Click here to open the kits menu"));
 		item.setItemMeta(im);
-		i.setItem(33, item);
+		i.setItem(32, item);
+		
+		item = new ItemStack(Material.BEACON);
+		im = item.getItemMeta();
+		im.setDisplayName("§aSeasons");
+		im.setLore(Arrays.asList("§7Click here to open the seasons menu", "", "§eCurrently season " + SeasonManager.getCurrentSeason()));
+		item.setItemMeta(im);
+		i.setItem(34, item);
 		
 		return i;
 	}

@@ -46,6 +46,8 @@ public class MenuListener implements Listener{
 							Bukkit.getServer().dispatchCommand(p, "crates");
 						} else if (name.equals("§aKits")) {
 							Bukkit.getServer().dispatchCommand(p, "kits");
+						} else if (name.equals("§aSeasons")) {
+							Bukkit.getServer().dispatchCommand(p, "season");
 						}
 					}
 
