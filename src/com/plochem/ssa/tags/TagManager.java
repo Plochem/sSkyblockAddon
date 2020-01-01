@@ -19,6 +19,7 @@ import org.bukkit.plugin.PluginManager;
 import me.lucko.luckperms.LuckPerms;
 import me.lucko.luckperms.api.LuckPermsApi;
 import me.lucko.luckperms.api.Node;
+import me.lucko.luckperms.api.User;
 
 public class TagManager {
 	private static File tagFile = new File("plugins/SFA/tags/tags.yml");
@@ -97,7 +98,12 @@ public class TagManager {
 	
 	public static void giveTag(String identifier, String name) {
 		Node node = api.getNodeFactory().newBuilder("sfa.tags." + identifier.toLowerCase()).build();
-		api.getUser(name).setPermission(node);
+        User user = api.getUser(name);
+        if (user != null) {
+            user.setPermission(node);
+            api.getUserManager().saveUser(user);
+
+        }
 	}
 	
 	public static boolean exists(String identifier) {
