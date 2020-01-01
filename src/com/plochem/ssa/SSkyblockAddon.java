@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -36,9 +37,6 @@ import com.plochem.ssa.boosters.BoosterActivate;
 import com.plochem.ssa.boosters.BoosterClaim;
 import com.plochem.ssa.boosters.BoosterManager;
 import com.plochem.ssa.boosters.BoosterType;
-import com.plochem.ssa.bouncepads.BouncePadBreak;
-import com.plochem.ssa.bouncepads.BouncePadInteract;
-import com.plochem.ssa.bouncepads.BouncePadPlace;
 import com.plochem.ssa.cosmetics.CosmeticListener;
 import com.plochem.ssa.cosmetics.CosmeticManager;
 import com.plochem.ssa.cosmetics.CosmeticMenuListener;
@@ -56,6 +54,7 @@ import com.plochem.ssa.kits.KitManager;
 import com.plochem.ssa.kits.KitPreview;
 import com.plochem.ssa.kits.KitSelection;
 import com.plochem.ssa.listeners.ChatHandling;
+import com.plochem.ssa.listeners.ClearLagListener;
 import com.plochem.ssa.listeners.InvseeEdit;
 import com.plochem.ssa.listeners.ItemCraftListener;
 import com.plochem.ssa.listeners.PlayerDeath;
@@ -155,6 +154,9 @@ public class SSkyblockAddon extends JavaPlugin {
 	public void onDisable(){
 		sEco.unhook();
 		CosmeticManager.saveSelections();
+		for(World w : Bukkit.getWorlds()) {
+			w.save();
+		}
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -807,7 +809,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		im.setLore(Arrays.asList("§7Click here to open the seasons menu", "", "§eCurrently season " + SeasonManager.getCurrentSeason()));
 		item.setItemMeta(im);
 		i.setItem(34, item);
-		
 		return i;
 	}
 
@@ -848,9 +849,6 @@ public class SSkyblockAddon extends JavaPlugin {
 		ConfigurationSerialization.registerClass(Reward.class, "Reward");
 		PluginManager pm = Bukkit.getServer().getPluginManager();
 		pm.registerEvents(new ChatHandling(this), this);
-		pm.registerEvents(new BouncePadInteract(), this);
-		pm.registerEvents(new BouncePadPlace(), this);
-		pm.registerEvents(new BouncePadBreak(), this);
 		pm.registerEvents(new SkullEquipListeners(), this);
 		pm.registerEvents(new SkullAbility(), this);
 		pm.registerEvents(new PlayerJoin(), this);
@@ -880,6 +878,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new ItemCraftListener(), this);
 		pm.registerEvents(new SeasonPlayerJoinListener(), this);
 		pm.registerEvents(new VoidDamageListener(), this);
+		pm.registerEvents(new ClearLagListener(), this);
 	}
 
 	public YamlConfiguration getBpData() {
