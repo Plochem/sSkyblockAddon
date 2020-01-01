@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.bgsoftware.superiorskyblock.Locale;
@@ -154,6 +155,11 @@ public class StatsListener implements Listener {
 		for(SuperiorPlayer id : e.getIsland().getIslandMembers(true)) {
 			StatsManager.showScoreboard(id.asPlayer());
 		}
+	}
+	
+	@EventHandler
+	public void onXPChange(PlayerExpChangeEvent e) {
+		StatsManager.showScoreboard(e.getPlayer());
 	}
 
 	
