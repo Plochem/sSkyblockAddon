@@ -33,13 +33,13 @@ public class KitManager {
             		for(Kit kit : kits) {
             			int curr = cooldown.getInt(kit.getName() + "-time");
             			if(curr != 0) {
-            				 cooldown.set(kit.getName() + "-time", curr-1);
+            				 cooldown.set(kit.getName() + "-time", curr-60);
             			}
             		}
             		saveCoolDown(f,cooldown);
             	}
             }
-        }.runTaskTimerAsynchronously(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20);
+        }.runTaskTimerAsynchronously(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20*60); // runs every minute
 	}
 	@SuppressWarnings("unchecked")
 	public static void createKitFile() {
