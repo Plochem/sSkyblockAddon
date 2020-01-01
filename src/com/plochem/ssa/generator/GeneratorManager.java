@@ -92,7 +92,7 @@ public class GeneratorManager {
 				saveGenFile();
 				if(timeElapsed == lcm) timeElapsed = 0;
 			}
-        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 1200L); // TODO change to  1200
+        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20*60); // TODO change to 1200 - runs every min
 	}
 	
 	public static void giveGenerator(CommandSender sender, String name, String type) {
@@ -107,7 +107,7 @@ public class GeneratorManager {
 		}
 		GeneratorType material = GeneratorType.valueOf(type.toUpperCase());
 		if(material == null) {
-			sender.sendMessage("§cYou entered an invalid item name. Try §8coal§c, §4redstone§c, §firon_ingot§c, §egold_ingot§c, §bdiamond§c, or §aemerald§c.");
+			sender.sendMessage("§cYou entered an invalid item name. Try §8coal§c, §4redstone§c, §firon§c, §egold§c, §bdiamond§c, or §aemerald§c.");
 			return;
 		}
 		ItemStack gen = new ItemStack(Material.ENDER_PORTAL_FRAME);

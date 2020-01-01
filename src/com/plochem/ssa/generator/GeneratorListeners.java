@@ -85,7 +85,7 @@ public class GeneratorListeners implements Listener{
 							if(amt != Integer.parseInt(sign.getLine(2))) {
 								p.sendMessage("§cThe amount on the sign does not match with amount on the server. You'll receive the amount from the server instead.");
 							}
-							ItemStack items = new ItemStack(Material.valueOf(gen.getType().toString()), amt);
+							ItemStack items = new ItemStack(Material.valueOf(gen.getType().toString() + "_BLOCK"), amt);
 							HashMap<Integer,ItemStack> extra = p.getInventory().addItem(items);
 							p.sendMessage("§aYou have claimed your ores!");
 							//TODO sound
