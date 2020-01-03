@@ -80,11 +80,12 @@ public class RewardListener implements Listener{
 
 		long seconds = tempDateTime.until(end, ChronoUnit.SECONDS);
 		String time = hours + " hours " + minutes + " minutes " + seconds + " seconds";
-		if(months > 0) {
-			time = months + " months " + time;
-		}
 		if(days > 0) {
 			time = days + " days " + time;
+		}
+		
+		if(months > 0) {
+			time = months + " months " + time;
 		}
 		return time;
 	}
