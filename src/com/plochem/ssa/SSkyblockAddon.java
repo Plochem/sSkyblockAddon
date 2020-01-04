@@ -37,6 +37,7 @@ import com.plochem.ssa.boosters.BoosterActivate;
 import com.plochem.ssa.boosters.BoosterClaim;
 import com.plochem.ssa.boosters.BoosterManager;
 import com.plochem.ssa.boosters.BoosterType;
+import com.plochem.ssa.bosses.BossManager;
 import com.plochem.ssa.cosmetics.CosmeticListener;
 import com.plochem.ssa.cosmetics.CosmeticManager;
 import com.plochem.ssa.cosmetics.CosmeticMenuListener;
@@ -131,6 +132,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				SeasonManager.startTimer();
 				CosmeticManager.registerPerms();
 				CosmeticManager.createConfig();
+				BossManager.autospawnTimer();
 				for(File f : new File("plugins/SFA/playerbalance").listFiles()) { //loads balance from file to hashmap
 					YamlConfiguration playerData = YamlConfiguration.loadConfiguration(f);
 					sEco.loadToMap(UUID.fromString(f.getName().replaceAll(".yml", "")), playerData.getDouble("balance"));
