@@ -8,14 +8,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import com.plochem.ssa.bosses.BossEntity;
 import com.plochem.ssa.bosses.skills.Skill;
-import com.plochem.ssa.bosses.skills.SkillHandler;
 
-public class Poison implements SkillHandler{
+public class Poison extends Skill{
 
 	@Override
-	public void castSkill(Skill skill, List<UUID> nearbyPlayers) {
-		nearbyPlayers.forEach(id -> Bukkit.getPlayer(id).addPotionEffects(
+	public void cast(BossEntity boss, List<UUID> nearby) {
+		nearby.forEach(id -> Bukkit.getPlayer(id).addPotionEffects(
 		Arrays.asList(new PotionEffect(PotionEffectType.POISON, 20*10, 0),
 					new PotionEffect(PotionEffectType.BLINDNESS, 20*10, 0))));
 	}
