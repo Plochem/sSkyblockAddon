@@ -3,24 +3,27 @@ package com.plochem.ssa.bosses;
 public class BossStatistics {
 	private double maxHealth;
 	private double damage;
-	private double health;
 	private double defense;
 	private double targetRadius;
+	private int specialInterval;
+	private int basicInterval;
+	private int changeTargetInterval;
+	private double blocksSecond;
 	
-	public BossStatistics(double maxHealth, double damage, double defense, double targetRadius) {
+	public BossStatistics(double maxHealth, double damage, double defense, double targetRadius, int specialInterval, int basicInterval, int changeTargetInterval, double blocksSecond) {
 		this.maxHealth = maxHealth;
 		this.damage = damage;
 		this.defense = defense;
-		this.health = maxHealth;
+		this.maxHealth = maxHealth;
 		this.targetRadius = targetRadius;
+		this.specialInterval = specialInterval;
+		this.basicInterval = basicInterval;
+		this.changeTargetInterval = changeTargetInterval;
+		this.blocksSecond = blocksSecond;
 	}
 
 	public double getMaxHealth() {
 		return maxHealth;
-	}
-	
-	public double getHealth() {
-		return health;
 	}
 
 	public double getDamage() {
@@ -35,9 +38,20 @@ public class BossStatistics {
 		return targetRadius;
 	}
 	
-	public double decreaseHealth(double amount) {
-		health -= amount;
-		return health;
+	public int getSpecialInterval() {
+		return specialInterval;
+	}
+	
+	public int getBasicInterval() {
+		return basicInterval;
+	}
+	
+	public int getChangeTargetInterval() {
+		return changeTargetInterval;
+	}
+	
+	public double getSpeed() {
+		return blocksSecond;
 	}
 	
 }
