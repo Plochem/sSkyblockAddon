@@ -8,12 +8,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -37,7 +39,9 @@ import com.plochem.ssa.boosters.BoosterActivate;
 import com.plochem.ssa.boosters.BoosterClaim;
 import com.plochem.ssa.boosters.BoosterManager;
 import com.plochem.ssa.boosters.BoosterType;
+import com.plochem.ssa.bosses.BossEntity;
 import com.plochem.ssa.bosses.BossManager;
+import com.plochem.ssa.bosses.listeners.BossDamageListener;
 import com.plochem.ssa.cosmetics.CosmeticListener;
 import com.plochem.ssa.cosmetics.CosmeticManager;
 import com.plochem.ssa.cosmetics.CosmeticMenuListener;
@@ -56,6 +60,7 @@ import com.plochem.ssa.kits.KitPreview;
 import com.plochem.ssa.kits.KitSelection;
 import com.plochem.ssa.listeners.ChatHandling;
 import com.plochem.ssa.listeners.ClearLagListener;
+import com.plochem.ssa.listeners.DragonEgg;
 import com.plochem.ssa.listeners.InvseeEdit;
 import com.plochem.ssa.listeners.ItemCraftListener;
 import com.plochem.ssa.listeners.PlayerDeath;
@@ -95,7 +100,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
-	private List<String> consoleCmds = Arrays.asList("addbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote");
+	private List<String> consoleCmds = Arrays.asList("addbal", "randbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote");
 
 	public void onEnable(){
 		sEco.hook();   
@@ -132,6 +137,7 @@ public class SSkyblockAddon extends JavaPlugin {
 				SeasonManager.startTimer();
 				CosmeticManager.registerPerms();
 				CosmeticManager.createConfig();
+				BossManager.createFiles();
 				BossManager.autospawnTimer();
 				for(File f : new File("plugins/SFA/playerbalance").listFiles()) { //loads balance from file to hashmap
 					YamlConfiguration playerData = YamlConfiguration.loadConfiguration(f);
@@ -258,7 +264,7 @@ public class SSkyblockAddon extends JavaPlugin {
 					sender.sendMessage("§cSorry, but that player cannot be found!");
 					return false;
 				}
-				if(NumberUtils.isNumber(args[1])) {
+				if(StringUtils.isNumeric(args[1])) {
 					double amt = Double.parseDouble(args[1]);
 					SEconomyImplementer sei = sEco.getEconomyImplementer();
 					sei.depositPlayer(target, amt);
@@ -273,7 +279,21 @@ public class SSkyblockAddon extends JavaPlugin {
 			} else {
 				sender.sendMessage("§cYou do not have permission to perform this command!");
 			}
-		}  else if(command.getName().equalsIgnoreCase("setbal")) {
+		} else if(command.getName().equalsIgnoreCase("randbal")){
+			if(args.length != 3) {
+				sender.sendMessage("§cUsage: /randbal [player name] [min integer] [max integer]");
+				return false;
+			}
+			if(StringUtils.isNumeric(args[1]) && StringUtils.isNumeric(args[2])) {
+				Random r = new Random();
+				int low = Integer.parseInt(args[1]);
+				int high = Integer.parseInt(args[2]);
+				int result = r.nextInt(high-low) + low;
+				Bukkit.dispatchCommand(sender, "addbal " + args[0] + " " + result);
+			} else {
+				sender.sendMessage("§cEnter valid numerical amounts.");
+			}
+		} else if(command.getName().equalsIgnoreCase("setbal")) {
 			if(sender.hasPermission("sfa.setBal") || sender.isOp()){
 				if(args.length != 2) {
 					sender.sendMessage("§cUsage: /setbal [player name] [integer amount]");
@@ -750,6 +770,38 @@ public class SSkyblockAddon extends JavaPlugin {
 					}
 				}
 			}
+		} else if(command.getName().equalsIgnoreCase("boss")) {
+			if(args.length >= 1) {
+				if(args[0].equalsIgnoreCase("spawn")) {
+					if(p.hasPermission("sfa.bossadmin")) {
+						if(args.length == 2) {
+							BossEntity selected = null;
+							for(BossEntity boss : BossManager.getLoadBosses()) {
+								if(ChatColor.stripColor(boss.getName()).equalsIgnoreCase(args[1])) {
+									selected = boss;
+								}
+							}
+							if(selected != null) {
+								((BossEntity)selected.clone()).spawn();
+							} else {
+								p.sendMessage(BossManager.prefix + "§cA boss by the name of " + args[1] + " does not exist.");
+							}
+						} else {
+							p.sendMessage("§cUsage: /boss spawn [name]");
+						}
+					} else {
+						p.sendMessage("§cYou do not have permission to perform this command.");
+					}
+
+				} else if(args[0].equalsIgnoreCase("reload")) {
+					if(p.hasPermission("sfa.bossadmin")) {
+						BossManager.reload();
+						p.sendMessage("§aReloaded");
+					} else {
+						p.sendMessage("§cYou do not have permission to perform this command.");
+					}
+				}
+			}
 		}
 		return false;
 	}
@@ -881,6 +933,8 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new SeasonPlayerJoinListener(), this);
 		pm.registerEvents(new VoidDamageListener(), this);
 		pm.registerEvents(new ClearLagListener(), this);
+		pm.registerEvents(new BossDamageListener(), this);
+		pm.registerEvents(new DragonEgg(), this);
 	}
 
 	public YamlConfiguration getBpData() {

@@ -11,6 +11,7 @@ commands:
    pay:
    setbal:
    addbal:
+   randbal:
    boosterqueue:
    myboosters:
    givebooster:
@@ -44,6 +45,7 @@ commands:
    giveSellChest:
    season:
    seasons:
+   boss:
 permissions:
    sfa.giveBouncePad:
       default: op
@@ -102,4 +104,6 @@ permissions:
    sfa.season.joinreset:
       default: op
    sfa.rewardsreload:
+      default: op
+   sfa.bossadmin:
       default: op
