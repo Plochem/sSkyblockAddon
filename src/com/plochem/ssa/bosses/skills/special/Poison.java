@@ -13,11 +13,15 @@ import com.plochem.ssa.bosses.skills.Skill;
 
 public class Poison extends Skill{
 
+	public Poison() {
+		super("Poison", 15, Arrays.asList("§7Gives nearby players poison and", "§7blindness for 10 seconds"));
+	}
+
 	@Override
 	public void cast(BossEntity boss, List<UUID> nearby) {
 		nearby.forEach(id -> Bukkit.getPlayer(id).addPotionEffects(
-		Arrays.asList(new PotionEffect(PotionEffectType.POISON, 20*10, 0),
-					new PotionEffect(PotionEffectType.BLINDNESS, 20*10, 0))));
+		Arrays.asList(new PotionEffect(PotionEffectType.POISON, 20*10, 1),
+					new PotionEffect(PotionEffectType.BLINDNESS, 20*10, 1))));
 	}
 
 }
