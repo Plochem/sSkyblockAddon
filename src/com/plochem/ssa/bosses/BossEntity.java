@@ -83,7 +83,7 @@ public class BossEntity implements Cloneable{
 
 	public void spawn() {
 		entity = (LivingEntity)BossManager.getWorld().spawnEntity(BossManager.getLoc(), type);
-		entity.setCustomName(name);
+		setNameAndHealth();
 		entity.setCustomNameVisible(true);
 		entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(stats.getMaxHealth());
 		entity.setHealth(stats.getMaxHealth());
@@ -91,7 +91,7 @@ public class BossEntity implements Cloneable{
 		startSkillTask(this);
 		startTargetTask();
 		BossManager.getCurrBosses().put(entity.getUniqueId(), this);
-		Bukkit.broadcastMessage(BossManager.prefix + "ง7The " + name + " ง7boss has spawned in the PVP arena!");
+		Bukkit.broadcastMessage(BossManager.prefix + "ยง7The " + name + " ยง7boss has spawned in the PVP arena!");
 	}
 
 	public void despawn() {
@@ -119,18 +119,21 @@ public class BossEntity implements Cloneable{
 			@Override
 			public void run() {
 				if(dead) this.cancel();
-				cnt++;
-				if(cnt % stats.getBasicInterval() == 0)
+				cnt+=gcd;
+				if(cnt % stats.getBasicInterval() == 0) {
 					castRandomSkill(basicSkills);
-				if(cnt % stats.getSpecialInterval() == 0)
+				}
+				if(cnt % stats.getSpecialInterval() == 0) {
 					castRandomSkill(specialSkills);
-				if(cnt % stats.getBasicInterval() == 0 && cnt % stats.getSpecialInterval() == 0)
+				}
+				if(cnt % stats.getBasicInterval() == 0 && cnt % stats.getSpecialInterval() == 0) {
 					cnt = 0;
+				}
 
 			}
 		}.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20*gcd);
 	}
-	
+
 	private void startTargetTask() {
 		new BukkitRunnable() {
 			int cnt = 0;
@@ -142,8 +145,8 @@ public class BossEntity implements Cloneable{
 					cnt = 0;
 				}
 				if(target != null) {
-					 navigateTo(target.getLocation(), stats.getSpeed());
-					 cnt++;
+					navigateTo(target.getLocation(), stats.getSpeed());
+					cnt++;
 				}
 			}
 		}.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 1); // change to 1
@@ -161,7 +164,7 @@ public class BossEntity implements Cloneable{
 		loc.setDirection(diff);
 		entity.teleport(loc);
 	}
-	
+
 	public void findNewTarget() {
 		List<Entity> nearbyBossEntities = this.getEntity().getNearbyEntities(stats.getTargetRadius(), stats.getTargetRadius(), stats.getTargetRadius());
 		Iterator<Entity> nearbyIterator = nearbyBossEntities.iterator();
@@ -175,23 +178,32 @@ public class BossEntity implements Cloneable{
 			target = (Player)nearbyBossEntities.get(rand.nextInt(nearbyBossEntities.size()));
 		}
 	}
-	
+
 	public void castRandomSkill(List<Skill> skills) {
 		Random rand = new Random();
 		Skill randSkill = skills.get(rand.nextInt(skills.size()));
 		List<UUID> nearby = getNearbyPlayers(randSkill.getRange());
 		if(nearby != null && nearby.size() > 0) {
 			randSkill.cast(this, nearby);
-			BossManager.sendMessage(BossManager.prefix + "ง7The " + name + " ง7boss has cast the งb" + randSkill.getName() + " ง7skill!");
+			BossManager.sendMessage(BossManager.prefix + "ยง7The " + name + " ยง7boss has cast the ยงb" + randSkill.getName() + " ยง7skill!");
 		}
 	}
-	
-    private int findGCD(int num1, int num2) {
-        if(num2 == 0){
-            return num1;
-        }
-        return findGCD(num2, num1%num2);
-    }
+
+	public void setNameAndHealth() {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				entity.setCustomName(name + " ยง8ยงl| " + "ยงc" + entity.getHealth() + " โค");				
+			}
+		}.runTaskLater(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 5);
+	}
+
+	private int findGCD(int num1, int num2) {
+		if(num2 == 0){
+			return num1;
+		}
+		return findGCD(num2, num1%num2);
+	}
 
 	public String getName() {
 		return name;
@@ -216,7 +228,7 @@ public class BossEntity implements Cloneable{
 	public void setSpecialSkills(List<Skill> specialSkills) {
 		this.specialSkills = specialSkills;
 	}
-	
+
 	public List<Skill> getBasicSkills() {
 		return basicSkills;
 	}
@@ -253,6 +265,10 @@ public class BossEntity implements Cloneable{
 		return playerDamage;
 	}
 	
+	public void setTarget(Player target) {
+		this.target = target;
+	}
+
 	public Player getTarget() {
 		return target;
 	}
