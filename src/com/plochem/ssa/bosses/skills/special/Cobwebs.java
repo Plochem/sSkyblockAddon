@@ -27,13 +27,15 @@ public class Cobwebs extends Skill{
 		for(int i = 0; i < Math.min(2, nearby.size()); i++) {
 			Player p = Bukkit.getPlayer(nearby.get(i));
 			Location loc = p.getLocation();
+			Material type = loc.getBlock().getType();
 			loc.getBlock().setType(Material.WEB);
 			p.teleport(loc);
 			new BukkitRunnable() {	
 				Location temp = loc;
+				Material oldType = type;
 				@Override
 				public void run() {
-					temp.getBlock().setType(Material.AIR);
+					temp.getBlock().setType(oldType);
 				}
 			}.runTaskLater(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 20*8);
 		}
