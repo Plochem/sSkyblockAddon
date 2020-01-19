@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
@@ -26,10 +24,7 @@ public class ItemBuilder {
 	private Map<Enchantment, Integer> enchantments = new HashMap<>();
 	private String displayname;
 	private List<String> lore = new ArrayList<>();
-	private boolean andSymbol = true;
 	private boolean unsafeStackSize = false;
-
-	/** Initalizes the ItemBuilder with {@link org.bukkit.Material} and Amount */
 
 	public ItemBuilder(Material material, int amount) {
 		if(material == null) material = Material.AIR;
@@ -37,6 +32,20 @@ public class ItemBuilder {
 		this.amount = amount;
 		this.item = new ItemStack(material, amount);
 		this.material = material;
+	}
+	
+	public ItemBuilder(ItemStack item) {
+        this.item = item;
+        this.material = item.getType();
+        this.amount = item.getAmount();
+        this.data = item.getData();
+        this.damage = item.getDurability();
+        this.enchantments = item.getEnchantments();
+        if(item.hasItemMeta()) {
+        	this.meta = item.getItemMeta();
+            this.displayname = item.getItemMeta().getDisplayName();
+            this.lore = item.getItemMeta().getLore();
+        }
 	}
 
 	public ItemBuilder data(MaterialData data) {
@@ -136,7 +145,6 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder setNBTString(String key, String value) {
-		
 		Object nmsItem = CraftItemStack.asNMSCopy(item);
 		Object compound = getNBTTagCompound(nmsItem);
 		try {
@@ -147,8 +155,18 @@ public class ItemBuilder {
 		}
 		return this;
 	}
+	
+	public String getNBTString(String key) {
+		Object compound = getNBTTagCompound(CraftItemStack.asNMSCopy(item));
+		try {
+			return (String) compound.getClass().getMethod("getString", String.class).invoke(compound, key);
+		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
 
-    public Object setNBTTag(Object tag, Object item) {
+    private Object setNBTTag(Object tag, Object item) {
         try {
             item.getClass().getMethod("setTag", item.getClass()).invoke(item, tag);
             return item;
@@ -166,248 +184,9 @@ public class ItemBuilder {
                 return Class.forName("net.minecraft.server." + ver + ".NBTTagCompound").newInstance();
             }
             return compound;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         return null;
     }
-	public class ReflectionUtils {
-
-		public String getString(ItemStack item, String key) {
-
-			Object compound = getNBTTagCompound(getItemAsNMSStack(item));
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				return (String) compound.getClass().getMethod("getString", String.class).invoke(compound, key);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return null;
-
-		}
-
-
-
-		public ItemStack setString(ItemStack item, String key, String value) {
-
-			Object nmsItem = getItemAsNMSStack(item);
-
-			Object compound = getNBTTagCompound(nmsItem);
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				compound.getClass().getMethod("setString", String.class, String.class).invoke(compound, key, value);
-
-				nmsItem = setNBTTag(compound, nmsItem);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return getItemAsBukkitStack(nmsItem);
-
-		}
-
-
-
-		public int getInt(ItemStack item, String key) {
-
-			Object compound = getNBTTagCompound(getItemAsNMSStack(item));
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				return (Integer) compound.getClass().getMethod("getInt", String.class).invoke(compound, key);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return -1;
-
-		}
-
-
-
-		public ItemStack setInt(ItemStack item, String key, int value) {
-
-			Object nmsItem = getItemAsNMSStack(item);
-
-			Object compound = getNBTTagCompound(nmsItem);
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				compound.getClass().getMethod("setInt", String.class, Integer.class).invoke(compound, key, value);
-
-				nmsItem = setNBTTag(compound, nmsItem);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return getItemAsBukkitStack(nmsItem);
-
-		}
-
-
-
-		public double getDouble(ItemStack item, String key) {
-
-			Object compound = getNBTTagCompound(getItemAsNMSStack(item));
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				return (Double) compound.getClass().getMethod("getDouble", String.class).invoke(compound, key);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return Double.NaN;
-
-		}
-
-
-
-		public ItemStack setDouble(ItemStack item, String key, double value) {
-
-			Object nmsItem = getItemAsNMSStack(item);
-
-			Object compound = getNBTTagCompound(nmsItem);
-
-			if(compound == null) {
-
-				compound = getNewNBTTagCompound();
-
-			}
-
-			try {
-
-				compound.getClass().getMethod("setDouble", String.class, Double.class).invoke(compound, key, value);
-
-				nmsItem = setNBTTag(compound, nmsItem);
-
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-
-				ex.printStackTrace();
-
-			}
-
-			return getItemAsBukkitStack(nmsItem);
-		}
-
-		public boolean getBoolean(ItemStack item, String key) {
-			Object compound = getNBTTagCompound(getItemAsNMSStack(item));
-			if(compound == null) {
-				compound = getNewNBTTagCompound();
-			}
-			try {
-				return (Boolean) compound.getClass().getMethod("getBoolean", String.class).invoke(compound, key);
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-				ex.printStackTrace();
-			}
-			return false;
-		}
-
-		public ItemStack setBoolean(ItemStack item, String key, boolean value) {
-			Object nmsItem = getItemAsNMSStack(item);
-			Object compound = getNBTTagCompound(nmsItem);
-			if(compound == null) {
-				compound = getNewNBTTagCompound();
-			}
-			try {
-				compound.getClass().getMethod("setBoolean", String.class, Boolean.class).invoke(compound, key, value);
-				nmsItem = setNBTTag(compound, nmsItem);
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-				ex.printStackTrace();
-			}
-			return getItemAsBukkitStack(nmsItem);
-
-		}
-
-		public boolean hasKey(ItemStack item, String key) {
-			Object compound = getNBTTagCompound(getItemAsNMSStack(item));
-			if(compound == null) {
-				compound = getNewNBTTagCompound();
-			}
-			try {
-				return (Boolean) compound.getClass().getMethod("hasKey", String.class).invoke(compound, key);
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-				e.printStackTrace();
-			}
-			return false;
-		}
-
-		public Object getNewNBTTagCompound() {
-			String ver = Bukkit.getServer().getClass().getPackage().getName().split(".")[3];
-			try {
-				return Class.forName("net.minecraft.server." + ver + ".NBTTagCompound").newInstance();
-			} catch (ClassNotFoundException | IllegalAccessException | InstantiationException ex) {
-				ex.printStackTrace();
-			}
-			return null;
-		}
-
-		public Object setNBTTag(Object tag, Object item) {
-			try {
-				item.getClass().getMethod("setTag", item.getClass()).invoke(item, tag);
-				return item;
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-				ex.printStackTrace();
-			}
-			return null;
-		}
-
-		public Object getNBTTagCompound(Object nmsStack) {
-			try {
-				return nmsStack.getClass().getMethod("getTag").invoke(nmsStack);
-			} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-				ex.printStackTrace();
-			}
-			return null;
-		}
-	}
-}
 }
