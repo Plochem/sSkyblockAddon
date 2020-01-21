@@ -39,11 +39,13 @@ public class BossEntity implements Cloneable{
 	private BossStatistics stats;
 	private Map<UUID, Double> playerDamage = new HashMap<>();
 	private Player target;
+	private Tier tier;
 	private boolean dead = false;
 
-	public BossEntity(String name, String type, List<Skill> specialSkills, List<Skill> basicSkills, List<String> info, BossReward reward, BossStatistics stats) {
-		this.name = name;
+	public BossEntity(String name, String type, Tier tier, List<Skill> specialSkills, List<Skill> basicSkills, List<String> info, BossReward reward, BossStatistics stats) {
+		this.name = tier.getColor() + name;
 		this.type = EntityType.valueOf(type);
+		this.tier = tier;
 		this.specialSkills = specialSkills;
 		this.basicSkills = basicSkills;
 		this.info = info;
@@ -271,6 +273,10 @@ public class BossEntity implements Cloneable{
 
 	public Player getTarget() {
 		return target;
+	}
+	
+	public Tier getTier() {
+		return tier;
 	}
 
 	@Override
