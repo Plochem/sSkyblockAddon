@@ -49,6 +49,8 @@ import com.plochem.ssa.economy.BanknoteListener;
 import com.plochem.ssa.economy.BanknoteManager;
 import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.economy.SEconomyImplementer;
+import com.plochem.ssa.gearset.GearSet;
+import com.plochem.ssa.gearset.GearSetManager;
 import com.plochem.ssa.gearset.listeners.PlayerGeartSetDamage;
 import com.plochem.ssa.generator.Generator;
 import com.plochem.ssa.generator.GeneratorListeners;
@@ -101,7 +103,7 @@ public class SSkyblockAddon extends JavaPlugin {
 	private List<UUID> runningSomeTPCmd = new ArrayList<>();
 	private List<UUID> viewingInv = new ArrayList<>();
 	private Map<UUID, UUID> tpReq = new HashMap<>();
-	private List<String> consoleCmds = Arrays.asList("addbal", "randbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote");
+	private List<String> consoleCmds = Arrays.asList("addbal", "randbal", "givebooster", "setbal", "givegen", "tags", "givesellchest", "givebanknote", "gearset");
 
 	public void onEnable(){
 		sEco.hook();   
@@ -800,6 +802,30 @@ public class SSkyblockAddon extends JavaPlugin {
 						p.sendMessage("§aReloaded");
 					} else {
 						p.sendMessage("§cYou do not have permission to perform this command.");
+					}
+				}
+			}
+		} else if(command.getName().equalsIgnoreCase("gearset")) {
+			if(args.length >= 1) {
+				if(args[0].equalsIgnoreCase("give")) {
+					if(p.hasPermission("sfa.gearsetadmin")) {
+						if(args.length == 3) {
+							Player target = Bukkit.getPlayer(args[1]);
+							if(target != null) {
+								GearSet set = GearSetManager.getGearSet(args[2]);
+								if(set != null) {
+									GearSetManager.giveRandom(set, target);
+								} else {
+									sender.sendMessage("§cThat gearset does not exist");								
+								}
+							} else {
+								sender.sendMessage("§cSorry, but that player cannot be found");								
+							}
+						} else {
+							sender.sendMessage("§cUsage: /gearset give [name] [gearset]");
+						}
+					} else {
+						sender.sendMessage("§cYou do not have permission to perform this command.");
 					}
 				}
 			}

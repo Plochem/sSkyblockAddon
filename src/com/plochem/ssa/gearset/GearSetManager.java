@@ -3,6 +3,7 @@ package com.plochem.ssa.gearset;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -46,5 +47,9 @@ public class GearSetManager {
 			}
 		}
 		return false;
+	}
+
+	public static void giveRandom(GearSet set, Player target) {
+		target.getInventory().addItem(set.getItems().get(new Random().nextInt(set.getItems().size())));
 	}
 }
