@@ -1,6 +1,6 @@
 main: com.plochem.ssa.SSkyblockAddon
 name: sSkyblockAddon
-version: 1.12.8
+version: 1.13.8
 author: Plochem
 description: Skyblock Addon for Straxidus.
 depend: [Vault, SuperiorSkyblock2, WorldEdit, LuckPerms, ClearLag]
@@ -46,6 +46,7 @@ commands:
    season:
    seasons:
    boss:
+   gearset:
 permissions:
    sfa.giveBouncePad:
       default: op
@@ -106,4 +107,6 @@ permissions:
    sfa.rewardsreload:
       default: op
    sfa.bossadmin:
+      default: op
+   sfa.gearsetadmin:
       default: op
