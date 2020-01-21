@@ -49,6 +49,7 @@ import com.plochem.ssa.economy.BanknoteListener;
 import com.plochem.ssa.economy.BanknoteManager;
 import com.plochem.ssa.economy.SEconomy;
 import com.plochem.ssa.economy.SEconomyImplementer;
+import com.plochem.ssa.gearset.listeners.PlayerGeartSetDamage;
 import com.plochem.ssa.generator.Generator;
 import com.plochem.ssa.generator.GeneratorListeners;
 import com.plochem.ssa.generator.GeneratorManager;
@@ -935,6 +936,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		pm.registerEvents(new ClearLagListener(), this);
 		pm.registerEvents(new BossDamageListener(), this);
 		pm.registerEvents(new DragonEgg(), this);
+		pm.registerEvents(new PlayerGeartSetDamage(), this);
 	}
 
 	public YamlConfiguration getBpData() {
