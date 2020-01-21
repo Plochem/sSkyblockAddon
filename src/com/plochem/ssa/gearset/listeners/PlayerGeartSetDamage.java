@@ -1,5 +1,7 @@
 package com.plochem.ssa.gearset.listeners;
 
+import java.util.Arrays;
+
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +18,7 @@ public class PlayerGeartSetDamage implements Listener{
 			Player shooter = (Player)e.getEntity().getShooter();
 			GearSet set = GearSetManager.getGearSet("Paladin");
 			if(GearSetManager.isWearingSet(set, shooter)) {
-				set.getAbility().execute();
+				set.getAbility().execute(shooter, Arrays.asList(e.getHitEntity().getUniqueId()));
 			}
 		}
 		
