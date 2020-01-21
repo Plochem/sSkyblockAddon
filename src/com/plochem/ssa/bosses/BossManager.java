@@ -40,7 +40,7 @@ public class BossManager {
 				Arrays.asList(skillRegistry.get("melee")),
 				Arrays.asList("§7A dangerous spider that can easily", "defeat anything in its path."),
 				new BossReward(Arrays.asList(
-						Arrays.asList("cc give p straxidus 1 %player%", "randbal %player% 100000 300000"), 
+						Arrays.asList("cc give p straxidus 1 %player%", "randbal %player% 100000 300000", "gearset give %player% Paladin"), 
 						Arrays.asList("cc give p mythical 1 %player%", "randbal %player% 50000 75000"),
 						Arrays.asList("randbal %player% 10000 30000")), 
 						Arrays.asList("randbal %player% 1000 3000")), 
