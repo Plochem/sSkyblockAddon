@@ -35,10 +35,10 @@ public class BossManager {
 		skillRegistry.put("melee", new Melee());
 		skillRegistry.put("poison", new Poison());
 		skillRegistry.put("cobwebs", new Cobwebs());
-		loadedBosses.add(new BossEntity("§d§lPaladin", "SPIDER", 
+		loadedBosses.add(new BossEntity("Paladin", "SPIDER", Tier.EPIC,
 				Arrays.asList(skillRegistry.get("poison"), skillRegistry.get("cobwebs")), 
 				Arrays.asList(skillRegistry.get("melee")),
-				Arrays.asList("is gay", "", "very"),
+				Arrays.asList("§7A dangerous spider that can easily", "defeat anything in its path."),
 				new BossReward(Arrays.asList(
 						Arrays.asList("cc give p straxidus 1 %player%", "randbal %player% 100000 300000"), 
 						Arrays.asList("cc give p mythical 1 %player%", "randbal %player% 50000 75000"),
