@@ -50,6 +50,8 @@ public class GearSetManager {
 	}
 
 	public static void giveRandom(GearSet set, Player target) {
-		target.getInventory().addItem(set.getItems().get(new Random().nextInt(set.getItems().size())));
+		ItemStack item = set.getItems().get(new Random().nextInt(set.getItems().size()));
+		target.getInventory().addItem(item);
+		target.sendMessage("§aYou recieved the " + item.getItemMeta().getDisplayName());
 	}
 }
