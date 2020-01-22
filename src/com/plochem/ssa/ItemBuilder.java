@@ -1,18 +1,18 @@
 package com.plochem.ssa;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.material.MaterialData;
+
+import net.minecraft.server.v1_12_R1.NBTTagCompound;
 
 public class ItemBuilder {
 	private ItemStack item;
@@ -24,11 +24,9 @@ public class ItemBuilder {
 	private Map<Enchantment, Integer> enchantments = new HashMap<>();
 	private String displayname;
 	private List<String> lore = new ArrayList<>();
-	private boolean unsafeStackSize = false;
 
 	public ItemBuilder(Material material, int amount) {
 		if(material == null) material = Material.AIR;
-		if(((amount > material.getMaxStackSize()) || (amount <= 0)) && (!unsafeStackSize)) amount = 1;
 		this.amount = amount;
 		this.item = new ItemStack(material, amount);
 		this.material = material;
@@ -130,9 +128,6 @@ public class ItemBuilder {
 		if(data != null) {
 			item.setData(data);
 		}
-		if(enchantments.size() > 0) {
-			item.addUnsafeEnchantments(enchantments);
-		}
 		if(displayname != null) {
 			meta.setDisplayName(displayname);
 		}
@@ -141,52 +136,25 @@ public class ItemBuilder {
 		}
 
 		item.setItemMeta(meta);
+		
+		if(enchantments.size() > 0) {
+			item.addUnsafeEnchantments(enchantments);
+		}
 		return item;
 	}
 
 	public ItemBuilder setNBTString(String key, String value) {
-		Object nmsItem = CraftItemStack.asNMSCopy(item);
-		Object compound = getNBTTagCompound(nmsItem);
-		try {
-			compound.getClass().getMethod("setString", String.class, String.class).invoke(compound, key, value);
-			nmsItem = setNBTTag(compound, nmsItem);
-		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-			ex.printStackTrace();
-		}
+		net.minecraft.server.v1_12_R1.ItemStack nmsItem = CraftItemStack.asNMSCopy(item);
+		NBTTagCompound nbtCompounnd = (nmsItem.hasTag()) ? nmsItem.getTag() : new NBTTagCompound();
+		nbtCompounnd.setString(key, value);
+		nmsItem.setTag(nbtCompounnd);
+		item = CraftItemStack.asBukkitCopy(nmsItem);
 		return this;
 	}
 	
 	public String getNBTString(String key) {
-		Object compound = getNBTTagCompound(CraftItemStack.asNMSCopy(item));
-		try {
-			return (String) compound.getClass().getMethod("getString", String.class).invoke(compound, key);
-		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-			ex.printStackTrace();
-		}
-		return null;
+		NBTTagCompound nbtCompound = CraftItemStack.asNMSCopy(item).getTag();
+		if(nbtCompound == null) return null;
+		return nbtCompound.getString(key);
 	}
-
-    private Object setNBTTag(Object tag, Object item) {
-        try {
-            item.getClass().getMethod("setTag", item.getClass()).invoke(item, tag);
-            return item;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
-
-    private Object getNBTTagCompound(Object nmsStack) {
-        try {
-            Object compound = nmsStack.getClass().getMethod("getTag").invoke(nmsStack);
-            if(compound == null) {
-                String ver = Bukkit.getServer().getClass().getPackage().getName().split(".")[3];
-                return Class.forName("net.minecraft.server." + ver + ".NBTTagCompound").newInstance();
-            }
-            return compound;
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | InstantiationException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return null;
-    }
 }
