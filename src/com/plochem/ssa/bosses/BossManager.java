@@ -128,5 +128,13 @@ public class BossManager {
 		return loadedBosses;
 	}
 
+	public static void despawnAll() {
+		for(BossEntity boss : currBosses.values()) {
+			boss.getEntity().remove();
+		}
+		currBosses.clear();
+		
+	}
+
 
 }
