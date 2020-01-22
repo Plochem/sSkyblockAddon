@@ -17,7 +17,7 @@ public class PlayerGeartSetDamage implements Listener{
 		if(e.getEntity() instanceof Arrow && e.getEntity().getShooter() instanceof Player) {
 			Player shooter = (Player)e.getEntity().getShooter();
 			GearSet set = GearSetManager.getGearSet("Paladin");
-			if(GearSetManager.isWearingSet(set, shooter)) {
+			if(e.getHitEntity() != null && GearSetManager.isWearingSet(set, shooter)) {
 				set.getAbility().execute(shooter, Arrays.asList(e.getHitEntity().getUniqueId()));
 			}
 		}
