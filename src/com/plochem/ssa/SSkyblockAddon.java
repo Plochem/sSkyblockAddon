@@ -164,6 +164,7 @@ public class SSkyblockAddon extends JavaPlugin {
 
 	public void onDisable(){
 		sEco.unhook();
+		BossManager.despawnAll();
 		CosmeticManager.saveSelections();
 		for(World w : Bukkit.getWorlds()) {
 			w.save();
@@ -808,7 +809,7 @@ public class SSkyblockAddon extends JavaPlugin {
 		} else if(command.getName().equalsIgnoreCase("gearset")) {
 			if(args.length >= 1) {
 				if(args[0].equalsIgnoreCase("give")) {
-					if(p.hasPermission("sfa.gearsetadmin")) {
+					if(sender.hasPermission("sfa.gearsetadmin")) {
 						if(args.length == 3) {
 							Player target = Bukkit.getPlayer(args[1]);
 							if(target != null) {
