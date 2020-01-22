@@ -26,7 +26,7 @@ public class GearSetManager {
 				new ItemBuilder(Material.BOW, 1).displayname("§5§lPaladin §d§lBow").enchant(Enchantment.ARROW_DAMAGE, 6).enchant(Enchantment.ARROW_FIRE, 2).enchant(Enchantment.ARROW_INFINITE, 1).setNBTString("gearset", "paladin_bow").build()),
 				Tier.EPIC, "Paladin", new StickyBow())); 
 	}
-	
+
 	public static boolean isWearingSet(GearSet set, Player p) {
 		for(ItemStack item : set.getItems()) {
 			if(!invContains(p.getInventory(), item)) {
@@ -35,15 +35,18 @@ public class GearSetManager {
 		}
 		return true;
 	}
-	
+
 	public static GearSet getGearSet(String s) {
 		return gearsets.get(s);
 	}
-	
+
 	private static boolean invContains(PlayerInventory inv, ItemStack gearItem) {
-		for(ItemStack armor : inv.getContents()) {
-			if(new ItemBuilder(gearItem).getNBTString("gearset").equals(new ItemBuilder(armor).getNBTString("gearset"))) {
-				return true;
+		for(ItemStack inventoryItem : inv.getContents()) {
+			if(inventoryItem != null) {
+				String otherTag = new ItemBuilder(inventoryItem).getNBTString("gearset"); 
+				if(otherTag != null && new ItemBuilder(gearItem).getNBTString("gearset").equals(otherTag)) {
+					return true;
+				}
 			}
 		}
 		return false;
