@@ -41,6 +41,8 @@ public class BossEntity implements Cloneable{
 	private Player target;
 	private Tier tier;
 	private boolean dead = false;
+	
+	private List<Entry<UUID,Double>> sortedDamage;
 
 	public BossEntity(String name, String type, Tier tier, List<Skill> specialSkills, List<Skill> basicSkills, List<String> info, BossReward reward, BossStatistics stats) {
 		this.name = tier.getColor() + name;
@@ -54,33 +56,39 @@ public class BossEntity implements Cloneable{
 	}
 
 	public void giveRewards() {
-		List<Entry<UUID,Double>> sorted = new ArrayList<>(playerDamage.entrySet());
-		Collections.sort(sorted, new Comparator<Entry<UUID,Double>>() { // custom comparator or nah?
-			@Override
-			public int compare(Entry<UUID,Double> o1, Entry<UUID,Double> o2) {
-				if (o1.getValue() < o2.getValue()) {
-					return 1;
-				} else if (o1.getValue() > o2.getValue()) {
-					return -1;
-				}
-				return 0;
-			}
-		});
-
-		for(int i = 0; i < Math.min(playerDamage.size(),3); i++) {
-			String name = Bukkit.getPlayer(sorted.get(i).getKey()).getName();
+		for(int i = 0; i < Math.min(sortedDamage.size(),3); i++) {
+			String name = Bukkit.getPlayer(sortedDamage.get(i).getKey()).getName();
 			for(String cmd : reward.getTopDmgCommands().get(i)) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", name));
 			}
 		}
 
-		for(int i = Math.min(playerDamage.size(),3); i < sorted.size(); i++) {
-			String name = Bukkit.getPlayer(sorted.get(i).getKey()).getName();
+		for(int i = Math.min(sortedDamage.size(),3); i < sortedDamage.size(); i++) {
+			String name = Bukkit.getPlayer(sortedDamage.get(i).getKey()).getName();
 			for(String cmd : reward.getOtherDmgCommands()) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd.replaceAll("%player%", name));
 			}
 		}
-
+	}
+	
+	public void showStats() {
+		for(Entry<UUID, Double> e: sortedDamage) {
+			Player p = Bukkit.getPlayer(e.getKey());
+			if(p != null) {
+				p.sendMessage("§a§l---------------------------------------------");
+				p.sendMessage("§lBoss Results");
+				p.sendMessage("");
+				String[] place = {"§e§l1st Damager", "§6§l2nd Damager", "§c§l3rd Damager"};
+				for(int i = 0; i < Math.min(sortedDamage.size(),3); i++) {
+					String name = Bukkit.getPlayer(sortedDamage.get(i).getKey()).getName();
+					Double dmg = sortedDamage.get(i).getValue();
+					p.sendMessage(place[i] + " §7§l- §a" + name + " §7§l- " + dmg);
+				}
+				p.sendMessage("");
+				p.sendMessage("§a§l---------------------------------------------");
+			}
+		}
+		
 	}
 
 	public void spawn() {
@@ -287,6 +295,22 @@ public class BossEntity implements Cloneable{
 			e.printStackTrace();
 			return null;
 		}
+	}
+	
+	public void sortTopDamage(){
+		List<Entry<UUID,Double>> sorted = new ArrayList<>(playerDamage.entrySet());
+		Collections.sort(sorted, new Comparator<Entry<UUID,Double>>() { // custom comparator or nah?
+			@Override
+			public int compare(Entry<UUID,Double> o1, Entry<UUID,Double> o2) {
+				if (o1.getValue() < o2.getValue()) {
+					return 1;
+				} else if (o1.getValue() > o2.getValue()) {
+					return -1;
+				}
+				return 0;
+			}
+		});
+		sortedDamage = sorted;
 	}
 
 }
