@@ -46,7 +46,9 @@ public class BossDamageListener implements Listener{
 		BossEntity hitBoss = BossManager.getCurrBosses().get(e.getEntity().getUniqueId());
 		if(hitBoss != null) {
 			Bukkit.broadcastMessage(BossManager.prefix + "§7The " + hitBoss.getName() + " §7boss has been slain!");
+			hitBoss.sortTopDamage();
 			hitBoss.giveRewards();
+			hitBoss.showStats();
 			hitBoss.despawn();
 		}
 	}
