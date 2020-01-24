@@ -786,7 +786,7 @@ public class SSkyblockAddon extends JavaPlugin {
 								}
 							}
 							if(selected != null) {
-								((BossEntity)selected.clone()).spawn();
+								BossManager.clone(selected).spawn();
 							} else {
 								p.sendMessage(BossManager.prefix + "§cA boss by the name of " + args[1] + " does not exist.");
 							}

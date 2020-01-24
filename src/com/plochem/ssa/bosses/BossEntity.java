@@ -28,7 +28,7 @@ import com.plochem.ssa.bosses.skills.Skill;
 
 import net.minecraft.server.v1_12_R1.EnumMoveType;
 
-public class BossEntity implements Cloneable{
+public class BossEntity{
 	private String name;
 	private LivingEntity entity;
 	private EntityType type;
@@ -42,17 +42,21 @@ public class BossEntity implements Cloneable{
 	private Tier tier;
 	private boolean dead = false;
 	
-	private List<Entry<UUID,Double>> sortedDamage;
+	private List<Entry<UUID,Double>> sortedDamage = new ArrayList<>();
 
-	public BossEntity(String name, String type, Tier tier, List<Skill> specialSkills, List<Skill> basicSkills, List<String> info, BossReward reward, BossStatistics stats) {
+	public BossEntity(String name, EntityType type, Tier tier, List<Skill> specialSkills, List<Skill> basicSkills, List<String> info, BossReward reward, BossStatistics stats) {
 		this.name = tier.getColor() + name;
-		this.type = EntityType.valueOf(type);
+		this.type = type;
 		this.tier = tier;
 		this.specialSkills = specialSkills;
 		this.basicSkills = basicSkills;
 		this.info = info;
 		this.reward = reward;
 		this.stats = stats;
+	}
+	
+	public BossEntity(BossEntity old) {
+		this(old.getName(), old.getType(), old.getTier(), old.getSpecialSkills(), old.getBasicSkills(), old.getInfo(), old.getReward(), old.getStats());
 	}
 
 	public void giveRewards() {
@@ -287,16 +291,6 @@ public class BossEntity implements Cloneable{
 		return tier;
 	}
 
-	@Override
-	public Object clone() {
-		try {
-			return super.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	public void sortTopDamage(){
 		List<Entry<UUID,Double>> sorted = new ArrayList<>(playerDamage.entrySet());
 		Collections.sort(sorted, new Comparator<Entry<UUID,Double>>() { // custom comparator or nah?

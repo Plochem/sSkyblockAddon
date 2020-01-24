@@ -14,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -35,7 +36,7 @@ public class BossManager {
 		skillRegistry.put("melee", new Melee());
 		skillRegistry.put("poison", new Poison());
 		skillRegistry.put("cobwebs", new Cobwebs());
-		loadedBosses.add(new BossEntity("Paladin", "SPIDER", Tier.EPIC,
+		loadedBosses.add(new BossEntity("Paladin", EntityType.SPIDER, Tier.EPIC,
 				Arrays.asList(skillRegistry.get("poison"), skillRegistry.get("cobwebs")), 
 				Arrays.asList(skillRegistry.get("melee")),
 				Arrays.asList("§7A dangerous spider that can easily", "defeat anything in its path."),
@@ -97,7 +98,7 @@ public class BossManager {
 							if(currBosses.size() < bossConfig.getInt("maxalive")) {
 								Random rand = new Random();
 								BossEntity boss = loadedBosses.get(rand.nextInt(loadedBosses.size()));
-								((BossEntity)boss.clone()).spawn();
+								BossManager.clone(boss).spawn();
 							} else {
 								Bukkit.broadcastMessage(prefix + "§7There are too many bosses spawned.");		
 							}
@@ -134,6 +135,11 @@ public class BossManager {
 		}
 		currBosses.clear();
 		
+	}
+	
+	public static BossEntity clone(BossEntity boss) {
+		BossEntity thing = new BossEntity(boss);
+		return thing;
 	}
 
 
