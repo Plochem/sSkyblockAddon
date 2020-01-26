@@ -45,7 +45,7 @@ public class BossManager {
 						Arrays.asList("cc give p mythical 1 %player%", "randbal %player% 50000 75000"),
 						Arrays.asList("randbal %player% 10000 30000")), 
 						Arrays.asList("randbal %player% 1000 3000")), 
-				new BossStatistics(15000, 4, 2, 5, 10, 5, 10, 2.5)));
+				new BossStatistics(15000, 4, 2, 5, 10, 5, 5, 3)));
 		Bukkit.getLogger().info("[SFA] Bosses loaded!");
 	}
 
