@@ -14,12 +14,14 @@ import java.util.UUID;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftLivingEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -89,6 +91,8 @@ public class BossEntity{
 					p.sendMessage(place[i] + " §7§l- §a" + name + " §7§l- " + dmg);
 				}
 				p.sendMessage("");
+				p.sendMessage("§b§lYou §7§l- " + e.getValue());
+				p.sendMessage("");
 				p.sendMessage("§a§l---------------------------------------------");
 			}
 		}
@@ -154,12 +158,15 @@ public class BossEntity{
 			@Override
 			public void run() {
 				if(dead) this.cancel();
+				 // no target, or time to switch
 				if(target == null || cnt == stats.getChangeTargetInterval() * 20) {
 					findNewTarget();
 					cnt = 0;
 				}
+				if(!target.getWorld().equals(BossManager.getWorld())) target = null; // remove target if in different world
 				if(target != null) {
 					navigateTo(target.getLocation(), stats.getSpeed());
+					BossManager.getWorld().spawnParticle(Particle.REDSTONE, target.getLocation().add(0, 2.5, 0), 0, 1.0, 1.0/255, 1.0/255);
 					cnt++;
 				}
 			}
@@ -188,8 +195,25 @@ public class BossEntity{
 			}
 		}
 		if(nearbyBossEntities.size() > 0) {
+			// get random player in radius
 			Random rand = new Random();
 			target = (Player)nearbyBossEntities.get(rand.nextInt(nearbyBossEntities.size()));
+		} else {
+			// if no random player, get last dmging player (handles noobs who only use bows)
+			if(entity.getLastDamageCause() != null) {
+				Entity lastHit = entity.getLastDamageCause().getEntity();
+				if(lastHit != null) {
+					if(lastHit instanceof Projectile) {
+						if(((Projectile) lastHit).getShooter() instanceof Player){
+							target = (Player)(((Projectile)lastHit).getShooter());
+						}
+					} else if(lastHit instanceof Player) {
+						target = (Player)entity.getLastDamageCause().getEntity();
+					}
+				} else {
+					target = null;
+				}
+			}
 		}
 	}
 
