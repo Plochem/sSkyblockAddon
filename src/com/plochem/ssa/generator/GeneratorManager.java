@@ -92,7 +92,7 @@ public class GeneratorManager {
 				saveGenFile();
 				if(timeElapsed == lcm) timeElapsed = 0;
 			}
-        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20*60*4); // TODO change to 1200 - runs every 4 min
+        }.runTaskTimer(SSkyblockAddon.getPlugin(SSkyblockAddon.class), 0, 20*60); // TODO change to 1200 - runs every 1 min
 	}
 	
 	public static void giveGenerator(CommandSender sender, String name, String type) {
