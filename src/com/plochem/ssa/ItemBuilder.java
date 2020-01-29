@@ -82,6 +82,13 @@ public class ItemBuilder {
 		}
 		return this;
 	}
+	
+	public ItemBuilder lore(List<String> lines) {
+		for (String line : lines) {
+			lore.add(line);
+		}
+		return this;
+	}
 
 	public ItemBuilder lore(String line, int index) {
 		lore.set(index, line);
